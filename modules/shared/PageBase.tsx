@@ -7,7 +7,7 @@ export type PageBaseProps = {
 
 const PageBase = (props: PageBaseProps) => {
   return (
-    <div className="bg-black text-white pt-16">
+    <div className="bg-black text-white md:pt-16 pt-24">
       <Header />
       <div className="container mx-auto">{props.children}</div>
     </div>

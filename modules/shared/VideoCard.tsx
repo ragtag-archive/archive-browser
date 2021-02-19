@@ -12,8 +12,8 @@ const VideoCard = ({ video }: VideoCardProps) => {
   const mkvURL = videoBase + ".mkv";
 
   return (
-    <div className="flex flex-row py-2">
-      <div className="w-1/4">
+    <div className="flex flex-col md:flex-row">
+      <div className="md:w-1/4 w-full py-2">
         <div
           className="w-full h-0 relative"
           style={{ paddingBottom: "56.25%" }}
@@ -22,7 +22,7 @@ const VideoCard = ({ video }: VideoCardProps) => {
           {!!video && <img src={thumbURL} className="absolute inset-0" />}
         </div>
       </div>
-      <div className="flex-1 px-4">
+      <div className="flex-1 px-4 py-2">
         {!!video ? (
           <>
             <div>
