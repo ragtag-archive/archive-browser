@@ -11,7 +11,9 @@ const LandingPage = () => {
   return (
     <PageBase>
       {isLoading ? (
-        <div>Loading videos...</div>
+        Array(5)
+          .fill(0)
+          .map(() => <VideoCard />)
       ) : (
         <div>
           {videos.map(({ _source: video }) => (
