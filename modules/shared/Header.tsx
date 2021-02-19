@@ -12,7 +12,7 @@ const Header = () => {
   }, [debouncedSearch]);
 
   return (
-    <div className="fixed inset-x-0 top-0 bg-gray-900 text-white">
+    <div className="fixed inset-x-0 top-0 bg-gray-900 text-white z-10">
       <div className="container mx-auto px-6 flex flex-col md:flex-row py-2">
         <div className="text-2xl py-1">Ragtag Archive</div>
         <div className="flex-1 flex justify-center py-1">
