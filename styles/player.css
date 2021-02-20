@@ -1,0 +1,22 @@
+.seekbar {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  transition: 0.2s;
+  background: transparent;
+}
+
+.seekbar:hover {
+  cursor: pointer;
+}
+
+.seekbar::-webkit-slider-thumb {
+  /* appearance: none; */
+  opacity: 0;
+}
+
+.seekbar::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 15px;
+  cursor: pointer;
+}

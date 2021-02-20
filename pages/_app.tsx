@@ -2,6 +2,7 @@ import NProgress from "nprogress";
 import Router from "next/router";
 import SearchProvider from "../modules/shared/hooks/search/SearchProvider";
 import "../styles/tailwind.css";
+import "../styles/player.css";
 import "nprogress/nprogress.css";
 
 NProgress.configure({

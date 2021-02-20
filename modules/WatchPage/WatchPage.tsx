@@ -3,6 +3,7 @@ import Head from "next/head";
 import PageBase from "../shared/PageBase";
 import { VideoMetadata } from "../shared/database";
 import { DRIVE_BASE_URL } from "../shared/config";
+import VideoPlayer from "../shared/VideoPlayer";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -63,69 +64,21 @@ const WatchPage = ({ videoInfo, fileList, hasChat }: WatchPageProps) => {
       </Head>
       <div className="flex md:flex-row flex-col">
         <div className={"w-full " + (hasChat ? "md:w-3/4" : "")}>
-          <div
-            className="w-full h-0 relative overflow-hidden"
-            style={{ paddingBottom: "56.25%" }}
-          >
-            {!!urlVideo && !!urlAudio ? (
-              <>
-                <video
-                  className="w-full h-full absolute"
-                  ref={refVideo}
-                  controls
-                  poster={thumbURL}
-                  onPlay={() => refAudio.current?.play()}
-                  onPause={() => refAudio.current?.pause()}
-                  onWaiting={() => refAudio.current?.pause()}
-                  onTimeUpdate={() => {
-                    if (!refAudio.current || !refVideo.current) return;
-
-                    // Resync if more than 100ms off
-                    if (
-                      Math.abs(
-                        refAudio.current.currentTime -
-                          refVideo.current.currentTime
-                      ) > 0.1
-                    )
-                      refAudio.current.currentTime =
-                        refVideo.current.currentTime;
-
-                    try {
-                      if (refVideo.current.paused) refAudio.current.pause();
-                      else refAudio.current.play();
-                    } catch (ex) {}
-                  }}
-                >
-                  <source src={urlVideo} />
-                  {fileList
-                    .filter((file) => file.endsWith(".vtt"))
-                    .map((file) => {
-                      const lang = file.split(".")[1];
-                      const url =
-                        "/api/captions?v=" +
-                        videoInfo.video_id +
-                        "&lang=" +
-                        lang;
-                      return (
-                        <track
-                          key={lang}
-                          kind="subtitles"
-                          label={lang}
-                          srcLang={lang}
-                          src={url}
-                          default={lang === "en" || lang === "en-US"}
-                        />
-                      );
-                    })}
-                </video>
-                <audio ref={refAudio}>
-                  <source src={urlAudio} />
-                </audio>
-              </>
-            ) : (
-              <div className="bg-gray-800 animate-pulse absolute inset-0" />
-            )}
-          </div>
+          <VideoPlayer
+            srcVideo={urlVideo}
+            srcAudio={urlAudio}
+            srcPoster={thumbURL}
+            captions={fileList
+              .filter((file) => file.endsWith(".vtt"))
+              .map((path) => {
+                const lang = path.split(".")[1];
+                return {
+                  lang,
+                  src:
+                    "/api/captions?v=" + videoInfo.video_id + "&lang=" + lang,
+                };
+              })}
+          />
           <div className="mt-4 mx-6">
             {!!videoInfo ? (
               <>
