@@ -1,26 +1,30 @@
 import React from "react";
-import { useSearch } from "../shared/hooks/search/useSearch";
+import Head from "next/head";
 import PageBase from "../shared/PageBase";
+import { ElasticSearchResult, VideoMetadata } from "../shared/database";
 import VideoCard from "../shared/VideoCard";
 
-const LandingPage = () => {
-  const { isLoading, searchResults } = useSearch();
+type LandingPageProps = {
+  videos: ElasticSearchResult<VideoMetadata>;
+};
 
-  const videos = isLoading ? [] : searchResults.hits.hits;
-
+const LandingPage = (props: LandingPageProps) => {
+  const { videos } = props;
   return (
     <PageBase>
-      {isLoading ? (
-        Array(5)
-          .fill(0)
-          .map(() => <VideoCard />)
-      ) : (
-        <div>
-          {videos.map(({ _source: video }) => (
-            <VideoCard video={video} key={video.video_id} />
-          ))}
-        </div>
-      )}
+      <Head>
+        <title>Ragtag Archive</title>
+      </Head>
+      <div>
+        <h1 className="text-3xl mt-16 text-center">Welcome to the archives</h1>
+        <p className="text-lg text-center mb-16">
+          Check out these latest videos
+        </p>
+
+        {videos.hits.hits.map(({ _source: video }) => (
+          <VideoCard video={video} key={video.video_id} />
+        ))}
+      </div>
     </PageBase>
   );
 };

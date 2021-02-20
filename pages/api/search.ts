@@ -7,7 +7,20 @@ import {
 } from "../../modules/shared/config";
 import axios from "axios";
 
-export const apiSearch = async (query: { q?: string; v?: string }) => {
+type SortField =
+  | "archived_timestamp"
+  | "upload_date"
+  | "duration"
+  | "view_count"
+  | "like_count"
+  | "dislike_count";
+
+export const apiSearch = async (query: {
+  q?: string;
+  v?: string;
+  sort?: SortField;
+  sort_order?: "asc" | "desc";
+}) => {
   const q = query.q || "";
   const v = query.v || "";
 
@@ -59,6 +72,14 @@ export const apiSearch = async (query: { q?: string; v?: string }) => {
       },
     },
   };
+
+  if (query.sort) {
+    requestData["sort"] = [
+      {
+        [query.sort]: query.sort_order || "asc",
+      },
+    ];
+  }
 
   return axios.request({
     method: "get",
