@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DRIVE_BASE_URL } from "./config";
 import { VideoMetadata } from "./database";
 import { formatSeconds } from "./formatSeconds";
+import { format } from "timeago.js";
 
 export type VideoCardProps = {
   video?: VideoMetadata;
@@ -42,7 +43,8 @@ const VideoCard = ({ video }: VideoCardProps) => {
                   <p>
                     {Intl.NumberFormat("en-US").format(video.view_count)} views
                     &middot; Uploaded{" "}
-                    {new Date(video.upload_date).toLocaleDateString()}
+                    {new Date(video.upload_date).toLocaleDateString()} &middot;
+                    Archived {format(video.archived_timestamp + "Z", "en_US")}
                   </p>
                 </div>
               </a>
