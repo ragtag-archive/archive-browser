@@ -30,7 +30,16 @@ export const apiSearch = async (query: { q?: string; v?: string }) => {
           },
         }
       : !q
-      ? undefined
+      ? {
+          query: {
+            match_all: {},
+          },
+          sort: [
+            {
+              upload_date: "desc",
+            },
+          ],
+        }
       : {
           query: {
             bool: {
