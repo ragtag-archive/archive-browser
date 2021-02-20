@@ -9,6 +9,7 @@ import axios from "axios";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const q = req.query.q || "";
+  const v = req.query.v || "";
 
   const searchRes = await axios.request({
     method: "get",
@@ -18,7 +19,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       username: ES_BASIC_USERNAME,
       password: ES_BASIC_PASSWORD,
     },
-    data: !q
+    data: !!v
+      ? {
+          query: {
+            match: {
+              video_id: {
+                query: v,
+              },
+            },
+          },
+        }
+      : !q
       ? undefined
       : {
           query: {

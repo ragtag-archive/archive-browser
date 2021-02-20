@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { useSearch } from "./hooks/search/useSearch";
 import { useDebounce } from "./hooks/useDebounce";
 
@@ -14,7 +15,11 @@ const Header = () => {
   return (
     <div className="fixed inset-x-0 top-0 bg-gray-900 text-white z-10">
       <div className="container mx-auto px-6 flex flex-col md:flex-row py-2">
-        <div className="text-2xl py-1">Ragtag Archive</div>
+        <div className="text-2xl py-1">
+          <Link href="/">
+            <a>Ragtag Archive</a>
+          </Link>
+        </div>
         <div className="flex-1 flex justify-center py-1">
           <input
             type="text"
