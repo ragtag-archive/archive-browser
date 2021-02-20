@@ -6,12 +6,13 @@ import { DRIVE_BASE_URL } from "../shared/config";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
-type WatchPageProps = {
+export type WatchPageProps = {
   videoInfo: VideoMetadata;
   fileList: string[];
+  hasChat: boolean;
 };
 
-const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
+const WatchPage = ({ videoInfo, fileList, hasChat }: WatchPageProps) => {
   const refVideo = React.useRef<HTMLVideoElement>(null);
   const refAudio = React.useRef<HTMLAudioElement>(null);
 
@@ -61,14 +62,15 @@ const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
         <meta property="twitter:image" content={thumbURL} />
       </Head>
       <div className="flex md:flex-row flex-col">
-        <div className="md:w-3/4 w-full">
+        <div className={"w-full " + (hasChat ? "md:w-3/4" : "")}>
           <div
-            className="w-full h-0 relative"
+            className="w-full h-0 relative overflow-hidden"
             style={{ paddingBottom: "56.25%" }}
           >
             {!!urlVideo && !!urlAudio ? (
               <>
                 <video
+                  className="w-full h-full absolute"
                   ref={refVideo}
                   controls
                   poster={thumbURL}
@@ -124,7 +126,7 @@ const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
               <div className="bg-gray-800 animate-pulse absolute inset-0" />
             )}
           </div>
-          <div className="mt-4 md:mx-0 mx-6">
+          <div className="mt-4 mx-6">
             {!!videoInfo ? (
               <>
                 <div className="flex md:flex-row flex-col">
@@ -170,9 +172,11 @@ const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
             )}
           </div>
         </div>
-        <div className="w-1/4">
-          <h4>Chat replay (coming soon)</h4>
-        </div>
+        {hasChat && (
+          <div className="w-1/4">
+            <h4>Chat replay (coming soon)</h4>
+          </div>
+        )}
       </div>
     </PageBase>
   );
