@@ -28,7 +28,7 @@ const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
   return (
     <PageBase>
       <div className="flex md:flex-row flex-col">
-        <div className="w-3/4">
+        <div className="md:w-3/4 w-full">
           <div
             className="w-full h-0 relative"
             style={{ paddingBottom: "56.25%" }}
@@ -71,10 +71,10 @@ const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
               <div className="bg-gray-800 animate-pulse absolute inset-0" />
             )}
           </div>
-          <div className="mt-4">
+          <div className="mt-4 md:mx-0 mx-6">
             {!!videoInfo ? (
               <>
-                <div className="flex flex-row">
+                <div className="flex md:flex-row flex-col">
                   <div className="flex-1">
                     <h1 className="text-2xl mb-2">{videoInfo.title}</h1>
                     <h2 className="mb-4">{videoInfo.channel_name}</h2>
@@ -95,13 +95,15 @@ const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
                   <div>
                     <a
                       href={mkvURL}
-                      className="block bg-blue-500 px-4 py-2 rounded"
+                      className="block bg-blue-500 px-4 py-2 rounded mb-4"
                     >
                       Download .mkv
                     </a>
                   </div>
                 </div>
-                <p className="whitespace-pre-line">{videoInfo.description}</p>
+                <p className="whitespace-pre-line break-words">
+                  {videoInfo.description}
+                </p>
               </>
             ) : (
               <>

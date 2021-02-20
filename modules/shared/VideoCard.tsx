@@ -38,8 +38,12 @@ const VideoCard = ({ video }: VideoCardProps) => {
               <a>
                 <div>
                   <h2 className="font-bold text-xl">{video.title}</h2>
-                  <h3>{video.channel_name}</h3>
-                  <p>{video.description.substr(0, 100)}...</p>
+                  <p>{video.channel_name}</p>
+                  <p>
+                    {Intl.NumberFormat("en-US").format(video.view_count)} views
+                    &middot; Uploaded{" "}
+                    {new Date(video.upload_date).toLocaleDateString()}
+                  </p>
                 </div>
               </a>
             </Link>
