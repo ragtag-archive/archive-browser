@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 import Header from "./Header";
 
 export type PageBaseProps = {
@@ -8,6 +9,9 @@ export type PageBaseProps = {
 const PageBase = (props: PageBaseProps) => {
   return (
     <div className="bg-black text-white md:pt-16 pt-24">
+      <Head>
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+      </Head>
       <Header />
       <div className="container mx-auto">{props.children}</div>
     </div>
