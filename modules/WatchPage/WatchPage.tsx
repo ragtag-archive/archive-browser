@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 import PageBase from "../shared/PageBase";
 import { VideoMetadata } from "../shared/database";
 import { DRIVE_BASE_URL } from "../shared/config";
@@ -27,6 +28,38 @@ const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
 
   return (
     <PageBase>
+      <Head>
+        <title>{videoInfo.title} - Ragtag Archive</title>
+        <meta name="title" content={videoInfo.title} />
+        <meta
+          name="description"
+          content={videoInfo.description.substr(0, 160)}
+        />
+
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content={"https://archive.ragtag.moe/watch?v=" + videoInfo.video_id}
+        />
+        <meta property="og:title" content={videoInfo.title} />
+        <meta
+          property="og:description"
+          content={videoInfo.description.substr(0, 160)}
+        />
+        <meta property="og:image" content={thumbURL} />
+
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta
+          property="twitter:url"
+          content={"https://archive.ragtag.moe/watch?v=" + videoInfo.video_id}
+        />
+        <meta property="twitter:title" content={videoInfo.title} />
+        <meta
+          property="twitter:description"
+          content={videoInfo.description.substr(0, 160)}
+        />
+        <meta property="twitter:image" content={thumbURL} />
+      </Head>
       <div className="flex md:flex-row flex-col">
         <div className="md:w-3/4 w-full">
           <div
