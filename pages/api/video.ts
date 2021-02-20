@@ -2,9 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { DRIVE_BASE_URL } from "../../modules/shared/config";
 import axios from "axios";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const v = req.query.v || "";
-  if (!v) return res.status(400).json({ ok: false });
+export const apiVideo = async (query: { v?: string }) => {
+  const v = query.v || "";
+  if (!v) return { ok: false };
 
   const searchRes = await axios.request({
     method: "get",
@@ -20,8 +20,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (m) urls.push(m[1]);
   } while (m);
 
-  res.json({
+  return {
     ok: true,
     urls,
-  });
+  };
+};
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  res.json(await apiVideo({ v: req.query.v as string }));
 };

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DRIVE_BASE_URL } from "./config";
 import { VideoMetadata } from "./database";
+import { formatSeconds } from "./formatSeconds";
 
 export type VideoCardProps = {
   video?: VideoMetadata;
@@ -23,6 +24,9 @@ const VideoCard = ({ video }: VideoCardProps) => {
             >
               <div className="bg-gray-800 animate-pulse absolute inset-0" />
               {!!video && <img src={thumbURL} className="absolute inset-0" />}
+              <div className="absolute right-0 bottom-0 bg-black text-white px-2 opacity-75 rounded m-2">
+                {formatSeconds(video?.duration || 0)}
+              </div>
             </div>
           </a>
         </Link>

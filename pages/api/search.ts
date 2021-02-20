@@ -7,11 +7,11 @@ import {
 } from "../../modules/shared/config";
 import axios from "axios";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const q = req.query.q || "";
-  const v = req.query.v || "";
+export const apiSearch = async (query: { q?: string; v?: string }) => {
+  const q = query.q || "";
+  const v = query.v || "";
 
-  const searchRes = await axios.request({
+  return axios.request({
     method: "get",
     baseURL: ES_BACKEND_URL,
     url: "/" + ES_INDEX + "/_search",
@@ -67,6 +67,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           },
         },
   });
+};
 
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const searchRes = await apiSearch({
+    q: req.query.q as string,
+    v: req.query.v as string,
+  });
   res.json(searchRes.data);
 };

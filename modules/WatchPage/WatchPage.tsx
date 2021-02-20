@@ -6,52 +6,23 @@ import { DRIVE_BASE_URL } from "../shared/config";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
-const WatchPage = () => {
-  const router = useRouter();
-  const [videoExists, setVideoExists] = React.useState(true);
-  const [videoInfo, setVideoInfo] = React.useState<VideoMetadata>(null);
-  const [fileList, setFileList] = React.useState<string[]>([]);
+type WatchPageProps = {
+  videoInfo: VideoMetadata;
+  fileList: string[];
+};
+
+const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
+  const videoExists = videoInfo !== null;
 
   const refVideo = React.useRef<HTMLVideoElement>(null);
   const refAudio = React.useRef<HTMLAudioElement>(null);
 
-  const fetchVideo = async (id: string) => {
-    fetch("/api/search?v=" + id)
-      .then((res) => res.json())
-      .then((res: ElasticSearchResult<VideoMetadata>) => {
-        if (res.hits.total.value === 0) setVideoExists(false);
-        else {
-          setVideoInfo(res.hits.hits[0]._source);
-          setVideoExists(true);
-        }
-      });
-
-    fetch("/api/video?v=" + id)
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.ok) setFileList(res.urls);
-        // TODO: handle if not ok
-      });
-  };
-
-  React.useEffect(() => {
-    if (router.query.v) fetchVideo(router.query.v as string);
-    // else setVideoExists(false);
-  }, [router.query]);
-
-  if (videoInfo === null || fileList.length === 0)
-    return (
-      <PageBase>
-        <div className="text-center text-3xl mt-4">Loading...</div>
-      </PageBase>
-    );
-
   const videoBase =
-    DRIVE_BASE_URL + "/" + videoInfo?.video_id + "/" + videoInfo?.video_id;
+    DRIVE_BASE_URL + "/" + videoInfo.video_id + "/" + videoInfo.video_id;
   const mkvURL = videoBase + ".mkv";
   const thumbURL = videoBase + ".webp";
 
-  const [fmtVideo, fmtAudio] = videoInfo?.format_id?.split?.("+") || ["-", "-"];
+  const [fmtVideo, fmtAudio] = videoInfo.format_id.split("+");
   const urlVideo =
     DRIVE_BASE_URL + fileList.find((file) => file.includes(".f" + fmtVideo));
   const urlAudio =
