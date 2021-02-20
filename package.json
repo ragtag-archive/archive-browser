@@ -12,12 +12,14 @@
     "@types/axios": "^0.14.0",
     "axios": "^0.21.1",
     "next": "10.0.1",
+    "nprogress": "^0.2.0",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },
   "devDependencies": {
     "@tailwindcss/ui": "^0.7.2",
     "@types/node": "^14.14.7",
+    "@types/nprogress": "^0.2.0",
     "@types/react": "^16.9.56",
     "@types/react-dom": "^16.9.9",
     "postcss": "^8.2.5",
