@@ -65,7 +65,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         <div className="w-full h-4 relative group">
           <div className="absolute bottom-0 bg-white opacity-50 h-1 group-hover:h-2 w-full transition-all duration-200" />
           <div
-            className="absolute bottom-0 bg-red-500 h-1 group-hover:h-2"
+            className="absolute bottom-0 bg-blue-500 h-1 group-hover:h-2"
             style={{
               transition: "height .2s",
               width:
@@ -91,7 +91,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             <button
               type="button"
               onClick={handlePlayPause}
-              className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded"
+              className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +116,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             <button
               type="button"
               onClick={handleMuteUnmute}
-              className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded"
+              className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
             >
               {audioVolume === 0 ? (
                 <svg
@@ -144,6 +144,16 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 </svg>
               )}
             </button>
+
+            <input
+              type="range"
+              className="slider"
+              value={audioVolume}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={(e) => setAudioVolume(Number(e.target.value))}
+            />
           </div>
           <div>{/*<button type="button">CC</button>*/}</div>
         </div>
