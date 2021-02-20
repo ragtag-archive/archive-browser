@@ -95,6 +95,26 @@ const WatchPage = ({ videoInfo, fileList }: WatchPageProps) => {
                   }}
                 >
                   <source src={urlVideo} />
+                  {fileList
+                    .filter((file) => file.endsWith(".vtt"))
+                    .map((file) => {
+                      const lang = file.split(".")[1];
+                      const url =
+                        "/api/captions?v=" +
+                        videoInfo.video_id +
+                        "&lang=" +
+                        lang;
+                      return (
+                        <track
+                          key={lang}
+                          kind="subtitles"
+                          label={lang}
+                          srcLang={lang}
+                          src={url}
+                          default={lang === "en" || lang === "en-US"}
+                        />
+                      );
+                    })}
                 </video>
                 <audio ref={refAudio}>
                   <source src={urlAudio} />
