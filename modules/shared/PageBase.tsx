@@ -10,7 +10,7 @@ const PageBase = (props: PageBaseProps) => {
   return (
     <div className="bg-black text-white md:pt-16 pt-24">
       <Head>
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.png" type="image/png" />
       </Head>
       <Header />
       <div className="container mx-auto">{props.children}</div>
