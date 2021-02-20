@@ -24,7 +24,12 @@ const VideoCard = ({ video }: VideoCardProps) => {
               style={{ paddingBottom: "56.25%" }}
             >
               <div className="bg-gray-800 animate-pulse absolute inset-0" />
-              {!!video && <img src={thumbURL} className="absolute inset-0" />}
+              {!!video && (
+                <img
+                  src={thumbURL}
+                  className="absolute inset-0 w-full h-full"
+                />
+              )}
               <div className="absolute right-0 bottom-0 bg-black text-white px-2 bg-opacity-75 rounded m-2">
                 {formatSeconds(video?.duration || 0)}
               </div>
