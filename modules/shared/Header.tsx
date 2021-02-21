@@ -38,9 +38,10 @@ const Header = () => {
             />
           </form>
         </div>
-        {/* Quick hack to center the search box */}
-        <div className="text-2xl py-1 opacity-0 hidden md:block" aria-hidden>
-          Ragtag Archive
+        <div className="py-2">
+          <Link href="/request">
+            <a>Request</a>
+          </Link>
         </div>
       </div>
     </div>
