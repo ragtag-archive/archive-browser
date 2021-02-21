@@ -161,7 +161,7 @@ const WatchPage = ({
             )}
           </div>
         </div>
-        <div className="w-1/4 md:pl-4">
+        <div className="w-full md:w-1/4 md:pl-4">
           {!hasChat ? (
             <div className="border border-gray-800 rounded p-4 text-center">
               <p>Chat replay unavailable</p>

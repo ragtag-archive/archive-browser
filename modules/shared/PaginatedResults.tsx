@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { ElasticSearchResult, VideoMetadata } from "./database";
 import Link from "next/link";
 import VideoCard from "./VideoCard";
+import {formatNumber} from "./format";
 
 export type PaginatedResultsProps = {
   results: ElasticSearchResult<VideoMetadata>;
@@ -22,6 +23,11 @@ const PaginatedResults = (props: PaginatedResultsProps) => {
 
   return (
     <>
+        <p className="md:px-0 px-4">
+          Showing results {from + 1}-
+          {Math.min(results.hits.total.value, from + size)} of{" "}
+          {formatNumber(results.hits.total.value)}
+        </p>
       {videos.map(({ _source: video }) => (
         <VideoCard video={video} key={video.video_id} />
       ))}

@@ -1,7 +1,6 @@
 import React from "react";
 import Head from "next/head";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database";
-import { formatNumber } from "./shared/format";
 import PageBase from "./shared/PageBase";
 import PaginatedResults from "./shared/PaginatedResults";
 
@@ -27,11 +26,6 @@ const ChannelPage = (props: ChannelPageProps) => {
           <p className="text-lg text-center">All videos from</p>
           <h1 className="text-3xl text-center">{channelName}</h1>
         </div>
-        <p>
-          Showing results {props.from + 1}-
-          {Math.min(props.results.hits.total.value, props.from + props.size)} of{" "}
-          {formatNumber(props.results.hits.total.value)}
-        </p>
         <PaginatedResults {...rest} />
       </div>
     </PageBase>

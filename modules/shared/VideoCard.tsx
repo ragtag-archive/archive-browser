@@ -42,7 +42,7 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
           </a>
         </Link>
       </div>
-      <div className={small ? "py-2" : "flex-1 px-4 py-2"}>
+      <div className={small ? "py-2 md:px-0 px-4" : "flex-1 px-4 py-2"}>
         {!!video ? (
           <>
             <Link href={video ? "/watch?v=" + video?.video_id : ""}>
