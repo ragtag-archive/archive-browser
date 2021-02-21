@@ -11,6 +11,7 @@ export type ChatReplayPanelProps = {
 const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [replayData, setReplayData] = React.useState<ChatMessage[]>(null);
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
+  const refChatScrollDiv = React.useRef<HTMLDivElement>(null);
 
   const downloadChatData = async () => {
     setDownloadProgress(0);
@@ -21,6 +22,14 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
     });
     setReplayData(data.data);
   };
+
+  React.useEffect(() => {
+    if (refChatScrollDiv.current)
+      refChatScrollDiv.current.scrollTo({
+        top: refChatScrollDiv.current.scrollHeight,
+        behavior: "smooth",
+      });
+  }, [props.currentTimeSeconds]);
 
   if (replayData === null)
     return (
@@ -44,7 +53,10 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
     );
 
   return (
-    <div className="border border-gray-800 rounded h-96 overflow-y-scroll">
+    <div
+      className="border border-gray-800 rounded h-96 overflow-y-scroll"
+      ref={refChatScrollDiv}
+    >
       <ChatReplay
         currentTimeSeconds={props.currentTimeSeconds}
         replayData={replayData}
