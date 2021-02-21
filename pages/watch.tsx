@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { ElasticSearchResult, VideoMetadata } from "../modules/shared/database";
-import WatchPage, { WatchPageProps } from "../modules/WatchPage/WatchPage";
+import WatchPage, { WatchPageProps } from "../modules/WatchPage";
 import { apiSearch } from "./api/search";
 import { apiVideo } from "./api/video";
 

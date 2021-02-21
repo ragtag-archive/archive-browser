@@ -8,3 +8,13 @@ export const formatSeconds = (seconds: number) => {
   if (h > 0) return h + ":" + mmss;
   return mmss;
 };
+
+export const formatNumber = (num: number) =>
+  Intl.NumberFormat("en-US").format(num);
+
+export const formatDate = (date: Date) =>
+  Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);

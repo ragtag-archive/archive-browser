@@ -1,8 +1,8 @@
 import React from "react";
 import Head from "next/head";
-import PageBase from "../shared/PageBase";
-import { ElasticSearchResult, VideoMetadata } from "../shared/database";
-import VideoCard from "../shared/VideoCard";
+import PageBase from "./shared/PageBase";
+import { ElasticSearchResult, VideoMetadata } from "./shared/database";
+import VideoCard from "./shared/VideoCard";
 
 export type SearchPageProps = {
   q: string;

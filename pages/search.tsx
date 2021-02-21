@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import SearchPage, { SearchPageProps } from "../modules/SearchPage/SearchPage";
+import SearchPage, { SearchPageProps } from "../modules/SearchPage";
 import { apiSearch } from "./api/search";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

@@ -13,7 +13,7 @@ const PageBase = (props: PageBaseProps) => {
         <link rel="shortcut icon" href="/favicon.png" type="image/png" />
       </Head>
       <Header />
-      <div className="container mx-auto">{props.children}</div>
+      <div className="container mx-auto mt-4">{props.children}</div>
     </div>
   );
 };

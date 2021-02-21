@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DRIVE_BASE_URL } from "./config";
 import { VideoMetadata } from "./database";
-import { formatSeconds } from "./formatSeconds";
+import { formatSeconds } from "./format";
 import { format } from "timeago.js";
 
 export type VideoCardProps = {
@@ -55,8 +55,31 @@ const VideoCard = ({ video }: VideoCardProps) => {
               </a>
             </Link>
             <div className="flex flex-row mt-2">
-              <a href={mkvURL} className="block bg-blue-500 px-4 py-2 rounded">
+              <a
+                href={mkvURL}
+                className="
+                  bg-gray-800
+                  hover:bg-gray-700
+                  focus:bg-gray-900 focus:outline-none
+                  px-4 py-2 mr-2 rounded
+                  transition duration-200
+                "
+              >
                 Download .mkv
+              </a>
+              <a
+                href={"https://youtu.be/" + video.video_id}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="
+                  bg-gray-800
+                  hover:bg-gray-700
+                  focus:bg-gray-900 focus:outline-none
+                  px-4 py-2 mr-2 rounded
+                  transition duration-200
+                "
+              >
+                Watch on YouTube
               </a>
             </div>
           </>

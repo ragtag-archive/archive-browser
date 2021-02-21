@@ -42,3 +42,72 @@ export type ElasticSearchResult<T> = {
     hits: Array<ElasticSearchDocument<T>>;
   };
 };
+
+type ChatMessageBase = {
+  time_in_seconds: number;
+  action_type: "add_chat_item" | "add_live_chat_ticker_item" | string;
+  message_id: string;
+  timestamp: number;
+  time_text: string;
+  message: string;
+};
+
+type ChatMessageImage = {
+  url: string;
+  id: string;
+  width?: number;
+  height?: number;
+};
+
+type ChatMessageAuthorBadge = {
+  title: string;
+  icons: ChatMessageImage[];
+};
+
+type ChatMessageAuthor = {
+  name: string;
+  id: string;
+  images: ChatMessageImage[];
+  badges?: ChatMessageAuthorBadge[];
+};
+
+type ChatMessageMoney = {
+  text: string;
+  amount: number;
+  currency: string;
+  currency_symbol: string;
+};
+
+type ChatViewerEngagementMessage = ChatMessageBase & {
+  icon: "YOUTUBE_ROUND";
+  message_type: "viewer_engagement_message";
+};
+
+type ChatTextMessage = ChatMessageBase & {
+  message_type: "text_message";
+  author: ChatMessageAuthor;
+};
+
+type ChatMembershipItem = ChatMessageBase & {
+  message_type: "membership_item";
+  author: ChatMessageAuthor;
+};
+
+type ChatPaidMessage = ChatMessageBase & {
+  message_type: "paid_message";
+  author: ChatMessageAuthor & {
+    name_text_colour?: string;
+  };
+  money: ChatMessageMoney;
+  timestamp_colour: string;
+  body_background_colour: string;
+  header_text_colour: string;
+  header_background_colour: string;
+  body_text_colour: string;
+};
+
+export type ChatMessage =
+  | ChatViewerEngagementMessage
+  | ChatTextMessage
+  | ChatMembershipItem
+  | ChatPaidMessage;

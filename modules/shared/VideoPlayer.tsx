@@ -1,5 +1,5 @@
 import React from "react";
-import { formatSeconds } from "./formatSeconds";
+import { formatSeconds } from "./format";
 
 type CaptionsTrack = {
   lang: string;
@@ -11,6 +11,7 @@ export type VideoPlayerProps = {
   srcAudio: string;
   srcPoster: string;
   captions?: CaptionsTrack[];
+  onPlaybackProgress?: (progress: number) => any;
 };
 
 const VideoPlayer = (props: VideoPlayerProps) => {
@@ -84,6 +85,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const isLoading =
     !refVideo.current || !refAudio.current || !videoReady || !audioReady;
 
+  const controlsVisible = new Date().getTime() - lastActive < 5000;
+
   return (
     <div
       className={
@@ -111,11 +114,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           </div>
         </div>
         <div
-          className="absolute inset-x-0 bottom-0 z-10 px-6 transition duration-200"
+          className="absolute inset-x-0 bottom-0 z-20 px-6 transition duration-200"
           style={{
             background:
               "linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 100%)",
-            opacity: new Date().getTime() - lastActive > 5000 ? 0 : 1,
+            opacity: controlsVisible ? 1 : 0,
           }}
         >
           <div className="w-full h-4 relative group">
@@ -137,6 +140,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
               max={refVideo.current?.duration}
               onChange={(e) => {
                 const val = Number(e.target.value);
+                setLastActive(new Date().getTime());
                 setPlaybackProgress(val);
                 if (refVideo.current) {
                   refVideo.current.pause();
@@ -253,8 +257,16 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           poster={srcPoster}
           onCanPlay={() => setVideoReady(true)}
           onPlaying={() => setVideoReady(true)}
-          onPlay={() => refAudio.current?.play()}
-          onPause={() => refAudio.current?.pause()}
+          onPlay={() => {
+            if (!refAudio.current) return;
+            refAudio.current.currentTime = refVideo.current.currentTime;
+            refAudio.current.play();
+          }}
+          onPause={() => {
+            if (!refAudio.current) return;
+            refAudio.current.currentTime = refVideo.current.currentTime;
+            refAudio.current.pause();
+          }}
           onWaiting={() => refAudio.current?.pause()}
           onClick={handlePlayPause}
           onTimeUpdate={() => {
@@ -262,11 +274,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
             setPlaybackProgress(refVideo.current.currentTime);
 
-            // Resync if more than 200ms off
+            // Resync if more than 500ms off
             if (
               Math.abs(
                 refAudio.current.currentTime - refVideo.current.currentTime
-              ) > 0.2
+              ) > 0.5
             )
               refAudio.current.currentTime = refVideo.current.currentTime;
 
@@ -274,6 +286,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
               if (refVideo.current.paused) refAudio.current.pause();
               else refAudio.current.play();
             } catch (ex) {}
+
+            // Update parent
+            props.onPlaybackProgress?.(refVideo.current.currentTime);
           }}
         >
           <source src={srcVideo} />
