@@ -10,8 +10,18 @@
   cursor: pointer;
 }
 
+/*
+ * The styles have to be separated
+ * https://stackoverflow.com/a/42130838
+ */
 .seekbar::-webkit-slider-thumb {
-  /* appearance: none; */
+  -webkit-appearance: none;
+  appearance: none;
+  opacity: 0;
+}
+.seekbar::-moz-range-thumb {
+  -webkit-appearance: none;
+  appearance: none;
   opacity: 0;
 }
 
@@ -39,7 +49,22 @@
   margin-top: -2.5px;
   border-radius: 10px;
 }
+.slider::-moz-range-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fff;
+  width: 10px;
+  height: 10px;
+  margin-top: -2.5px;
+  border-radius: 10px;
+  border: 0;
+}
 .slider::-webkit-slider-runnable-track {
+  background: rgba(255, 255, 255, 0.5);
+  height: 5px;
+  margin-bottom: 5px;
+}
+.slider::-moz-range-track {
   background: rgba(255, 255, 255, 0.5);
   height: 5px;
   margin-bottom: 5px;
