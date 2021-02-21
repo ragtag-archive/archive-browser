@@ -21,10 +21,14 @@ export const apiSearch = async (query: {
   sort?: SortField;
   sort_order?: "asc" | "desc";
   more_like_this?: string;
+  from?: number;
+  size?: number;
 }) => {
   const q = query.q || "";
   const v = query.v || "";
   const mlt = query.more_like_this || "";
+  const from = query.from || 0;
+  const size = query.size || 10;
 
   const should = [];
 
@@ -75,6 +79,8 @@ export const apiSearch = async (query: {
     });
 
   const requestData = {
+    from,
+    size,
     query: {
       bool: {
         should,

@@ -5,12 +5,15 @@ import { apiSearch } from "./api/search";
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const q = ctx.query.q as string;
   const page = Number(ctx.query.page as string) || 1;
-  const results = (await apiSearch({ q })).data;
+  const size = 25;
+  const from = (page - 1) * size;
+  const results = (await apiSearch({ q, from, size })).data;
 
   const props: SearchPageProps = {
     q,
     results,
     page,
+    from, size
   };
 
   return { props };
