@@ -18,14 +18,16 @@ type SortField =
 export const apiSearch = async (query: {
   q?: string;
   v?: string;
+  channel_id?: string;
   sort?: SortField;
   sort_order?: "asc" | "desc";
-  more_like_this?: string;
+  more_like_this?: { title: string; description: string; channel_name: string };
   from?: number;
   size?: number;
 }) => {
   const q = query.q || "";
   const v = query.v || "";
+  const channel_id = query.channel_id;
   const mlt = query.more_like_this || "";
   const from = query.from || 0;
   const size = query.size || 10;
@@ -33,6 +35,7 @@ export const apiSearch = async (query: {
   const should = [];
 
   if (v) should.push({ match: { video_id: { query: v } } });
+  if (channel_id) should.push({ match: { channel_id: { query: channel_id } } });
   if (q)
     should.push(
       {
@@ -71,12 +74,26 @@ export const apiSearch = async (query: {
       }
     );
   if (mlt)
-    should.push({
-      more_like_this: {
-        fields: ["title", "description", "channel_name"],
-        like: mlt,
+    should.push(
+      {
+        more_like_this: {
+          fields: ["title"],
+          like: mlt.title,
+        },
       },
-    });
+      {
+        more_like_this: {
+          fields: ["description"],
+          like: mlt.description,
+        },
+      },
+      {
+        more_like_this: {
+          fields: ["channel_name"],
+          like: mlt.channel_name,
+        },
+      }
+    );
 
   const requestData = {
     from,

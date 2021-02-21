@@ -1,12 +1,13 @@
 import React from "react";
 import Head from "next/head";
-import PageBase from "./shared/PageBase";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database";
 import { formatNumber } from "./shared/format";
+import PageBase from "./shared/PageBase";
 import PaginatedResults from "./shared/PaginatedResults";
 
-export type SearchPageProps = {
-  q: string;
+export type ChannelPageProps = {
+  channelId: string;
+  channelName: string;
 
   results: ElasticSearchResult<VideoMetadata>;
   page: number;
@@ -14,14 +15,18 @@ export type SearchPageProps = {
   size: number;
 };
 
-const SearchPage = (props: SearchPageProps) => {
-  const { q, ...rest } = props;
+const ChannelPage = (props: ChannelPageProps) => {
+  const { channelId, channelName, ...rest } = props;
   return (
     <PageBase>
       <Head>
-        <title>{q} - Ragtag Archive</title>
+        <title>{channelName} - Ragtag Archive</title>
       </Head>
       <div>
+        <div className="px-4 my-16">
+          <p className="text-lg text-center">All videos from</p>
+          <h1 className="text-3xl text-center">{channelName}</h1>
+        </div>
         <p>
           Showing results {props.from + 1}-
           {Math.min(props.results.hits.total.value, props.from + props.size)} of{" "}
@@ -33,4 +38,4 @@ const SearchPage = (props: SearchPageProps) => {
   );
 };
 
-export default SearchPage;
+export default ChannelPage;

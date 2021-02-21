@@ -19,8 +19,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     if (_searchResult.hits.total.value === 0) return { notFound: true };
     const videoInfo = _searchResult.hits.hits[0]._source;
 
-    const related = (await apiSearch({ more_like_this: videoInfo.description }))
-      .data as ElasticSearchResult<VideoMetadata>;
+    const related = (
+      await apiSearch({
+        more_like_this: {
+          title: videoInfo.title,
+          description: videoInfo.description,
+          channel_name: videoInfo.channel_name,
+        },
+      })
+    ).data as ElasticSearchResult<VideoMetadata>;
 
     const props: WatchPageProps = {
       videoInfo,

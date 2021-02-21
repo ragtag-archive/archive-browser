@@ -7,6 +7,7 @@ import VideoPlayer from "./shared/VideoPlayer";
 import { formatDate } from "./shared/format";
 import ChatReplayPanel from "./shared/ChatReplayPanel";
 import VideoCard from "./shared/VideoCard";
+import Link from "next/link";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -138,9 +139,11 @@ const WatchPage = ({
                   </a>
                 </div>
                 <div className="mt-4">
-                  <h2 className="mb-4 font-bold text-lg">
-                    {videoInfo.channel_name}
-                  </h2>
+                  <Link href={"/channel/" + videoInfo.channel_id}>
+                    <a className="mb-4 font-bold text-lg inline-block mb-4 hover:underline">
+                      {videoInfo.channel_name}
+                    </a>
+                  </Link>
                   <p className="whitespace-pre-line break-words">
                     {videoInfo.description}
                   </p>

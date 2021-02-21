@@ -53,11 +53,17 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
                   >
                     {video.title}
                   </h2>
-                  <p
-                    className={["text-gray-400", small && "text-sm"].join(" ")}
-                  >
-                    {video.channel_name}
-                  </p>
+                  <Link href={"/channel/" + video.channel_id}>
+                    <a
+                      className={[
+                        "text-gray-400 hover:text-white hover:underline inline-block",
+                        "transition duration-200",
+                        small && "text-sm",
+                      ].join(" ")}
+                    >
+                      {video.channel_name}
+                    </a>
+                  </Link>
                   <p
                     className={["text-gray-400", small && "text-sm"].join(" ")}
                   >
