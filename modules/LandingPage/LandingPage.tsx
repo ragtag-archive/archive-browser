@@ -16,10 +16,14 @@ const LandingPage = (props: LandingPageProps) => {
         <title>Ragtag Archive</title>
       </Head>
       <div>
-        <h1 className="text-3xl mt-16 text-center">Welcome to the archives</h1>
-        <p className="text-lg text-center mb-16">
-          We have {videos.hits.total.value} videos. Here are the latest ones.
-        </p>
+        <div className="px-4">
+          <h1 className="text-3xl mt-16 text-center">
+            Welcome to the archives
+          </h1>
+          <p className="text-lg text-center mb-16">
+            We have {videos.hits.total.value} videos. Here are the latest ones.
+          </p>
+        </div>
 
         {videos.hits.hits.map(({ _source: video }) => (
           <VideoCard video={video} key={video.video_id} />

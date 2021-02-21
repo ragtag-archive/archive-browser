@@ -8,7 +8,7 @@ export type PageBaseProps = {
 
 const PageBase = (props: PageBaseProps) => {
   return (
-    <div className="bg-black text-white md:pt-16 pt-24">
+    <div className="bg-black text-white">
       <Head>
         <link rel="shortcut icon" href="/favicon.png" type="image/png" />
       </Head>

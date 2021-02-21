@@ -13,7 +13,7 @@ const Header = () => {
   };
 
   return (
-    <div className="fixed inset-x-0 top-0 bg-gray-900 text-white z-10">
+    <div className="bg-gray-900 text-white">
       <div className="container mx-auto px-6 flex flex-col md:flex-row py-2">
         <div className="text-2xl py-1">
           <Link href="/">
