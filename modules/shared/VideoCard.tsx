@@ -47,45 +47,39 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
           <>
             <Link href={video ? "/watch?v=" + video?.video_id : ""}>
               <a>
-                <div>
-                  <h2
-                    className={["font-bold", small ? "" : "text-xl"].join(" ")}
-                  >
-                    {video.title}
-                  </h2>
-                  <Link href={"/channel/" + video.channel_id}>
-                    <a
-                      className={[
-                        "text-gray-400 hover:text-white hover:underline inline-block",
-                        "transition duration-200",
-                        small && "text-sm",
-                      ].join(" ")}
-                    >
-                      {video.channel_name}
-                    </a>
-                  </Link>
-                  <p
-                    className={["text-gray-400", small && "text-sm"].join(" ")}
-                  >
-                    {Intl.NumberFormat("en-US").format(video.view_count)} views
-                    &middot; Uploaded {formatDate(new Date(video.upload_date))}{" "}
-                    &middot; Archived{" "}
-                    {format(video.archived_timestamp + "Z", "en_US")}
-                  </p>
-                </div>
+                <h2 className={["font-bold", small ? "" : "text-xl"].join(" ")}>
+                  {video.title}
+                </h2>
               </a>
             </Link>
+            <Link href={"/channel/" + video.channel_id}>
+              <a
+                className={[
+                  "text-gray-400 hover:text-white hover:underline inline-block",
+                  "transition duration-200",
+                  small && "text-sm",
+                ].join(" ")}
+              >
+                {video.channel_name}
+              </a>
+            </Link>
+            <p className={["text-gray-400", small && "text-sm"].join(" ")}>
+              {Intl.NumberFormat("en-US").format(video.view_count)} views
+              &middot; Uploaded {formatDate(new Date(video.upload_date))}{" "}
+              &middot; Archived{" "}
+              {format(video.archived_timestamp + "Z", "en_US")}
+            </p>
             {!small && (
               <div className="flex flex-row mt-2">
                 <a
                   href={mkvURL}
                   className="
-                  bg-gray-800
-                  hover:bg-gray-700
-                  focus:bg-gray-900 focus:outline-none
-                  px-4 py-2 mr-2 rounded
-                  transition duration-200
-                "
+                    bg-gray-800
+                    hover:bg-gray-700
+                    focus:bg-gray-900 focus:outline-none
+                    px-4 py-2 mr-2 rounded
+                    transition duration-200
+                  "
                 >
                   Download .mkv
                 </a>
@@ -94,12 +88,12 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
                   target="_blank"
                   rel="noreferrer noopener"
                   className="
-                  bg-gray-800
-                  hover:bg-gray-700
-                  focus:bg-gray-900 focus:outline-none
-                  px-4 py-2 mr-2 rounded
-                  transition duration-200
-                "
+                    bg-gray-800
+                    hover:bg-gray-700
+                    focus:bg-gray-900 focus:outline-none
+                    px-4 py-2 mr-2 rounded
+                    transition duration-200
+                  "
                 >
                   Watch on YouTube
                 </a>
