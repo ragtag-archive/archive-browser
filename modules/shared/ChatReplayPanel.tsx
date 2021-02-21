@@ -54,7 +54,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
 
   return (
     <div
-      className="border border-gray-800 rounded h-96 overflow-y-scroll"
+      className="border border-gray-800 rounded h-96 overflow-y-scroll resize-y"
       ref={refChatScrollDiv}
     >
       <ChatReplay

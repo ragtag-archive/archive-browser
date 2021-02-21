@@ -34,21 +34,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     setAudioVolume((now) => (now === 0 ? 0.5 : 0));
   };
 
-  React.useEffect(() => {
-    if (!refVideo.current) return;
-    refAudio.current.volume = audioVolume;
-  }, [audioVolume]);
-
   const pingActivity = () => {
     setLastActive(new Date().getTime());
   };
-
-  React.useEffect(() => {
-    if (!refSelf.current) return;
-    refSelf.current.addEventListener("mousemove", pingActivity);
-    return () =>
-      refSelf.current?.removeEventListener?.("mousemove", pingActivity);
-  }, [refSelf]);
 
   const handlePlayPause = () => {
     if (!refVideo.current || !refAudio.current) return;
@@ -61,7 +49,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refAudio.current.play();
       refVideo.current.play();
     }
-
     setIsPlaying((now) => !now);
   };
 
@@ -74,6 +61,34 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       setIsFullscreen(false);
     }
   };
+
+  const handleVisibilityChange = () => {
+    if (isPlaying) {
+      refAudio.current?.play?.();
+      refVideo.current?.play?.();
+    } else {
+      refAudio.current?.pause?.();
+      refVideo.current?.pause?.();
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [isPlaying]);
+
+  React.useEffect(() => {
+    if (!refVideo.current) return;
+    refAudio.current.volume = audioVolume;
+  }, [audioVolume]);
+
+  React.useEffect(() => {
+    if (!refSelf.current) return;
+    refSelf.current.addEventListener("mousemove", pingActivity);
+    return () =>
+      refSelf.current?.removeEventListener?.("mousemove", pingActivity);
+  }, [refSelf]);
 
   React.useEffect(() => {
     if (videoReady && audioReady && isPlaying) {
@@ -267,7 +282,14 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             refAudio.current.currentTime = refVideo.current.currentTime;
             refAudio.current.pause();
           }}
-          onWaiting={() => refAudio.current?.pause()}
+          onWaiting={() => {
+            setVideoReady(false);
+            refAudio.current?.pause();
+          }}
+          onStalled={() => {
+            setVideoReady(false);
+            refAudio.current?.pause();
+          }}
           onClick={handlePlayPause}
           onTimeUpdate={() => {
             if (!refAudio.current || !refVideo.current) return;
@@ -310,6 +332,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           ref={refAudio}
           onCanPlay={() => setAudioReady(true)}
           onPlaying={() => setAudioReady(true)}
+          onSeeking={() => setAudioReady(false)}
+          onSeeked={() => setAudioReady(true)}
+          onLoadedData={() => setAudioReady(true)}
         >
           <source src={srcAudio} />
         </audio>

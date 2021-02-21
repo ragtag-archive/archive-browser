@@ -15,8 +15,8 @@
  * https://stackoverflow.com/a/42130838
  */
 .seekbar::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
+  /* -webkit-appearance: none; */
+  /* appearance: none; */
   opacity: 0;
 }
 .seekbar::-moz-range-thumb {
