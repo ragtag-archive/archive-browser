@@ -14,6 +14,8 @@ const RequestPage = (props: RequestPageProps) => {
   const [message, setMessage] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  const captchaRef = React.useRef<HCaptcha>(null);
+
   const handleCaptchaVerify = (code) => {
     setCaptchaCode(code);
   };
@@ -44,12 +46,14 @@ const RequestPage = (props: RequestPageProps) => {
     } catch (ex) {
       setError("Invalid URL");
       setIsSubmitting(false);
+      captchaRef.current?.resetCaptcha();
       return false;
     }
 
     if (!captchaCode) {
       setError("Invalid captcha");
       setIsSubmitting(false);
+      captchaRef.current?.resetCaptcha();
       return false;
     }
 
@@ -66,6 +70,7 @@ const RequestPage = (props: RequestPageProps) => {
       .catch(({ response }) => response.data);
 
     setIsSubmitting(false);
+    captchaRef.current?.resetCaptcha();
     if (res.ok) setMessage(res.message);
     else setError(res.message);
   };
@@ -97,6 +102,7 @@ const RequestPage = (props: RequestPageProps) => {
             />
             <div className="my-4">
               <HCaptcha
+                ref={captchaRef}
                 size="normal"
                 sitekey={NEXT_PUBLIC_HCAPTCHA_SITE_KEY}
                 onVerify={handleCaptchaVerify}
