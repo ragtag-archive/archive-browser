@@ -287,23 +287,33 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           className="w-full h-full absolute"
           preload="auto"
           poster={srcPoster}
-          onCanPlay={() => setVideoReady(true)}
-          onPlaying={() => setVideoReady(true)}
+          onCanPlay={() => {
+            console.log("[video] onCanPlay()");
+            setVideoReady(true);
+          }}
+          onPlaying={() => {
+            console.log("[video] onPlaying()");
+            setVideoReady(true);
+          }}
           onPlay={() => {
+            console.log("[video] onPlay()");
             if (!refAudio.current) return;
             refAudio.current.currentTime = refVideo.current.currentTime;
             refAudio.current.play();
           }}
           onPause={() => {
+            console.log("[video] onPause()");
             if (!refAudio.current) return;
             refAudio.current.currentTime = refVideo.current.currentTime;
             refAudio.current.pause();
           }}
           onWaiting={() => {
+            console.log("[video] onWaiting()");
             setVideoReady(false);
             refAudio.current?.pause();
           }}
           onStalled={() => {
+            console.log("[video] onStalled()");
             setVideoReady(false);
             refAudio.current?.pause();
           }}
@@ -313,6 +323,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
             setPlaybackProgress(refVideo.current.currentTime);
             setVideoReady(true);
+
+            if (refVideo.current.ended) setIsPlaying(false);
 
             // Resync if more than 500ms off
             if (
@@ -329,6 +341,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
             // Update parent
             props.onPlaybackProgress?.(refVideo.current.currentTime);
+          }}
+          onEnded={() => {
+            console.log("[video] onEnded()");
+            setIsPlaying(false);
           }}
         >
           {captions.map(({ lang, src }) => {
