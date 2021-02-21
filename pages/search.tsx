@@ -13,7 +13,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     q,
     results,
     page,
-    from, size
+    from,
+    size,
   };
 
   return { props };

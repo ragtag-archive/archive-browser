@@ -16,6 +16,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
 
   const downloadChatData = async () => {
     setDownloadProgress(0);
+    setReplayData(null);
     const data = await axios.get(props.src, {
       onDownloadProgress: (progressEvent) => {
         setDownloadProgress(progressEvent.loaded);
@@ -29,7 +30,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
    */
   React.useEffect(() => {
     downloadChatData();
-  }, []);
+  }, [props.src]);
 
   React.useEffect(() => {
     if (refChatScrollDiv.current)

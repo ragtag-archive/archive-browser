@@ -73,6 +73,22 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   };
 
   React.useEffect(() => {
+    refVideo.current?.pause?.();
+    refAudio.current?.pause?.();
+    setIsPlaying(false);
+    setVideoReady(false);
+    setAudioReady(false);
+    setPlaybackProgress(0);
+
+    refVideo.current?.load?.();
+    refAudio.current?.load?.();
+    props.onPlaybackProgress?.(0);
+
+    if (refVideo.current) refVideo.current.currentTime = 0;
+    if (refAudio.current) refAudio.current.currentTime = 0;
+  }, [srcVideo, srcAudio]);
+
+  React.useEffect(() => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () =>
       document.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -267,6 +283,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         </div>
         <video
           ref={refVideo}
+          src={srcVideo}
           className="w-full h-full absolute"
           preload="auto"
           poster={srcPoster}
@@ -314,7 +331,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             props.onPlaybackProgress?.(refVideo.current.currentTime);
           }}
         >
-          <source src={srcVideo} />
           {captions.map(({ lang, src }) => {
             return (
               <track
@@ -331,15 +347,14 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         <audio
           preload="auto"
           ref={refAudio}
+          src={srcAudio}
           onCanPlay={() => setAudioReady(true)}
           onPlaying={() => setAudioReady(true)}
           onSeeking={() => setAudioReady(false)}
           onSeeked={() => setAudioReady(true)}
           onLoadedData={() => setAudioReady(true)}
           onTimeUpdate={() => setAudioReady(true)}
-        >
-          <source src={srcAudio} />
-        </audio>
+        ></audio>
       </div>
     </div>
   );

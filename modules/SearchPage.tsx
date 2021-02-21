@@ -16,22 +16,24 @@ export type SearchPageProps = {
 };
 
 const SearchPage = (props: SearchPageProps) => {
+  const { q, results, page, from, size } = props;
   const router = useRouter();
-  const videos = props.results.hits.hits;
+  const videos = results.hits.hits;
 
-  const hasNext = props.from + props.size < props.results.hits.total.value;
-  const hasPrev = props.from > 0;
+  const totalResults = results.hits.total.value;
+  const hasNext = from + size < totalResults;
+  const hasPrev = from > 0;
 
   return (
     <PageBase>
       <Head>
-        <title>{props.q} - Ragtag Archive</title>
+        <title>{q} - Ragtag Archive</title>
       </Head>
       <div>
         <p>
-          Showing results {props.from + 1}-
-          {Math.min(props.results.hits.total.value, props.from + props.size)} of{" "}
-          {formatNumber(props.results.hits.total.value)}
+          Showing results {from + 1}-
+          {Math.min(results.hits.total.value, from + size)} of{" "}
+          {formatNumber(results.hits.total.value)}
         </p>
         {videos.map(({ _source: video }) => (
           <VideoCard video={video} key={video.video_id} />
@@ -43,7 +45,7 @@ const SearchPage = (props: SearchPageProps) => {
                 pathname: "/search",
                 query: {
                   ...router.query,
-                  page: props.page - 1,
+                  page: page - 1,
                 },
               }}
             >
@@ -61,8 +63,7 @@ const SearchPage = (props: SearchPageProps) => {
             </Link>
           )}
           <div className="mx-4 inline-block">
-            Page {props.page} of{" "}
-            {Math.ceil(props.results.hits.total.value / props.size)}
+            Page {page} of {Math.ceil(results.hits.total.value / size)}
           </div>
           {hasNext && (
             <Link
@@ -70,7 +71,7 @@ const SearchPage = (props: SearchPageProps) => {
                 pathname: "/search",
                 query: {
                   ...router.query,
-                  page: props.page + 1,
+                  page: page + 1,
                 },
               }}
             >
