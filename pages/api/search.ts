@@ -20,9 +20,11 @@ export const apiSearch = async (query: {
   v?: string;
   sort?: SortField;
   sort_order?: "asc" | "desc";
+  more_like_this?: string;
 }) => {
   const q = query.q || "";
   const v = query.v || "";
+  const mlt = query.more_like_this || "";
 
   const should = [];
 
@@ -64,6 +66,13 @@ export const apiSearch = async (query: {
         },
       }
     );
+  if (mlt)
+    should.push({
+      more_like_this: {
+        fields: ["title", "description", "channel_name"],
+        like: mlt,
+      },
+    });
 
   const requestData = {
     query: {

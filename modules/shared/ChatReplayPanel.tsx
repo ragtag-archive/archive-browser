@@ -65,7 +65,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
       <div
         className={
           "border border-gray-800 rounded overflow-y-scroll resize-y transition-all duration-200 " +
-          (isChatVisible ? "h-96" : "h-8")
+          (isChatVisible ? "h-96" : "h-0")
         }
         ref={refChatScrollDiv}
       >
@@ -83,7 +83,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
         onClick={() => setIsChatVisible((now) => !now)}
         className="w-full text-center bg-gray-900 hover:bg-gray-800 focus:ring focus:outline-none rounded transition duration-200"
       >
-        Toggle chat
+        {isChatVisible ? "Hide chat replay" : "Show chat replay"}
       </button>
     </div>
   );

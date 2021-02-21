@@ -6,17 +6,22 @@ import { format } from "timeago.js";
 
 export type VideoCardProps = {
   video?: VideoMetadata;
+  small?: boolean;
 };
 
-const VideoCard = ({ video }: VideoCardProps) => {
+const VideoCard = ({ video, small }: VideoCardProps) => {
   const videoBase =
     DRIVE_BASE_URL + "/" + video?.video_id + "/" + video?.video_id;
   const thumbURL = videoBase + ".webp";
   const mkvURL = videoBase + ".mkv";
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="md:w-1/4 w-full py-2">
+    <div
+      className={["flex", small ? "flex-col" : "flex-col md:flex-row"].join(
+        " "
+      )}
+    >
+      <div className={small ? "w-full" : "md:w-1/4 w-full py-2"}>
         <Link href={video ? "/watch?v=" + video?.video_id : ""}>
           <a tabIndex={-1}>
             <div
@@ -37,15 +42,25 @@ const VideoCard = ({ video }: VideoCardProps) => {
           </a>
         </Link>
       </div>
-      <div className="flex-1 px-4 py-2">
+      <div className={small ? "py-2" : "flex-1 px-4 py-2"}>
         {!!video ? (
           <>
             <Link href={video ? "/watch?v=" + video?.video_id : ""}>
               <a>
                 <div>
-                  <h2 className="font-bold text-xl">{video.title}</h2>
-                  <p>{video.channel_name}</p>
-                  <p>
+                  <h2
+                    className={["font-bold", small ? "" : "text-xl"].join(" ")}
+                  >
+                    {video.title}
+                  </h2>
+                  <p
+                    className={["text-gray-400", small && "text-sm"].join(" ")}
+                  >
+                    {video.channel_name}
+                  </p>
+                  <p
+                    className={["text-gray-400", small && "text-sm"].join(" ")}
+                  >
                     {Intl.NumberFormat("en-US").format(video.view_count)} views
                     &middot; Uploaded {formatDate(new Date(video.upload_date))}{" "}
                     &middot; Archived{" "}
@@ -54,34 +69,36 @@ const VideoCard = ({ video }: VideoCardProps) => {
                 </div>
               </a>
             </Link>
-            <div className="flex flex-row mt-2">
-              <a
-                href={mkvURL}
-                className="
+            {!small && (
+              <div className="flex flex-row mt-2">
+                <a
+                  href={mkvURL}
+                  className="
                   bg-gray-800
                   hover:bg-gray-700
                   focus:bg-gray-900 focus:outline-none
                   px-4 py-2 mr-2 rounded
                   transition duration-200
                 "
-              >
-                Download .mkv
-              </a>
-              <a
-                href={"https://youtu.be/" + video.video_id}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="
+                >
+                  Download .mkv
+                </a>
+                <a
+                  href={"https://youtu.be/" + video.video_id}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="
                   bg-gray-800
                   hover:bg-gray-700
                   focus:bg-gray-900 focus:outline-none
                   px-4 py-2 mr-2 rounded
                   transition duration-200
                 "
-              >
-                Watch on YouTube
-              </a>
-            </div>
+                >
+                  Watch on YouTube
+                </a>
+              </div>
+            )}
           </>
         ) : (
           <div>

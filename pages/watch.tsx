@@ -5,26 +5,36 @@ import { apiSearch } from "./api/search";
 import { apiVideo } from "./api/video";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const v = ctx.query.v as string;
+  try {
+    const v = ctx.query.v as string;
 
-  if (!v) return { notFound: true };
+    if (!v) return { notFound: true };
 
-  const [searchResult, fileListResult] = await Promise.all([
-    apiSearch({ v }),
-    apiVideo({ v }),
-  ]);
+    const [searchResult, fileListResult] = await Promise.all([
+      apiSearch({ v }),
+      apiVideo({ v }),
+    ]);
 
-  const _searchResult = searchResult.data as ElasticSearchResult<VideoMetadata>;
+    const _searchResult = searchResult.data as ElasticSearchResult<VideoMetadata>;
+    if (_searchResult.hits.total.value === 0) return { notFound: true };
+    const videoInfo = _searchResult.hits.hits[0]._source;
 
-  if (_searchResult.hits.total.value === 0) return { notFound: true };
+    const related = (await apiSearch({ more_like_this: videoInfo.description }))
+      .data as ElasticSearchResult<VideoMetadata>;
 
-  const props: WatchPageProps = {
-    videoInfo: _searchResult.hits.hits[0]._source,
-    fileList: fileListResult.urls,
-    hasChat: fileListResult.urls.includes("/" + v + "/" + v + ".chat.json"),
-  };
+    const props: WatchPageProps = {
+      videoInfo,
+      fileList: fileListResult.urls,
+      hasChat: fileListResult.urls.includes("/" + v + "/" + v + ".chat.json"),
+      relatedVideos: related.hits.hits
+        .map((hit) => hit._source)
+        .filter((video) => video.video_id !== v),
+    };
 
-  return { props };
+    return { props };
+  } catch (ex) {
+    return { notFound: true };
+  }
 };
 
 export default WatchPage;

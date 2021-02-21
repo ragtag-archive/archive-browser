@@ -295,6 +295,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             if (!refAudio.current || !refVideo.current) return;
 
             setPlaybackProgress(refVideo.current.currentTime);
+            setVideoReady(true);
 
             // Resync if more than 500ms off
             if (
@@ -335,6 +336,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           onSeeking={() => setAudioReady(false)}
           onSeeked={() => setAudioReady(true)}
           onLoadedData={() => setAudioReady(true)}
+          onTimeUpdate={() => setAudioReady(true)}
         >
           <source src={srcAudio} />
         </audio>

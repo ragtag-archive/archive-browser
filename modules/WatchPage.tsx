@@ -6,6 +6,7 @@ import { DRIVE_BASE_URL } from "./shared/config";
 import VideoPlayer from "./shared/VideoPlayer";
 import { formatDate } from "./shared/format";
 import ChatReplayPanel from "./shared/ChatReplayPanel";
+import VideoCard from "./shared/VideoCard";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -13,9 +14,15 @@ export type WatchPageProps = {
   videoInfo: VideoMetadata;
   fileList: string[];
   hasChat: boolean;
+  relatedVideos: VideoMetadata[];
 };
 
-const WatchPage = ({ videoInfo, fileList, hasChat }: WatchPageProps) => {
+const WatchPage = ({
+  videoInfo,
+  fileList,
+  hasChat,
+  relatedVideos,
+}: WatchPageProps) => {
   const videoBase =
     DRIVE_BASE_URL + "/" + videoInfo.video_id + "/" + videoInfo.video_id;
   const mkvURL = videoBase + ".mkv";
@@ -163,7 +170,14 @@ const WatchPage = ({ videoInfo, fileList, hasChat }: WatchPageProps) => {
             />
           )}
           <div className="mt-6">
-            <h4 className="text-xl font-bold">Related videos</h4>
+            <h4 className="text-xl font-bold mb-2">Related videos</h4>
+            <div>
+              {relatedVideos.map((video) => (
+                <div className="mb-4">
+                  <VideoCard small video={video} key={video.video_id} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
