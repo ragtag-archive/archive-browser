@@ -11,8 +11,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const page = Number(ctx.query.page as string) || 1;
   const size = 25;
   const from = (page - 1) * size;
-  const results = (await apiSearch({ channel_id: channelId, from, size }))
-    .data as ElasticSearchResult<VideoMetadata>;
+  const results = (
+    await apiSearch({
+      channel_id: channelId,
+      from,
+      size,
+      sort: "upload_date",
+      sort_order: "desc",
+    })
+  ).data as ElasticSearchResult<VideoMetadata>;
 
   if (results.hits.total.value === 0) return { notFound: true };
 
