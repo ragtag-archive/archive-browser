@@ -8,3 +8,9 @@ export const TASQ_QUEUE_URL = process.env.TASQ_QUEUE_URL;
 export const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY;
 export const NEXT_PUBLIC_HCAPTCHA_SITE_KEY =
   process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY;
+
+export const JWT_PUBLIC_KEY =
+  "-----BEGIN PUBLIC KEY-----\n" +
+  process.env.JWT_PUBLIC_KEY +
+  "\n-----END PUBLIC KEY-----";
+export const BULK_INSERT_ROLE = process.env.BULK_INSERT_ROLE;
