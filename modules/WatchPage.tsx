@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import PageBase from "./shared/PageBase";
+import Linkify from "react-linkify";
 import { VideoMetadata } from "./shared/database";
 import { DRIVE_BASE_URL } from "./shared/config";
 import VideoPlayer from "./shared/VideoPlayer";
@@ -144,9 +145,23 @@ const WatchPage = ({
                       {videoInfo.channel_name}
                     </a>
                   </Link>
-                  <p className="whitespace-pre-line break-words">
-                    {videoInfo.description}
-                  </p>
+                  <div className="whitespace-pre-line break-words text-gray-300">
+                    <Linkify
+                      componentDecorator={(href, text, key) => (
+                        <a
+                          key={key}
+                          href={href}
+                          className="text-blue-300 hover:underline focus:outline-none focus:underline"
+                          target="_blank"
+                          rel="noreferrer noopener nofollow"
+                        >
+                          {text}
+                        </a>
+                      )}
+                    >
+                      {videoInfo.description}
+                    </Linkify>
+                  </div>
                 </div>
               </>
             ) : (

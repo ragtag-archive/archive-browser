@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^0.3.2",
+    "@types/react-linkify": "^1.0.0",
     "axios": "^0.21.1",
     "jsonwebtoken": "^8.5.1",
     "next": "10.0.1",
     "nprogress": "^0.2.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-linkify": "^1.0.0-alpha",
     "timeago.js": "^4.0.2"
   },
   "devDependencies": {

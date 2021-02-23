@@ -80,7 +80,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
         <div
           className={[
             "px-2 border border-gray-800 rounded",
-            "overflow-y-scroll resize-y scroll-dark",
+            "overflow-y-scroll resize-y",
             "transition-all duration-200",
             isChatVisible ? "h-96" : "h-0",
           ].join(" ")}
