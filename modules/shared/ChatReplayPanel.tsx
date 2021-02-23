@@ -12,17 +12,28 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [replayData, setReplayData] = React.useState<ChatMessage[]>(null);
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
   const [isChatVisible, setIsChatVisible] = React.useState(true);
+  const [isErrored, setIsErrored] = React.useState(false);
   const refChatScrollDiv = React.useRef<HTMLDivElement>(null);
 
   const downloadChatData = async () => {
     setDownloadProgress(0);
     setReplayData(null);
-    const data = await axios.get(props.src, {
-      onDownloadProgress: (progressEvent) => {
-        setDownloadProgress(progressEvent.loaded);
-      },
-    });
-    setReplayData(data.data);
+    try {
+      const data = await axios.get(props.src, {
+        onDownloadProgress: (progressEvent) => {
+          setDownloadProgress(progressEvent.loaded);
+        },
+      });
+
+      // Check if data is valid
+      if (typeof data.data === "string") {
+        JSON.parse(data.data);
+      }
+
+      setReplayData(data.data);
+    } catch (ex) {
+      setIsErrored(true);
+    }
   };
 
   /**
@@ -48,7 +59,9 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
           if (downloadProgress < 0) downloadChatData();
         }}
       >
-        {downloadProgress < 0 ? (
+        {isErrored ? (
+          <p>Error loading chat</p>
+        ) : downloadProgress < 0 ? (
           <>
             <p>Chat replay available!</p>
             <p>Click to Enable</p>
