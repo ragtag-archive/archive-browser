@@ -74,22 +74,24 @@ const WatchPage = ({
       </Head>
       <div className="flex md:flex-row flex-col">
         <div className={"w-full md:w-3/4"}>
-          <VideoPlayer
-            srcVideo={urlVideo}
-            srcAudio={urlAudio}
-            srcPoster={thumbURL}
-            captions={fileList
-              .filter((file) => file.endsWith(".vtt"))
-              .map((path) => {
-                const lang = path.split(".")[1];
-                return {
-                  lang,
-                  src:
-                    "/api/captions?v=" + videoInfo.video_id + "&lang=" + lang,
-                };
-              })}
-            onPlaybackProgress={setPlaybackProgress}
-          />
+          <div className="relative bg-gray-400">
+            <VideoPlayer
+              key={urlVideo}
+              srcVideo={urlVideo}
+              srcAudio={urlAudio}
+              srcPoster={thumbURL}
+              captions={fileList
+                .filter((file) => file.endsWith(".vtt"))
+                .map((path) => {
+                  const lang = path.split(".")[1];
+                  return {
+                    lang,
+                    src: DRIVE_BASE_URL + path,
+                  };
+                })}
+              onPlaybackProgress={setPlaybackProgress}
+            />
+          </div>
           <div className="mt-4 mx-6">
             {!!videoInfo ? (
               <>

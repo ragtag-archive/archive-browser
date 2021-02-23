@@ -121,7 +121,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   return (
     <div
       className={
-        "video-player bg-black " +
+        "video-player bg-gray-900 " +
         (isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "")
       }
       ref={refSelf}
@@ -286,6 +286,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           src={srcVideo}
           className="w-full h-full absolute"
           preload="auto"
+          crossOrigin="anonymous"
           poster={srcPoster}
           onCanPlay={() => {
             console.log("[video] onCanPlay()");
