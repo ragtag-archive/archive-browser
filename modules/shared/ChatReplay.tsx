@@ -59,7 +59,7 @@ const ChatReplay = (props: ChatReplayProps) => {
             return (
               <div
                 key={msg.message_id}
-                className="py-2 px-4 my-4 rounded"
+                className="my-4 rounded overflow-hidden"
                 style={{
                   color: msg.body_text_colour,
                   background: msg.body_background_colour,
@@ -68,19 +68,24 @@ const ChatReplay = (props: ChatReplayProps) => {
                 <div
                   style={{
                     color: msg.header_text_colour,
-                    background: msg.body_background_colour,
+                    background: msg.header_background_colour,
                   }}
-                  className="flex flex-row justify-between pb-2"
+                  className="flex flex-row justify-between px-4 py-2"
                 >
-                  <div className="font-bold">
-                    <div>{msg.author.name}</div>
-                    <div>{msg.money.text}</div>
+                  <div>
+                    <div style={{ color: msg.author.name_text_colour }}>
+                      {msg.author.name}
+                    </div>
+                    <div className="font-bold">{msg.money.text}</div>
                   </div>
-                  <div className="text-sm">
+                  <div
+                    className="text-sm"
+                    style={{ color: msg.author.name_text_colour }}
+                  >
                     [{formatSeconds(msg.time_in_seconds)}]
                   </div>
                 </div>
-                {msg.message}
+                <div className="px-4 py-2">{msg.message}</div>
               </div>
             );
           case "membership_item":

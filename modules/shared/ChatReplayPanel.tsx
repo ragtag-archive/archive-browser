@@ -76,21 +76,26 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
 
   return (
     <div>
-      <div
-        className={
-          "border border-gray-800 rounded overflow-y-scroll resize-y transition-all duration-200 " +
-          (isChatVisible ? "h-96" : "h-0")
-        }
-        ref={refChatScrollDiv}
-      >
-        {isChatVisible ? (
-          <ChatReplay
-            currentTimeSeconds={props.currentTimeSeconds}
-            replayData={replayData}
-          />
-        ) : (
-          <div>Chat disabled</div>
-        )}
+      <div className="relative">
+        <div
+          className={[
+            "px-2 border border-gray-800 rounded",
+            "overflow-y-scroll resize-y scroll-dark",
+            "transition-all duration-200",
+            isChatVisible ? "h-96" : "h-0",
+          ].join(" ")}
+          ref={refChatScrollDiv}
+        >
+          {isChatVisible ? (
+            <ChatReplay
+              currentTimeSeconds={props.currentTimeSeconds}
+              replayData={replayData}
+            />
+          ) : (
+            <div>Chat disabled</div>
+          )}
+        </div>
+        <div className="absolute right-0 bottom-0 w-4 h-4 bg-gray-800 pointer-events-none" />
       </div>
       <button
         type="button"
