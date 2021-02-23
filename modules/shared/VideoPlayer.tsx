@@ -321,6 +321,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           onClick={handlePlayPause}
           onTimeUpdate={() => {
             if (!refAudio.current || !refVideo.current) return;
+            if (!isPlaying) refVideo.current.pause();
 
             setPlaybackProgress(refVideo.current.currentTime);
             setVideoReady(true);
@@ -370,7 +371,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           onSeeking={() => setAudioReady(false)}
           onSeeked={() => setAudioReady(true)}
           onLoadedData={() => setAudioReady(true)}
-          onTimeUpdate={() => setAudioReady(true)}
+          onTimeUpdate={() => {
+            setAudioReady(true);
+            if (!isPlaying) refAudio.current.pause();
+          }}
         ></audio>
       </div>
     </div>
