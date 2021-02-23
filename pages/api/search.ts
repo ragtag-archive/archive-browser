@@ -7,6 +7,29 @@ import {
 } from "../../modules/shared/config";
 import axios from "axios";
 
+type AggregatedChannel = {
+  channel_name: string;
+  channel_id: string;
+  videos_count: number;
+};
+
+export const apiListChannels = async (): Promise<AggregatedChannel[]> =>
+  (
+    await apiSearchRaw({
+      aggs: {
+        channels: {
+          terms: { field: "channel_name", size: 1000 },
+          aggs: { channel_id: { terms: { field: "channel_id", size: 1 } } },
+        },
+      },
+      size: 0,
+    })
+  ).data.aggregations.channels.buckets.map((bucket) => ({
+    channel_name: bucket.key,
+    channel_id: bucket.channel_id.buckets[0].key,
+    videos_count: bucket.doc_count,
+  }));
+
 type SortField =
   | "archived_timestamp"
   | "upload_date"
@@ -36,7 +59,20 @@ export const apiSearch = async (query: {
 
   if (v) should.push({ match: { video_id: { query: v } } });
   if (channel_id) should.push({ match: { channel_id: { query: channel_id } } });
-  if (q)
+  if (q) {
+    // Workaround for channel_name being keyword instead of text
+    // Fetch list of channels
+    const channels = await apiListChannels();
+    channels
+      // Filter for channels containing query
+      .filter((channel) =>
+        channel.channel_name.toLowerCase().includes(q.toLowerCase())
+      )
+      // Insert channel IDs to query
+      .forEach((channel) =>
+        should.push({ match: { channel_id: { query: channel.channel_id } } })
+      );
+
     should.push(
       {
         match: {
@@ -62,17 +98,9 @@ export const apiSearch = async (query: {
             fuzziness: "AUTO",
           },
         },
-      },
-      {
-        match: {
-          channel_name: {
-            query: q,
-            operator: "OR",
-            fuzziness: "AUTO",
-          },
-        },
       }
     );
+  }
   if (mlt)
     should.push(
       {
@@ -113,7 +141,11 @@ export const apiSearch = async (query: {
     ];
   }
 
-  return axios.request({
+  return apiSearchRaw(requestData);
+};
+
+export const apiSearchRaw = (dsl: any) =>
+  axios.request({
     method: "get",
     baseURL: ES_BACKEND_URL,
     url: "/" + ES_INDEX + "/_search",
@@ -121,9 +153,8 @@ export const apiSearch = async (query: {
       username: ES_BASIC_USERNAME,
       password: ES_BASIC_PASSWORD,
     },
-    data: requestData,
+    data: dsl,
   });
-};
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const searchRes = await apiSearch({
