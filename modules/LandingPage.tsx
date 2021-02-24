@@ -10,10 +10,33 @@ type LandingPageProps = {
 
 const LandingPage = (props: LandingPageProps) => {
   const { videos } = props;
+
+  const siteName = "Ragtag Archive";
+  const siteDesc = "Preserving culture, one stream at a time";
+
   return (
     <PageBase>
       <Head>
         <title>Ragtag Archive</title>
+        <meta name="title" content={siteName} />
+        <meta name="description" content={siteDesc} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://archive.ragtag.moe/" />
+        <meta property="og:title" content={siteName} />
+        <meta
+          property="og:image"
+          content="https://archive.ragtag.moe/favicon.png"
+        />
+        <meta property="og:description" content={siteDesc} />
+        <meta property="twitter:card" content="summary" />
+        <meta property="twitter:url" content="https://archive.ragtag.moe/" />
+        <meta property="twitter:title" content={siteName} />
+        <meta
+          property="twitter:image"
+          content="https://archive.ragtag.moe/favicon.png"
+        />
+        <meta property="twitter:description" content={siteDesc} />
+        <meta property="twitter:creator" content="@kitsune_cw" />
       </Head>
       <div>
         <div className="px-4">

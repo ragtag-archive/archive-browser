@@ -43,10 +43,7 @@ const WatchPage = ({
       <Head>
         <title>{videoInfo.title} - Ragtag Archive</title>
         <meta name="title" content={videoInfo.title} />
-        <meta
-          name="description"
-          content={videoInfo.description.substr(0, 160)}
-        />
+        <meta name="description" content={videoInfo.channel_name} />
 
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Ragtag Archive" />
