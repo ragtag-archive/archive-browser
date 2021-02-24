@@ -75,6 +75,12 @@ const ChatReplay = (props: ChatReplayProps) => {
                   <div>
                     <div style={{ color: msg.author.name_text_colour }}>
                       {msg.author.name}
+                      {msg.author.badges && msg.author.badges[0].icons ? (
+                        <img
+                          src={msg.author.badges[0].icons[1].url}
+                          className="inline-block ml-2"
+                        />
+                      ) : null}
                     </div>
                     <div className="font-bold">{msg.money.text}</div>
                   </div>
@@ -92,11 +98,17 @@ const ChatReplay = (props: ChatReplayProps) => {
             return (
               <div
                 key={msg.message_id}
-                className="px-4 py-2 my-4 rounded bg-green-500 text-white"
+                className="px-4 py-2 my-4 rounded bg-green-600 text-white"
               >
                 <div className="flex flex-row justify-between pb-2">
                   <div className="font-bold">
-                    <div>{msg.author.name}</div>
+                    <div className="inline-block">{msg.author.name}</div>
+                    {msg.author.badges && msg.author.badges[0].icons ? (
+                      <img
+                        src={msg.author.badges[0].icons[1].url}
+                        className="inline-block ml-2"
+                      />
+                    ) : null}
                   </div>
                   <div className="text-sm">
                     [{formatSeconds(msg.time_in_seconds)}]
@@ -108,9 +120,30 @@ const ChatReplay = (props: ChatReplayProps) => {
           case "text_message":
             return (
               <div key={msg.message_id} className="px-2 mb-2">
-                <div className="text-gray-400 text-xs">
-                  [{formatSeconds(msg.time_in_seconds)}]
-                  <span className="ml-2">{msg.author.name}</span>
+                <div className="text-gray-400 text-xs flex justify-between">
+                  <span
+                    className={[
+                      "mr-2",
+                      msg.author.badges
+                        ?.map(({ title }) =>
+                          title === "Owner"
+                            ? "bg-blue-600 text-white font-bold px-2 rounded"
+                            : title.toLowerCase().includes("member")
+                            ? "text-green-500"
+                            : ""
+                        )
+                        ?.join(" "),
+                    ].join(" ")}
+                  >
+                    {msg.author.name}
+                    {msg.author.badges && msg.author.badges[0].icons ? (
+                      <img
+                        src={msg.author.badges[0].icons[1].url}
+                        className="inline-block ml-2"
+                      />
+                    ) : null}
+                  </span>
+                  <span>[{formatSeconds(msg.time_in_seconds)}]</span>
                 </div>
                 {msg.message}
               </div>
