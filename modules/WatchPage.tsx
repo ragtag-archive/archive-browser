@@ -49,15 +49,13 @@ const WatchPage = ({
         />
 
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Ragtag Archive" />
         <meta
           property="og:url"
           content={"https://archive.ragtag.moe/watch?v=" + videoInfo.video_id}
         />
         <meta property="og:title" content={videoInfo.title} />
-        <meta
-          property="og:description"
-          content={videoInfo.description.substr(0, 160)}
-        />
+        <meta property="og:description" content={videoInfo.channel_name} />
         <meta property="og:image" content={thumbURL} />
 
         <meta property="twitter:card" content="summary_large_image" />
@@ -66,10 +64,7 @@ const WatchPage = ({
           content={"https://archive.ragtag.moe/watch?v=" + videoInfo.video_id}
         />
         <meta property="twitter:title" content={videoInfo.title} />
-        <meta
-          property="twitter:description"
-          content={videoInfo.description.substr(0, 160)}
-        />
+        <meta property="twitter:description" content={videoInfo.channel_name} />
         <meta property="twitter:image" content={thumbURL} />
       </Head>
       <div className="flex md:flex-row flex-col">
