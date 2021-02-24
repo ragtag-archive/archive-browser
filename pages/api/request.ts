@@ -23,10 +23,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (!Array.isArray(videos))
       return res.status(400).json({ ok: false, message: "Malformed body" });
 
-    if (videos.length > 100)
+    if (videos.length > 1000)
       return res.status(400).json({
         ok: false,
-        message: "You can only request at most 100 videos at a time.",
+        message: "You can only request at most 1000 videos at a time.",
       });
 
     if (videos.filter((vid) => !reId.test(vid)).length > 0)
