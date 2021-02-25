@@ -61,7 +61,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <Sidebar isOpen={isSidebarOpen} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </>
   );
 };
