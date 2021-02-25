@@ -14,6 +14,9 @@ const PageBase = (props: PageBaseProps) => {
       </Head>
       <Header />
       <div className="container mx-auto mt-4">{props.children}</div>
+      <div className="my-6 text-gray-500 text-center">
+        Made with 🍝 by kitsune.
+      </div>
     </div>
   );
 };
