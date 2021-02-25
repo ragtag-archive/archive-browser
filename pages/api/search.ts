@@ -145,21 +145,31 @@ export const apiSearch = async (query: {
 };
 
 export const apiSearchRaw = (dsl: any) =>
-  axios.request({
-    method: "get",
-    baseURL: ES_BACKEND_URL,
-    url: "/" + ES_INDEX + "/_search",
-    auth: {
-      username: ES_BASIC_USERNAME,
-      password: ES_BASIC_PASSWORD,
-    },
-    data: dsl,
-  });
+  axios
+    .request({
+      method: "get",
+      baseURL: ES_BACKEND_URL,
+      url: "/" + ES_INDEX + "/_search",
+      auth: {
+        username: ES_BASIC_USERNAME,
+        password: ES_BASIC_PASSWORD,
+      },
+      data: dsl,
+    })
+    .catch(({ response }) => response);
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const searchRes = await apiSearch({
-    q: req.query.q as string,
-    v: req.query.v as string,
-  });
-  res.json(searchRes.data);
+  if (req.body) {
+    console.log(req.body);
+    const searchRes = await apiSearchRaw(
+      typeof req.body === "string" ? JSON.parse(req.body) : req.body
+    );
+    res.json(searchRes.data);
+  } else {
+    const searchRes = await apiSearch({
+      q: req.query.q as string,
+      v: req.query.v as string,
+    });
+    res.json(searchRes.data);
+  }
 };
