@@ -139,6 +139,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         (isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "")
       }
       ref={refSelf}
+      onMouseOut={() => setLastActive(0)}
     >
       <div
         className="w-full h-0 relative overflow-hidden"
