@@ -6,6 +6,10 @@ import {
   ES_INDEX,
 } from "../../modules/shared/config";
 import axios from "axios";
+import {
+  ElasticSearchResult,
+  VideoMetadata,
+} from "../../modules/shared/database";
 
 export type AggregatedChannel = {
   channel_name: string;
@@ -30,6 +34,39 @@ export const apiListChannels = async (): Promise<AggregatedChannel[]> =>
     videos_count: bucket.doc_count,
   }));
 
+export const apiRelatedVideos = async (
+  videoId: string
+): Promise<ElasticSearchResult<VideoMetadata>> => {
+  const mlt = (
+    await apiSearchRaw({
+      query: {
+        more_like_this: {
+          fields: ["title", "description", "channel_name"],
+          like: [
+            {
+              _index: ES_INDEX,
+              _id: videoId,
+            },
+          ],
+        },
+      },
+    })
+  ).data as ElasticSearchResult<VideoMetadata>;
+
+  if (mlt.hits.total.value > 1) return mlt;
+
+  // more_like_this didn't find any hits
+  // try to find other videos from the channel
+  const videoInfo = (await apiSearch({ v: videoId }))
+    .data as ElasticSearchResult<VideoMetadata>;
+  if (videoInfo.hits.total.value < 1) return mlt;
+
+  const channel_uploads = await apiSearch({
+    channel_id: videoInfo.hits.hits[0]._source.channel_id,
+  });
+  return channel_uploads.data;
+};
+
 type SortField =
   | "archived_timestamp"
   | "upload_date"
@@ -44,14 +81,12 @@ export const apiSearch = async (query: {
   channel_id?: string;
   sort?: SortField;
   sort_order?: "asc" | "desc";
-  more_like_this?: { title: string; description: string; channel_name: string };
   from?: number;
   size?: number;
 }) => {
   const q = query.q || "";
   const v = query.v || "";
   const channel_id = query.channel_id;
-  const mlt = query.more_like_this || "";
   const from = query.from || 0;
   const size = query.size || 10;
 
@@ -115,27 +150,6 @@ export const apiSearch = async (query: {
       }
     );
   }
-  if (mlt)
-    should.push(
-      {
-        more_like_this: {
-          fields: ["title"],
-          like: mlt.title,
-        },
-      },
-      {
-        more_like_this: {
-          fields: ["description"],
-          like: mlt.description,
-        },
-      },
-      {
-        more_like_this: {
-          fields: ["channel_name"],
-          like: mlt.channel_name,
-        },
-      }
-    );
 
   const requestData = {
     from,

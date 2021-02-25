@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { ElasticSearchResult, VideoMetadata } from "../modules/shared/database";
 import WatchPage, { WatchPageProps } from "../modules/WatchPage";
-import { apiSearch } from "./api/search";
+import { apiRelatedVideos, apiSearch } from "./api/search";
 import { apiVideo } from "./api/video";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -19,15 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     if (_searchResult.hits.total.value === 0) return { notFound: true };
     const videoInfo = _searchResult.hits.hits[0]._source;
 
-    const related = (
-      await apiSearch({
-        more_like_this: {
-          title: videoInfo.title,
-          description: videoInfo.description,
-          channel_name: videoInfo.channel_name,
-        },
-      })
-    ).data as ElasticSearchResult<VideoMetadata>;
+    const related = await apiRelatedVideos(v);
 
     const props: WatchPageProps = {
       videoInfo,
