@@ -64,13 +64,27 @@ export const apiSearch = async (query: {
     // Fetch list of channels
     const channels = await apiListChannels();
     channels
-      // Filter for channels containing query
-      .filter((channel) =>
-        channel.channel_name.toLowerCase().includes(q.toLowerCase())
-      )
-      // Insert channel IDs to query
+      .map((channel) => ({
+        ...channel,
+        // Add a 'boost' parameter based on how many query words match the channel name
+        boost: q
+          .toLowerCase()
+          .split(" ")
+          .map((qPart) => channel.channel_name.toLowerCase().includes(qPart))
+          .filter((x) => x).length,
+      }))
+      // Filter only channels with at least one match
+      .filter((channel) => channel.boost > 0)
+      // Insert into query with boost
       .forEach((channel) =>
-        should.push({ match: { channel_id: { query: channel.channel_id } } })
+        should.push({
+          match: {
+            channel_id: {
+              query: channel.channel_id,
+              boost: channel.boost * 10,
+            },
+          },
+        })
       );
 
     should.push(
