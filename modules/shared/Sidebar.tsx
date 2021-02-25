@@ -72,11 +72,11 @@ const Sidebar = (props: SidebarProps) => {
       <div
         className={[
           "fixed inset-0 z-30 bg-black transition-all duration-200",
-          isOpen ? "opacity-75" : "opacity-0 pointer-events-none",
+          isOpen ? "bg-opacity-25" : "bg-opacity-0 pointer-events-none",
         ].join(" ")}
         style={{
-          WebkitBackdropFilter: "blur(10px)",
-          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: isOpen ? "blur(10px)" : "",
+          backdropFilter: isOpen ? "blur(10px)" : "",
         }}
         onClick={() => props.onClose?.()}
       />
