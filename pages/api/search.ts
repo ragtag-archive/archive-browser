@@ -7,7 +7,7 @@ import {
 } from "../../modules/shared/config";
 import axios from "axios";
 
-type AggregatedChannel = {
+export type AggregatedChannel = {
   channel_name: string;
   channel_id: string;
   videos_count: number;
