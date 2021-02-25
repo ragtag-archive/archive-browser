@@ -118,21 +118,29 @@ const ChatReplay = (props: ChatReplayProps) => {
               </div>
             );
           case "text_message":
+            const authorType =
+              msg.author.badges?.map(({ title }) =>
+                title === "Owner"
+                  ? "owner"
+                  : title === "Moderator"
+                  ? "moderator"
+                  : title.toLowerCase().includes("member")
+                  ? "member"
+                  : ""
+              ) || [];
             return (
               <div key={msg.message_id} className="px-2 mb-2">
                 <div className="text-gray-400 text-xs flex justify-between">
                   <span
                     className={[
                       "mr-2",
-                      msg.author.badges
-                        ?.map(({ title }) =>
-                          title === "Owner"
-                            ? "bg-blue-600 text-white font-bold px-2 rounded"
-                            : title.toLowerCase().includes("member")
-                            ? "text-green-500"
-                            : ""
-                        )
-                        ?.join(" "),
+                      authorType.includes("owner")
+                        ? "bg-blue-600 text-white font-bold px-2 rounded"
+                        : authorType.includes("moderator")
+                        ? "text-blue-600 font-bold"
+                        : authorType.includes("member")
+                        ? "text-green-500"
+                        : "",
                     ].join(" ")}
                   >
                     {msg.author.name}
@@ -142,6 +150,17 @@ const ChatReplay = (props: ChatReplayProps) => {
                         className="inline-block ml-2"
                       />
                     ) : null}
+                    {authorType.includes("moderator") && (
+                      <svg
+                        viewBox="0 0 16 16"
+                        className="text-blue-600 w-4 h-4 inline-block ml-2"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M9.64589146,7.05569719 C9.83346524,6.562372 9.93617022,6.02722257 9.93617022,5.46808511 C9.93617022,3.00042984 7.93574038,1 5.46808511,1 C4.90894765,1 4.37379823,1.10270499 3.88047304,1.29027875 L6.95744681,4.36725249 L4.36725255,6.95744681 L1.29027875,3.88047305 C1.10270498,4.37379824 1,4.90894766 1,5.46808511 C1,7.93574038 3.00042984,9.93617022 5.46808511,9.93617022 C6.02722256,9.93617022 6.56237198,9.83346524 7.05569716,9.64589147 L12.4098057,15 L15,12.4098057 L9.64589146,7.05569719 Z"
+                        />
+                      </svg>
+                    )}
                   </span>
                   <span>[{formatSeconds(msg.time_in_seconds)}]</span>
                 </div>
