@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Head from "next/head";
 import { AggregatedChannel } from "../pages/api/search";
 import PageBase from "./shared/PageBase";
 
@@ -11,6 +12,9 @@ const ChannelsListPage = (props: ChannelsListPageProps) => {
 
   return (
     <PageBase>
+      <Head>
+        <title>Channels - Ragtag Archive</title>
+      </Head>
       <div className="">
         {channels.map((channel) => (
           <Link
