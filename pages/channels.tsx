@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import ChannelsListPage from "../modules/ChannelsListPage";
-import { apiListChannels } from "./api/search";
+import { apiListChannels } from "./api/v1/channels";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const channels = await apiListChannels();

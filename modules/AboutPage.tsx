@@ -13,7 +13,8 @@ const AboutPage = () => {
           This website aims to back up as much Virtual YouTuber content as
           possible, mainly from Hololive. We back up (almost) everything
           available on the YouTube video page, including the thumbnail,
-          description, and chat logs.
+          description, chat logs, and captions (if available). All videos are
+          archived at the highest quality available.
         </p>
         <p>
           This project started on January 20th, 2021. Any videos that are

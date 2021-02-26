@@ -4,12 +4,12 @@ import {
   ES_BASIC_PASSWORD,
   ES_BASIC_USERNAME,
   ES_INDEX,
-} from "../../modules/shared/config";
+} from "../../../modules/shared/config";
 import axios from "axios";
 import {
   ElasticSearchResult,
   VideoMetadata,
-} from "../../modules/shared/database";
+} from "../../../modules/shared/database";
 
 export type StorageStatistics = {
   videos: number;
@@ -44,29 +44,6 @@ export const apiStorageStatistics = async (): Promise<StorageStatistics> => {
     size: res.data.aggregations.size.sum_size.value,
   };
 };
-
-export type AggregatedChannel = {
-  channel_name: string;
-  channel_id: string;
-  videos_count: number;
-};
-
-export const apiListChannels = async (): Promise<AggregatedChannel[]> =>
-  (
-    await apiSearchRaw({
-      aggs: {
-        channels: {
-          terms: { field: "channel_id", size: 1000 },
-          aggs: { hits: { top_hits: { _source: ["channel_name"], size: 1 } } },
-        },
-      },
-      size: 0,
-    })
-  ).data.aggregations.channels.buckets.map((bucket) => ({
-    channel_id: bucket.key,
-    channel_name: bucket.hits.hits.hits[0]._source.channel_name,
-    videos_count: bucket.doc_count,
-  }));
 
 export const apiRelatedVideos = async (
   videoId: string

@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import LandingPage from "../modules/LandingPage";
-import { apiSearch, apiStorageStatistics } from "./api/search";
+import { apiSearch, apiStorageStatistics } from "./api/v1/search";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const [results, stats] = await Promise.all([

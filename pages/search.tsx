@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import SearchPage, { SearchPageProps } from "../modules/SearchPage";
-import { apiSearch } from "./api/search";
+import { apiSearch } from "./api/v1/search";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const q = ctx.query.q as string;

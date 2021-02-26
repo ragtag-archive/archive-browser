@@ -4,7 +4,7 @@ import {
   ElasticSearchResult,
   VideoMetadata,
 } from "../../modules/shared/database";
-import { apiSearch } from "../api/search";
+import { apiSearch } from "../api/v1/search";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const channelId = ctx.params.channelId as string;

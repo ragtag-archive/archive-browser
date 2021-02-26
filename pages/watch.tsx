@@ -8,7 +8,7 @@ import {
 } from "../modules/shared/config";
 import { ElasticSearchResult, VideoMetadata } from "../modules/shared/database";
 import WatchPage, { WatchPageProps } from "../modules/WatchPage";
-import { apiRelatedVideos, apiSearch } from "./api/search";
+import { apiRelatedVideos, apiSearch } from "./api/v1/search";
 import { apiVideo } from "./api/video";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
