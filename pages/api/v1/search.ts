@@ -188,10 +188,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     );
     res.json(searchRes.data);
   } else {
-    const searchRes = await apiSearch({
-      q: req.query.q as string,
-      v: req.query.v as string,
-    });
+    const searchRes = await apiSearch(req.query);
     res.json(searchRes.data);
   }
 };
