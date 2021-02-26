@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Head from "next/head";
-import { AggregatedChannel } from "../pages/api/search";
+import { AggregatedChannel } from "../pages/api/v1/channels";
 import PageBase from "./shared/PageBase";
 
 export type ChannelsListPageProps = {

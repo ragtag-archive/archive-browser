@@ -3,7 +3,7 @@ import Head from "next/head";
 import PageBase from "./shared/PageBase";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database";
 import VideoCard from "./shared/VideoCard";
-import { StorageStatistics } from "../pages/api/search";
+import { StorageStatistics } from "../pages/api/v1/search";
 import { formatBytes, formatNumber } from "./shared/format";
 
 type LandingPageProps = {
