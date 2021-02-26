@@ -1,3 +1,5 @@
+import prettyBytes from "pretty-bytes";
+
 export const formatSeconds = (seconds: number) => {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
@@ -18,3 +20,5 @@ export const formatDate = (date: Date) =>
     day: "numeric",
     year: "numeric",
   }).format(date);
+
+export const formatBytes = (bytes: number) => prettyBytes(bytes);

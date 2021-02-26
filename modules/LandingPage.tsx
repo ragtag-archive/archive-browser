@@ -4,7 +4,7 @@ import PageBase from "./shared/PageBase";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database";
 import VideoCard from "./shared/VideoCard";
 import { StorageStatistics } from "../pages/api/search";
-import { formatNumber } from "./shared/format";
+import { formatBytes, formatNumber } from "./shared/format";
 
 type LandingPageProps = {
   videos: ElasticSearchResult<VideoMetadata>;
@@ -17,7 +17,7 @@ const LandingPage = (props: LandingPageProps) => {
   const siteName = "Ragtag Archive";
   const siteDesc = "Preserving culture, one stream at a time";
 
-  const formatSize = (stats.size / Math.pow(1024, 4)).toFixed(2) + " TB";
+  const formatSize = formatBytes(stats.size);
 
   return (
     <PageBase>

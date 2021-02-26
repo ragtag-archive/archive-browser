@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DRIVE_BASE_URL } from "./config";
 import { VideoMetadata } from "./database";
-import { formatDate, formatSeconds } from "./format";
+import { formatBytes, formatDate, formatSeconds } from "./format";
 import { format } from "timeago.js";
 
 export type VideoCardProps = {
@@ -14,6 +14,7 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
     DRIVE_BASE_URL + "/" + video?.video_id + "/" + video?.video_id;
   const thumbURL = videoBase + ".webp";
   const mkvURL = videoBase + ".mkv";
+  const mkvSize = video.files.find(({ name }) => name.endsWith(".mkv")).size;
 
   return (
     <div
@@ -85,7 +86,7 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
                     transition duration-200
                   "
                 >
-                  Download .mkv
+                  Download .mkv ({mkvSize > -1 ? formatBytes(mkvSize) : "N/A"})
                 </a>
                 <a
                   href={"https://youtu.be/" + video.video_id}

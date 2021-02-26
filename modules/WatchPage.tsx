@@ -5,7 +5,7 @@ import Linkify from "react-linkify";
 import { VideoMetadata } from "./shared/database";
 import { DRIVE_BASE_URL } from "./shared/config";
 import VideoPlayer from "./shared/VideoPlayer";
-import { formatDate } from "./shared/format";
+import { formatBytes, formatDate } from "./shared/format";
 import ChatReplayPanel from "./shared/ChatReplayPanel";
 import VideoCard from "./shared/VideoCard";
 import Link from "next/link";
@@ -21,9 +21,11 @@ export type WatchPageProps = {
 const WatchPage = ({ videoInfo, hasChat, relatedVideos }: WatchPageProps) => {
   const videoBase =
     DRIVE_BASE_URL + "/" + videoInfo.video_id + "/" + videoInfo.video_id;
-  const mkvURL = videoBase + ".mkv";
   const thumbURL = videoBase + ".webp";
   const chatURL = videoBase + ".chat.json";
+  const mkvURL = videoBase + ".mkv";
+  const mkvSize = videoInfo.files.find(({ name }) => name.endsWith(".mkv"))
+    .size;
 
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [fmtVideo, fmtAudio] = videoInfo.format_id.split("+");
@@ -118,7 +120,7 @@ const WatchPage = ({ videoInfo, hasChat, relatedVideos }: WatchPageProps) => {
                       transition duration-200
                     "
                   >
-                    Download .mkv
+                    Download .mkv ({formatBytes(mkvSize)})
                   </a>
                   <a
                     href={"https://youtu.be/" + videoInfo.video_id}
