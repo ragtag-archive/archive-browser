@@ -3,16 +3,21 @@ import Head from "next/head";
 import PageBase from "./shared/PageBase";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database";
 import VideoCard from "./shared/VideoCard";
+import { StorageStatistics } from "../pages/api/search";
+import { formatNumber } from "./shared/format";
 
 type LandingPageProps = {
   videos: ElasticSearchResult<VideoMetadata>;
+  stats: StorageStatistics;
 };
 
 const LandingPage = (props: LandingPageProps) => {
-  const { videos } = props;
+  const { videos, stats } = props;
 
   const siteName = "Ragtag Archive";
   const siteDesc = "Preserving culture, one stream at a time";
+
+  const formatSize = (stats.size / Math.pow(1024, 4)).toFixed(2) + " TB";
 
   return (
     <PageBase>
@@ -43,9 +48,11 @@ const LandingPage = (props: LandingPageProps) => {
           <h1 className="text-3xl mt-16 text-center">
             Welcome to the archives
           </h1>
-          <p className="text-lg text-center mb-16">
-            We have {videos.hits.total.value} videos. Here are the latest ones.
+          <p className="text-lg text-center">
+            We have {formatNumber(videos.hits.total.value)} videos using up{" "}
+            {formatSize} of data.
           </p>
+          <p className="text-lg text-center mb-16">Here are the latest ones.</p>
         </div>
 
         {videos.hits.hits.map(({ _source: video }) => (

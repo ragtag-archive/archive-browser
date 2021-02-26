@@ -11,6 +11,40 @@ import {
   VideoMetadata,
 } from "../../modules/shared/database";
 
+export type StorageStatistics = {
+  videos: number;
+  files: number;
+  size: number;
+};
+export const apiStorageStatistics = async (): Promise<StorageStatistics> => {
+  const res = await apiSearchRaw({
+    size: 0,
+    query: {
+      match_all: {},
+    },
+    aggregations: {
+      size: {
+        nested: {
+          path: "files",
+        },
+        aggregations: {
+          sum_size: {
+            sum: {
+              field: "files.size",
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return {
+    videos: res.data.hits.total.value,
+    files: res.data.aggregations.size.doc_count,
+    size: res.data.aggregations.size.sum_size.value,
+  };
+};
+
 export type AggregatedChannel = {
   channel_name: string;
   channel_id: string;
