@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Sidebar from "./Sidebar";
+import { IconBars } from "./icons";
 
 const Header = () => {
   const router = useRouter();
@@ -25,16 +26,7 @@ const Header = () => {
                 className="mr-2 p-2 w-10 h-10 focus:outline-none hover:bg-gray-800 focus:bg-gray-800 rounded-full"
                 onClick={() => setIsSidebarOpen((x) => !x)}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
-                  className="w-6 h-6"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
-                  />
-                </svg>
+                <IconBars className="w-6 h-6" />
               </button>
               <Link href="/">
                 <a className="py-1">Ragtag Archive</a>
@@ -51,9 +43,10 @@ const Header = () => {
                 type="text"
                 placeholder="Search"
                 className="
-                w-full rounded px-4 py-1 md:mx-2
-                bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring
-                transition duration-100"
+                  w-full rounded px-4 py-1 md:mx-2
+                  bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring
+                  transition duration-100
+                "
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />

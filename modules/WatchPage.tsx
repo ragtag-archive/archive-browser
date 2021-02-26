@@ -9,6 +9,7 @@ import { formatBytes, formatDate } from "./shared/format";
 import ChatReplayPanel from "./shared/ChatReplayPanel";
 import VideoCard from "./shared/VideoCard";
 import Link from "next/link";
+import { IconDownload, IconYouTube } from "./shared/icons";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -118,9 +119,11 @@ const WatchPage = ({ videoInfo, hasChat, relatedVideos }: WatchPageProps) => {
                       focus:bg-gray-900 focus:outline-none
                       px-4 py-2 mr-2 rounded
                       transition duration-200
+                      flex flex-row items-center
                     "
                   >
-                    Download .mkv ({formatBytes(mkvSize)})
+                    <IconDownload className="w-4 h-4 mr-3" />
+                    Download ({formatBytes(mkvSize)})
                   </a>
                   <a
                     href={"https://youtu.be/" + videoInfo.video_id}
@@ -132,8 +135,10 @@ const WatchPage = ({ videoInfo, hasChat, relatedVideos }: WatchPageProps) => {
                       focus:bg-gray-900 focus:outline-none
                       px-4 py-2 mr-2 rounded
                       transition duration-200
+                      flex flex-row items-center
                     "
                   >
+                    <IconYouTube className="w-4 h-4 mr-3" />
                     Watch on YouTube
                   </a>
                 </div>

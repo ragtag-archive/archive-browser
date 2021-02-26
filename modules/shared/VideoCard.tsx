@@ -3,6 +3,7 @@ import { DRIVE_BASE_URL } from "./config";
 import { VideoMetadata } from "./database";
 import { formatBytes, formatDate, formatSeconds } from "./format";
 import { format } from "timeago.js";
+import { IconDownload, IconYouTube } from "./icons";
 
 export type VideoCardProps = {
   video?: VideoMetadata;
@@ -84,9 +85,11 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
                     focus:bg-gray-900 focus:outline-none
                     px-4 py-2 mr-2 rounded
                     transition duration-200
+                    flex flex-row items-center
                   "
                 >
-                  Download .mkv ({mkvSize > -1 ? formatBytes(mkvSize) : "N/A"})
+                  <IconDownload className="w-4 h-4 mr-3" />
+                  Download ({formatBytes(mkvSize)})
                 </a>
                 <a
                   href={"https://youtu.be/" + video.video_id}
@@ -98,8 +101,10 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
                     focus:bg-gray-900 focus:outline-none
                     px-4 py-2 mr-2 rounded
                     transition duration-200
+                    flex flex-row items-center
                   "
                 >
+                  <IconYouTube className="w-4 h-4 mr-3" />
                   Watch on YouTube
                 </a>
               </div>
