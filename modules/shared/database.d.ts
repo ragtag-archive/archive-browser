@@ -14,6 +14,7 @@ export type VideoMetadata = {
   like_count: number;
   dislike_count: number;
   archived_timestamp: string;
+  files: Array<{ name: string; size: number }>;
 };
 
 export type ElasticSearchDocument<T> = {

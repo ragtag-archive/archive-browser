@@ -14,17 +14,11 @@ const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
 export type WatchPageProps = {
   videoInfo: VideoMetadata;
-  fileList: string[];
   hasChat: boolean;
   relatedVideos: VideoMetadata[];
 };
 
-const WatchPage = ({
-  videoInfo,
-  fileList,
-  hasChat,
-  relatedVideos,
-}: WatchPageProps) => {
+const WatchPage = ({ videoInfo, hasChat, relatedVideos }: WatchPageProps) => {
   const videoBase =
     DRIVE_BASE_URL + "/" + videoInfo.video_id + "/" + videoInfo.video_id;
   const mkvURL = videoBase + ".mkv";
@@ -34,9 +28,17 @@ const WatchPage = ({
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [fmtVideo, fmtAudio] = videoInfo.format_id.split("+");
   const urlVideo =
-    DRIVE_BASE_URL + fileList.find((file) => file.includes(".f" + fmtVideo));
+    DRIVE_BASE_URL +
+    "/" +
+    videoInfo.video_id +
+    "/" +
+    videoInfo.files.find((file) => file.name.includes(".f" + fmtVideo));
   const urlAudio =
-    DRIVE_BASE_URL + fileList.find((file) => file.includes(".f" + fmtAudio));
+    DRIVE_BASE_URL +
+    "/" +
+    videoInfo.video_id +
+    "/" +
+    videoInfo.files.find((file) => file.name.includes(".f" + fmtAudio));
 
   return (
     <PageBase>
@@ -72,13 +74,13 @@ const WatchPage = ({
               srcVideo={urlVideo}
               srcAudio={urlAudio}
               srcPoster={thumbURL}
-              captions={fileList
-                .filter((file) => file.endsWith(".vtt"))
-                .map((path) => {
-                  const lang = path.split(".")[1];
+              captions={videoInfo.files
+                .filter((file) => file.name.endsWith(".vtt"))
+                .map(({ name }) => {
+                  const lang = name.split(".")[1];
                   return {
                     lang,
-                    src: DRIVE_BASE_URL + path,
+                    src: DRIVE_BASE_URL + "/" + videoInfo.video_id + "/" + name,
                   };
                 })}
               onPlaybackProgress={setPlaybackProgress}
