@@ -67,7 +67,11 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
               {Intl.NumberFormat("en-US").format(video.view_count)} views
               &middot; Uploaded {formatDate(new Date(video.upload_date))}{" "}
               &middot; Archived{" "}
-              {format(video.archived_timestamp + "Z", "en_US")}
+              {format(
+                video.archived_timestamp +
+                  (video.archived_timestamp.endsWith("Z") ? "" : "Z"),
+                "en_US"
+              )}
             </p>
             {!small && (
               <div className="flex flex-row mt-2">
