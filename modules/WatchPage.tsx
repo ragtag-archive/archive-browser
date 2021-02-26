@@ -32,13 +32,13 @@ const WatchPage = ({ videoInfo, hasChat, relatedVideos }: WatchPageProps) => {
     "/" +
     videoInfo.video_id +
     "/" +
-    videoInfo.files.find((file) => file.name.includes(".f" + fmtVideo));
+    videoInfo.files.find((file) => file.name.includes(".f" + fmtVideo)).name;
   const urlAudio =
     DRIVE_BASE_URL +
     "/" +
     videoInfo.video_id +
     "/" +
-    videoInfo.files.find((file) => file.name.includes(".f" + fmtAudio));
+    videoInfo.files.find((file) => file.name.includes(".f" + fmtAudio)).name;
 
   return (
     <PageBase>
