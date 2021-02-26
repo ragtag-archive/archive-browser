@@ -22,15 +22,15 @@ export const apiListChannels = async (): Promise<AggregatedChannel[]> =>
     await apiSearchRaw({
       aggs: {
         channels: {
-          terms: { field: "channel_name", size: 1000 },
-          aggs: { channel_id: { terms: { field: "channel_id", size: 1 } } },
+          terms: { field: "channel_id", size: 1000 },
+          aggs: { hits: { top_hits: { _source: ["channel_name"], size: 1 } } },
         },
       },
       size: 0,
     })
   ).data.aggregations.channels.buckets.map((bucket) => ({
-    channel_name: bucket.key,
-    channel_id: bucket.channel_id.buckets[0].key,
+    channel_id: bucket.key,
+    channel_name: bucket.hits.hits.hits[0]._source.channel_name,
     videos_count: bucket.doc_count,
   }));
 
@@ -95,33 +95,6 @@ export const apiSearch = async (query: {
   if (v) should.push({ match: { video_id: { query: v } } });
   if (channel_id) should.push({ match: { channel_id: { query: channel_id } } });
   if (q) {
-    // Workaround for channel_name being keyword instead of text
-    // Fetch list of channels
-    const channels = await apiListChannels();
-    channels
-      .map((channel) => ({
-        ...channel,
-        // Add a 'boost' parameter based on how many query words match the channel name
-        boost: q
-          .toLowerCase()
-          .split(" ")
-          .map((qPart) => channel.channel_name.toLowerCase().includes(qPart))
-          .filter((x) => x).length,
-      }))
-      // Filter only channels with at least one match
-      .filter((channel) => channel.boost > 0)
-      // Insert into query with boost
-      .forEach((channel) =>
-        should.push({
-          match: {
-            channel_id: {
-              query: channel.channel_id,
-              boost: channel.boost * 10,
-            },
-          },
-        })
-      );
-
     should.push(
       {
         match: {
@@ -145,6 +118,16 @@ export const apiSearch = async (query: {
             query: q,
             operator: "OR",
             fuzziness: "AUTO",
+          },
+        },
+      },
+      {
+        match: {
+          channel_name: {
+            query: q,
+            operator: "OR",
+            fuzziness: "AUTO",
+            boost: 10,
           },
         },
       }
