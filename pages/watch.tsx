@@ -1,4 +1,11 @@
+import axios from "axios";
 import { GetServerSideProps } from "next";
+import {
+  ES_BACKEND_URL,
+  ES_INDEX,
+  ES_BASIC_USERNAME,
+  ES_BASIC_PASSWORD,
+} from "../modules/shared/config";
 import { ElasticSearchResult, VideoMetadata } from "../modules/shared/database";
 import WatchPage, { WatchPageProps } from "../modules/WatchPage";
 import { apiRelatedVideos, apiSearch } from "./api/search";
@@ -6,7 +13,7 @@ import { apiVideo } from "./api/video";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
-    const v = ctx.query.v as string;
+    const v = (ctx.query.v as string).trim();
 
     if (!v) return { notFound: true };
 
@@ -18,6 +25,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     if (_searchResult.hits.total.value === 0) return { notFound: true };
     const videoInfo = _searchResult.hits.hits[0]._source;
 
+    // Fetch file list from GDrive if not available in database
     const files = Array.isArray(videoInfo.files)
       ? videoInfo.files
       : await apiVideo({ v }).then(({ urls }) =>
@@ -25,6 +33,24 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
             .map((url) => ({ name: url.split("/")[2], size: -1 }))
             .filter((file) => !!file.name)
         );
+
+    // Update database if file list not available
+    if (!Array.isArray(videoInfo.files)) {
+      console.log("Updating DB with files", files);
+      const updateres = await axios
+        .request({
+          method: "post",
+          baseURL: ES_BACKEND_URL,
+          url: "/" + ES_INDEX + "/_update/" + v,
+          auth: {
+            username: ES_BASIC_USERNAME,
+            password: ES_BASIC_PASSWORD,
+          },
+          data: { doc: { files } },
+        })
+        .catch(({ response }) => response);
+      console.log(updateres.data);
+    }
 
     const props: WatchPageProps = {
       videoInfo: {
