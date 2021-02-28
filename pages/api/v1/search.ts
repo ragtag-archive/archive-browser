@@ -39,9 +39,9 @@ export const apiStorageStatistics = async (): Promise<StorageStatistics> => {
   });
 
   return {
-    videos: res.data.hits.total.value,
-    files: res.data.aggregations.size.doc_count,
-    size: res.data.aggregations.size.sum_size.value,
+    videos: res.data?.hits?.total?.value || -1,
+    files: res.data?.aggregations?.size?.doc_count || -1,
+    size: res.data?.aggregations?.size?.sum_size?.value || -1,
   };
 };
 
@@ -167,18 +167,16 @@ export const apiSearch = async (query: {
 };
 
 export const apiSearchRaw = (dsl: any) =>
-  axios
-    .request({
-      method: "get",
-      baseURL: ES_BACKEND_URL,
-      url: "/" + ES_INDEX + "/_search",
-      auth: {
-        username: ES_BASIC_USERNAME,
-        password: ES_BASIC_PASSWORD,
-      },
-      data: dsl,
-    })
-    .catch(({ response }) => response);
+  axios.request({
+    method: "get",
+    baseURL: ES_BACKEND_URL,
+    url: "/" + ES_INDEX + "/_search",
+    auth: {
+      username: ES_BASIC_USERNAME,
+      password: ES_BASIC_PASSWORD,
+    },
+    data: dsl,
+  });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.body) {

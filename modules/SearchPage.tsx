@@ -3,6 +3,7 @@ import Head from "next/head";
 import PageBase from "./shared/PageBase";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database";
 import PaginatedResults from "./shared/PaginatedResults";
+import ServiceUnavailablePage from "./ServiceUnavailablePage";
 
 export type SearchPageProps = {
   q: string;
@@ -14,6 +15,8 @@ export type SearchPageProps = {
 };
 
 const SearchPage = (props: SearchPageProps) => {
+  if (!props.results) return <ServiceUnavailablePage />;
+
   const { q, ...rest } = props;
   return (
     <PageBase>

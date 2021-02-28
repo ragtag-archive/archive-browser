@@ -10,6 +10,7 @@ import ChatReplayPanel from "./shared/ChatReplayPanel";
 import VideoCard from "./shared/VideoCard";
 import Link from "next/link";
 import { IconDownload, IconYouTube } from "./shared/icons";
+import ServiceUnavailablePage from "./ServiceUnavailablePage";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -19,7 +20,10 @@ export type WatchPageProps = {
   relatedVideos: VideoMetadata[];
 };
 
-const WatchPage = ({ videoInfo, hasChat, relatedVideos }: WatchPageProps) => {
+const WatchPage = (props: WatchPageProps) => {
+  if (!props.videoInfo) return <ServiceUnavailablePage />;
+
+  const { videoInfo, hasChat, relatedVideos } = props;
   const videoBase =
     DRIVE_BASE_URL + "/" + videoInfo.video_id + "/" + videoInfo.video_id;
   const thumbURL = videoBase + ".webp";
