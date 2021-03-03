@@ -151,10 +151,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   };
 
-  const dSync = useDebounce({ videoReady, audioReady, isPlaying }, 100);
+  const dVideoReady = useDebounce(videoReady, 200);
+  const dAudioReady = useDebounce(audioReady, 200);
+  const dIsPlaying = useDebounce(isPlaying, 200);
   React.useEffect(() => {
     avSync();
-  }, [dSync, playbackProgress]);
+  }, [dVideoReady, dAudioReady, dIsPlaying, playbackProgress]);
 
   React.useEffect(() => {
     document.addEventListener("visibilitychange", avSync);
