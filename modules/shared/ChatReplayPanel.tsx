@@ -84,6 +84,9 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
             "transition-all duration-200",
             isChatVisible ? "h-96" : "h-0",
           ].join(" ")}
+          style={{
+            overscrollBehavior: "contain",
+          }}
           ref={refChatScrollDiv}
         >
           {isChatVisible ? (
