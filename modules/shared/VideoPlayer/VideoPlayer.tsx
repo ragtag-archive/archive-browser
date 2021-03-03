@@ -1,5 +1,6 @@
 import React from "react";
 import { formatSeconds } from "../format";
+import { useDebounce } from "../hooks/useDebounce";
 import {
   IconClosedCaptioningRegular,
   IconClosedCaptioningSolid,
@@ -57,6 +58,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const handlePlayPause = () => {
     if (!refVideo.current || !refAudio.current) return;
+    pingActivity();
 
     refVideo.current.currentTime = refAudio.current.currentTime;
     if (!videoReady || !audioReady) return;
@@ -69,6 +71,53 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refVideo.current.play();
     }
     setIsPlaying((now) => !now);
+  };
+
+  const nudgeTime = (delta: number) => {
+    setPlaybackProgress((now) => {
+      const newTime = Math.max(
+        0,
+        Math.min(
+          now + delta,
+          refAudio.current.duration,
+          refVideo.current.duration
+        )
+      );
+      refAudio.current.currentTime = newTime;
+      refVideo.current.currentTime = newTime;
+      return newTime;
+    });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    let handled = true;
+
+    if (e.key === " " || e.key === "k") {
+      handlePlayPause();
+    } else if (e.key === "ArrowRight") {
+      nudgeTime(5);
+    } else if (e.key === "ArrowLeft") {
+      nudgeTime(-5);
+    } else if (e.key === "l") {
+      nudgeTime(10);
+    } else if (e.key === "j") {
+      nudgeTime(-10);
+    } else if (e.key === "ArrowDown") {
+      setAudioVolume((now) => Math.max(now - 0.1, 0));
+    } else if (e.key === "ArrowUp") {
+      setAudioVolume((now) => Math.min(now + 0.1, 1));
+    } else if (e.key === "m") {
+      handleMuteUnmute();
+    } else if (e.key === "f") {
+      handleFullscreen();
+    } else if (e.key === "c") {
+      handleCaptionsButton();
+    } else handled = false;
+
+    if (handled) {
+      pingActivity();
+      e.preventDefault();
+    }
   };
 
   const handleFullscreen = () => {
@@ -92,7 +141,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refVideo.current.currentTime = refAudio.current.currentTime;
 
     // Sync playback state
-    console.log({ isPlaying, videoReady, audioReady });
     const ended = refAudio.current.ended || refVideo.current.ended;
     if (isPlaying && videoReady && audioReady && !ended) {
       refVideo.current.play();
@@ -103,9 +151,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   };
 
+  const dSync = useDebounce({ videoReady, audioReady, isPlaying }, 100);
   React.useEffect(() => {
     avSync();
-  }, [videoReady, audioReady, isPlaying, playbackProgress]);
+  }, [dSync, playbackProgress]);
 
   React.useEffect(() => {
     document.addEventListener("visibilitychange", avSync);
@@ -139,12 +188,15 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   return (
     <div
-      className={
-        "video-player bg-gray-900 " +
-        (isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "")
-      }
+      className={[
+        "video-player bg-gray-900",
+        "focus:outline-none",
+        isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "",
+      ].join(" ")}
       ref={refSelf}
       onMouseOut={() => setLastActive(0)}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
     >
       <div
         className="w-full h-0 relative overflow-hidden"
@@ -186,7 +238,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
               max={refVideo.current?.duration}
               onChange={(e) => {
                 const val = Number(e.target.value);
-                setLastActive(new Date().getTime());
+                pingActivity();
                 setPlaybackProgress(val);
                 if (refVideo.current) {
                   refVideo.current.pause();
@@ -233,8 +285,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 value={audioVolume}
                 min={0}
                 max={1}
-                step={0.01}
-                onChange={(e) => setAudioVolume(Number(e.target.value))}
+                step={0.1}
+                onChange={(e) => {
+                  setAudioVolume(Number(e.target.value));
+                  pingActivity();
+                }}
               />
 
               <p className="inline-block ml-4 py-2">
@@ -286,13 +341,13 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           preload="auto"
           crossOrigin="anonymous"
           poster={srcPoster}
+          onClick={handlePlayPause}
           onCanPlay={() => setVideoReady(true)}
           onPlaying={() => setVideoReady(true)}
           onSeeking={() => setVideoReady(false)}
           onSeeked={() => setVideoReady(true)}
           onWaiting={() => setVideoReady(false)}
           onStalled={() => setVideoReady(false)}
-          onClick={handlePlayPause}
           onTimeUpdate={() => setVideoReady(true)}
         >
           {captions.map(({ lang, src }) => {
