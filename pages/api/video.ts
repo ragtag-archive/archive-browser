@@ -12,17 +12,11 @@ export const apiVideo = async (query: { v?: string }) => {
     url: "/" + v + "/",
   });
 
-  const re = /href="(.*?)"/gm;
-  const urls = [];
-  let m: RegExpExecArray;
-  do {
-    m = re.exec(searchRes.data);
-    if (m) urls.push(m[1]);
-  } while (m);
+  const files = searchRes.data.files;
 
   return {
     ok: true,
-    urls,
+    files,
   };
 };
 

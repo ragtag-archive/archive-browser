@@ -29,8 +29,8 @@ const WatchPage = (props: WatchPageProps) => {
   const thumbURL = videoBase + ".webp";
   const chatURL = videoBase + ".chat.json";
   const mkvURL = videoBase + ".mkv";
-  const mkvSize = videoInfo.files.find(({ name }) => name.endsWith(".mkv"))
-    .size;
+  const mkvSize =
+    videoInfo.files.find(({ name }) => name.endsWith(".mkv"))?.size || -1;
 
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [fmtVideo, fmtAudio] = videoInfo.format_id.split("+");

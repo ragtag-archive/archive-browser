@@ -16,7 +16,7 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
   const thumbURL = videoBase + ".webp";
   const mkvURL = videoBase + ".mkv";
   const mkvSize =
-    video.files?.find(({ name }) => name.endsWith(".mkv")).size || -1;
+    video.files?.find(({ name }) => name.endsWith(".mkv"))?.size || -1;
 
   return (
     <div

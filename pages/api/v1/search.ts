@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import {
+  DRIVE_BASE_URL,
   ES_BACKEND_URL,
   ES_BASIC_PASSWORD,
   ES_BASIC_USERNAME,
