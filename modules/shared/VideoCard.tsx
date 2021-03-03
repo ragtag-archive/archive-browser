@@ -36,6 +36,7 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
                 <img
                   src={thumbURL}
                   className="absolute inset-0 w-full h-full"
+                  alt="Video thumbnail"
                 />
               )}
               <div className="absolute right-0 bottom-0 bg-black text-white px-2 bg-opacity-75 rounded m-2">

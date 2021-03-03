@@ -235,6 +235,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             <input
               type="range"
               className="absolute bottom-0 w-full seekbar"
+              aria-label="Seekbar"
               value={playbackProgress}
               min={0}
               max={refVideo.current?.duration}
@@ -261,6 +262,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 type="button"
                 onClick={handlePlayPause}
                 className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
+                aria-label="Play/Pause button"
               >
                 {isPlaying ? (
                   <IconPlay width="1em" height="1em" />
@@ -273,6 +275,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 type="button"
                 onClick={handleMuteUnmute}
                 className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
+                aria-label="Mute/Unmute button"
               >
                 {audioVolume === 0 ? (
                   <IconVolumeMute width="1em" height="1em" />
@@ -284,6 +287,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
               <input
                 type="range"
                 className="slider"
+                aria-label="Volume slider"
                 value={audioVolume}
                 min={0}
                 max={1}
@@ -303,6 +307,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
               {hasCaptions && (
                 <button
                   type="button"
+                  aria-label="Toggle captions button"
                   onClick={handleCaptionsButton}
                   className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
                 >
@@ -324,6 +329,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
               )}
               <button
                 type="button"
+                aria-label="Toggle fullscreen button"
                 onClick={handleFullscreen}
                 className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
               >

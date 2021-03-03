@@ -79,6 +79,7 @@ const ChatReplay = (props: ChatReplayProps) => {
                         <img
                           src={msg.author.badges[0].icons[1].url}
                           className="inline-block ml-2"
+                          aria-hidden
                         />
                       ) : null}
                     </div>
@@ -107,6 +108,7 @@ const ChatReplay = (props: ChatReplayProps) => {
                       <img
                         src={msg.author.badges[0].icons[1].url}
                         className="inline-block ml-2"
+                        aria-hidden
                       />
                     ) : null}
                   </div>
@@ -161,6 +163,7 @@ const ChatReplay = (props: ChatReplayProps) => {
                           key={badge.title}
                           src={badge.icons?.[1]?.url}
                           className="inline-block ml-2"
+                          aria-hidden
                         />
                       ) : null
                     )}

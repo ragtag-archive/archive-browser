@@ -23,6 +23,7 @@ const Header = () => {
             <div className="absolute z-50 flex flex-row align-center">
               <button
                 type="button"
+                aria-label="Open sidebar"
                 className="mr-2 p-2 w-10 h-10 focus:outline-none hover:bg-gray-800 focus:bg-gray-800 rounded-full"
                 onClick={() => setIsSidebarOpen((x) => !x)}
               >
@@ -42,6 +43,7 @@ const Header = () => {
               <input
                 type="text"
                 placeholder="Search"
+                aria-label="Search box"
                 className="
                   w-full rounded px-4 py-1 md:mx-2
                   bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring

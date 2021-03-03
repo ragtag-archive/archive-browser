@@ -94,30 +94,27 @@ const WatchPage = (props: WatchPageProps) => {
             />
           </div>
           <div className="mt-4 mx-6">
-            {!!videoInfo ? (
-              <>
-                <h1 className="text-2xl mb-2">{videoInfo.title}</h1>
-                <div className="flex flex-row justify-between">
-                  <p className="text-gray-400">
-                    {format(videoInfo.view_count)} views &middot; Uploaded{" "}
-                    {formatDate(new Date(videoInfo.upload_date))} &middot;
-                    Archived{" "}
-                    {formatDate(new Date(videoInfo.archived_timestamp))}
-                  </p>
-                  <div>
-                    <span className="text-green-500">
-                      {format(videoInfo.like_count)} likes
-                    </span>{" "}
-                    /{" "}
-                    <span className="text-red-500">
-                      {format(videoInfo.dislike_count)} dislikes
-                    </span>
-                  </div>
-                </div>
-                <div className="flex flex-row mt-2">
-                  <a
-                    href={mkvURL}
-                    className="
+            <h1 className="text-2xl mb-2">{videoInfo.title}</h1>
+            <div className="flex flex-row justify-between">
+              <p className="text-gray-400">
+                {format(videoInfo.view_count)} views &middot; Uploaded{" "}
+                {formatDate(new Date(videoInfo.upload_date))} &middot; Archived{" "}
+                {formatDate(new Date(videoInfo.archived_timestamp))}
+              </p>
+              <div>
+                <span className="text-green-500">
+                  {format(videoInfo.like_count)} likes
+                </span>{" "}
+                /{" "}
+                <span className="text-red-500">
+                  {format(videoInfo.dislike_count)} dislikes
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-row mt-2">
+              <a
+                href={mkvURL}
+                className="
                       bg-gray-800
                       hover:bg-gray-700
                       focus:bg-gray-900 focus:outline-none
@@ -125,15 +122,15 @@ const WatchPage = (props: WatchPageProps) => {
                       transition duration-200
                       flex flex-row items-center
                     "
-                  >
-                    <IconDownload className="w-4 h-4 mr-3" />
-                    Download ({formatBytes(mkvSize)})
-                  </a>
-                  <a
-                    href={"https://youtu.be/" + videoInfo.video_id}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="
+              >
+                <IconDownload className="w-4 h-4 mr-3" />
+                Download ({formatBytes(mkvSize)})
+              </a>
+              <a
+                href={"https://youtu.be/" + videoInfo.video_id}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="
                       bg-gray-800
                       hover:bg-gray-700
                       focus:bg-gray-900 focus:outline-none
@@ -141,46 +138,35 @@ const WatchPage = (props: WatchPageProps) => {
                       transition duration-200
                       flex flex-row items-center
                     "
-                  >
-                    <IconYouTube className="w-4 h-4 mr-3" />
-                    Watch on YouTube
-                  </a>
-                </div>
-                <div className="mt-4">
-                  <Link href={"/channel/" + videoInfo.channel_id}>
-                    <a className="mb-4 font-bold text-lg inline-block mb-4 hover:underline">
-                      {videoInfo.channel_name}
-                    </a>
-                  </Link>
-                  <div className="whitespace-pre-line break-words text-gray-300">
-                    <Linkify
-                      componentDecorator={(href, text, key) => (
-                        <a
-                          key={key}
-                          href={href}
-                          className="text-blue-300 hover:underline focus:outline-none focus:underline"
-                          target="_blank"
-                          rel="noreferrer noopener nofollow"
-                        >
-                          {text}
-                        </a>
-                      )}
+              >
+                <IconYouTube className="w-4 h-4 mr-3" />
+                Watch on YouTube
+              </a>
+            </div>
+            <div className="mt-4">
+              <Link href={"/channel/" + videoInfo.channel_id}>
+                <a className="mb-4 font-bold text-lg inline-block mb-4 hover:underline">
+                  {videoInfo.channel_name}
+                </a>
+              </Link>
+              <div className="whitespace-pre-line break-words text-gray-300">
+                <Linkify
+                  componentDecorator={(href, text, key) => (
+                    <a
+                      key={key}
+                      href={href}
+                      className="text-blue-300 hover:underline focus:outline-none focus:underline"
+                      target="_blank"
+                      rel="noreferrer noopener nofollow"
                     >
-                      {videoInfo.description}
-                    </Linkify>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <h2 className="text-xl bg-gray-800 animate-pulse w-1/3">
-                  &nbsp;
-                </h2>
-                <div className="bg-gray-800 animate-pulse w-full h-16 mt-2">
-                  &nbsp;
-                </div>
-              </>
-            )}
+                      {text}
+                    </a>
+                  )}
+                >
+                  {videoInfo.description}
+                </Linkify>
+              </div>
+            </div>
           </div>
         </div>
         <div className="w-full md:w-1/4 md:pl-4">
@@ -195,7 +181,7 @@ const WatchPage = (props: WatchPageProps) => {
             />
           )}
           <div className="mt-6">
-            <h4 className="text-xl font-bold mb-2">Related videos</h4>
+            <h2 className="text-xl font-bold mb-2">Related videos</h2>
             <div>
               {relatedVideos.map((video) => (
                 <div className="mb-4">
