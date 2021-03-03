@@ -4,7 +4,7 @@ import PageBase from "./shared/PageBase";
 import Linkify from "react-linkify";
 import { VideoMetadata } from "./shared/database";
 import { DRIVE_BASE_URL } from "./shared/config";
-import VideoPlayer from "./shared/VideoPlayer";
+import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
 import { formatBytes, formatDate } from "./shared/format";
 import ChatReplayPanel from "./shared/ChatReplayPanel";
 import VideoCard from "./shared/VideoCard";

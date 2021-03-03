@@ -1,5 +1,5 @@
 import React from "react";
-import { formatSeconds } from "./format";
+import { formatSeconds } from "../format";
 import {
   IconClosedCaptioningRegular,
   IconClosedCaptioningSolid,
@@ -9,7 +9,8 @@ import {
   IconPlay,
   IconVolume,
   IconVolumeMute,
-} from "./icons";
+} from "../icons";
+import LoaderRing from "./components/LoaderRing";
 
 type CaptionsTrack = {
   lang: string;
@@ -56,6 +57,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const handlePlayPause = () => {
     if (!refVideo.current || !refAudio.current) return;
+
+    refVideo.current.currentTime = refAudio.current.currentTime;
     if (!videoReady || !audioReady) return;
 
     if (isPlaying) {
@@ -78,36 +81,35 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   };
 
-  const handleVisibilityChange = () => {
-    if (isPlaying) {
-      refAudio.current?.play?.();
-      refVideo.current?.play?.();
+  const avSync = () => {
+    if (!refAudio.current || !refVideo.current) return;
+
+    // Sync time
+    if (
+      Math.abs(refAudio.current.currentTime - refVideo.current.currentTime) >
+      0.5
+    )
+      refVideo.current.currentTime = refAudio.current.currentTime;
+
+    // Sync playback state
+    console.log({ isPlaying, videoReady, audioReady });
+    const ended = refAudio.current.ended || refVideo.current.ended;
+    if (isPlaying && videoReady && audioReady && !ended) {
+      refVideo.current.play();
+      refAudio.current.play();
     } else {
-      refAudio.current?.pause?.();
-      refVideo.current?.pause?.();
+      refVideo.current.pause();
+      refAudio.current.pause();
     }
   };
 
   React.useEffect(() => {
-    refVideo.current?.pause?.();
-    refAudio.current?.pause?.();
-    setIsPlaying(false);
-    setVideoReady(false);
-    setAudioReady(false);
-    setPlaybackProgress(0);
-
-    refVideo.current?.load?.();
-    refAudio.current?.load?.();
-    props.onPlaybackProgress?.(0);
-
-    if (refVideo.current) refVideo.current.currentTime = 0;
-    if (refAudio.current) refAudio.current.currentTime = 0;
-  }, [srcVideo, srcAudio]);
+    avSync();
+  }, [videoReady, audioReady, isPlaying, playbackProgress]);
 
   React.useEffect(() => {
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () =>
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("visibilitychange", avSync);
+    return () => document.removeEventListener("visibilitychange", avSync);
   }, [isPlaying]);
 
   React.useEffect(() => {
@@ -121,13 +123,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     return () =>
       refSelf.current?.removeEventListener?.("mousemove", pingActivity);
   }, [refSelf]);
-
-  React.useEffect(() => {
-    if (videoReady && audioReady && isPlaying) {
-      refVideo.current.play();
-      refAudio.current.play();
-    }
-  }, [videoReady, audioReady]);
 
   React.useEffect(() => {
     for (let i = 0; i < refVideo.current.textTracks.length; i++) {
@@ -162,12 +157,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             isLoading ? "opacity-100" : "opacity-0",
           ].join(" ")}
         >
-          <div className="lds-ring mx-auto">
-            <div />
-            <div />
-            <div />
-            <div />
-          </div>
+          <LoaderRing />
         </div>
         <div
           className="absolute inset-x-0 bottom-0 z-20 px-6 transition duration-200"
@@ -178,9 +168,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           }}
         >
           <div className="w-full h-4 relative group">
-            <div className="absolute bottom-0 bg-white opacity-50 h-1 group-hover:h-2 w-full transition-all duration-200" />
+            <div className="absolute bottom-0 bg-white opacity-50 h-1 group-hover:h-2 rounded-full w-full transition-all duration-200" />
             <div
-              className="absolute bottom-0 bg-blue-500 h-1 group-hover:h-2"
+              className="absolute bottom-0 bg-blue-500 h-1 group-hover:h-2 rounded-full"
               style={{
                 transition: "height .2s",
                 width:
@@ -296,66 +286,14 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           preload="auto"
           crossOrigin="anonymous"
           poster={srcPoster}
-          onCanPlay={() => {
-            console.log("[video] onCanPlay()");
-            setVideoReady(true);
-          }}
-          onPlaying={() => {
-            console.log("[video] onPlaying()");
-            setVideoReady(true);
-          }}
-          onPlay={() => {
-            console.log("[video] onPlay()");
-            if (!refAudio.current) return;
-            refAudio.current.currentTime = refVideo.current.currentTime;
-            refAudio.current.play();
-          }}
-          onPause={() => {
-            console.log("[video] onPause()");
-            if (!refAudio.current) return;
-            refAudio.current.currentTime = refVideo.current.currentTime;
-            refAudio.current.pause();
-          }}
-          onWaiting={() => {
-            console.log("[video] onWaiting()");
-            setVideoReady(false);
-            refAudio.current?.pause();
-          }}
-          onStalled={() => {
-            console.log("[video] onStalled()");
-            setVideoReady(false);
-            refAudio.current?.pause();
-          }}
+          onCanPlay={() => setVideoReady(true)}
+          onPlaying={() => setVideoReady(true)}
+          onSeeking={() => setVideoReady(false)}
+          onSeeked={() => setVideoReady(true)}
+          onWaiting={() => setVideoReady(false)}
+          onStalled={() => setVideoReady(false)}
           onClick={handlePlayPause}
-          onTimeUpdate={() => {
-            if (!refAudio.current || !refVideo.current) return;
-            if (!isPlaying) refVideo.current.pause();
-
-            setPlaybackProgress(refVideo.current.currentTime);
-            setVideoReady(true);
-
-            if (refVideo.current.ended) setIsPlaying(false);
-
-            // Resync if more than 500ms off
-            if (
-              Math.abs(
-                refAudio.current.currentTime - refVideo.current.currentTime
-              ) > 0.5
-            )
-              refAudio.current.currentTime = refVideo.current.currentTime;
-
-            try {
-              if (refVideo.current.paused) refAudio.current.pause();
-              else refAudio.current.play();
-            } catch (ex) {}
-
-            // Update parent
-            props.onPlaybackProgress?.(refVideo.current.currentTime);
-          }}
-          onEnded={() => {
-            console.log("[video] onEnded()");
-            setIsPlaying(false);
-          }}
+          onTimeUpdate={() => setVideoReady(true)}
         >
           {captions.map(({ lang, src }) => {
             return (
@@ -377,12 +315,15 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           onPlaying={() => setAudioReady(true)}
           onSeeking={() => setAudioReady(false)}
           onSeeked={() => setAudioReady(true)}
+          onWaiting={() => setAudioReady(false)}
+          onStalled={() => setAudioReady(false)}
           onLoadedData={() => setAudioReady(true)}
           onTimeUpdate={() => {
             setAudioReady(true);
-            if (!isPlaying) refAudio.current.pause();
+            setPlaybackProgress(refAudio.current.currentTime);
+            props.onPlaybackProgress?.(refAudio.current.currentTime);
           }}
-        ></audio>
+        />
       </div>
     </div>
   );
