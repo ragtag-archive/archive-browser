@@ -15,6 +15,7 @@ export type StorageStatistics = {
   videos: number;
   files: number;
   size: number;
+  duration: number;
 };
 export const apiStorageStatistics = async (): Promise<StorageStatistics> => {
   const res = await apiSearchRaw({
@@ -35,6 +36,11 @@ export const apiStorageStatistics = async (): Promise<StorageStatistics> => {
           },
         },
       },
+      total_duration: {
+        sum: {
+          field: "duration",
+        },
+      },
     },
   });
 
@@ -42,6 +48,7 @@ export const apiStorageStatistics = async (): Promise<StorageStatistics> => {
     videos: res.data?.hits?.total?.value || -1,
     files: res.data?.aggregations?.size?.doc_count || -1,
     size: res.data?.aggregations?.size?.sum_size?.value || -1,
+    duration: res.data?.aggregations?.total_duration?.value || -1,
   };
 };
 

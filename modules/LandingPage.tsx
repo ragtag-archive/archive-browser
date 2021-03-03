@@ -17,6 +17,7 @@ const LandingPage = (props: LandingPageProps) => {
 
   const { videos, stats } = props;
   const formatSize = formatBytes(stats.size);
+  const totalHours = formatNumber(Math.floor(stats.duration / 60 / 60));
 
   return (
     <PageBase>
@@ -28,11 +29,11 @@ const LandingPage = (props: LandingPageProps) => {
               Welcome to the archives
             </h1>
             <p className="text-lg text-center">
-              We have {formatNumber(videos.hits.total.value)} videos using up{" "}
-              {formatSize} of data.
+              We have {formatNumber(videos.hits.total.value)} videos worth{" "}
+              {totalHours} hours of content.
             </p>
             <p className="text-lg text-center mb-16">
-              Here are the latest ones.
+              That's about {formatSize} of data. Here are the latest ones.
             </p>
           </div>
 
