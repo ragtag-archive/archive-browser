@@ -29,11 +29,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       // Fetch file list from GDrive if not available in database
       const files = Array.isArray(videoInfo.files)
         ? videoInfo.files
-        : await apiVideo({ v }).then(({ urls }) =>
-            urls
-              .map((url) => ({ name: url.split("/")[2], size: -1 }))
-              .filter((file) => !!file.name)
-          );
+        : await apiVideo({ v }).then(({ files }) => files);
 
       // Update database if file list not available
       if (!Array.isArray(videoInfo.files)) {
