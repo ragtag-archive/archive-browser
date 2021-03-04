@@ -7,8 +7,13 @@ import { formatBytes, formatNumber } from "./shared/format";
 import DefaultHead from "./shared/DefaultHead";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
 
+type VideoSection = {
+  title: string;
+  videos: ElasticSearchResult<VideoMetadata>;
+};
+
 type LandingPageProps = {
-  videos?: ElasticSearchResult<VideoMetadata>;
+  videos?: VideoSection[];
   stats?: StorageStatistics;
 };
 
@@ -22,33 +27,36 @@ const LandingPage = (props: LandingPageProps) => {
   return (
     <PageBase>
       <DefaultHead />
-      {videos?.hits?.total?.value > 0 ? (
-        <div>
-          <div className="px-4">
-            <h1 className="text-3xl mt-16 text-center">
-              Welcome to the archives
-            </h1>
-            <p className="text-lg text-center">
-              We have {formatNumber(videos.hits.total.value)} videos worth{" "}
-              {totalHours} hours of content.
-            </p>
-            <p className="text-lg text-center mb-16">
-              That's about {formatSize} of data. Here are the latest ones.
-            </p>
-          </div>
-
-          {videos.hits.hits.map(({ _source: video }) => (
-            <VideoCard video={video} key={video.video_id} />
-          ))}
-        </div>
-      ) : (
+      <div>
         <div className="px-4">
           <h1 className="text-3xl mt-16 text-center">
-            Service temporarily unavailable
+            Welcome to the archives
           </h1>
-          <p className="text-lg text-center">Come back in a minute or two.</p>
+          <p className="text-lg text-center">
+            We have {formatNumber(stats.videos)} videos worth {totalHours} hours
+            of content, taking up {formatSize} in storage space.
+          </p>
         </div>
-      )}
+
+        {videos.map((section, idx) => (
+          <div key={section.title} className="py-6">
+            <h1 className="text-2xl font-bold px-4 sm:px-2">{section.title}</h1>
+            <div>
+              {section.videos.hits.hits.map(({ _source: video }) => (
+                <div
+                  className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 sm:px-2 py-4 inline-block"
+                  key={video.video_id}
+                >
+                  <VideoCard small video={video} />
+                </div>
+              ))}
+            </div>
+            {idx < videos.length - 1 && (
+              <div className="border-b-2 border-gray-600 w-1/3 mx-auto" />
+            )}
+          </div>
+        ))}
+      </div>
     </PageBase>
   );
 };
