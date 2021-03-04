@@ -16,10 +16,34 @@ export type ChannelPageProps = {
 
 const ChannelPage = (props: ChannelPageProps) => {
   const { channelId, channelName, ...rest } = props;
+  const description = "Browse archived videos from " + channelName;
   return (
     <PageBase>
       <Head>
         <title>{channelName} - Ragtag Archive</title>
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Ragtag Archive" />
+        <meta property="og:title" content={channelName} />
+        <meta property="og:description" content={description} />
+        <meta
+          property="og:url"
+          content={"https://archive.ragtag.moe/channel/" + channelId}
+        />
+        <meta
+          property="og:image"
+          content="https://archive.ragtag.moe/favicon.png"
+        />
+        <meta property="twitter:card" content="summary" />
+        <meta property="twitter:title" content={channelName} />
+        <meta property="twitter:description" content={description} />
+        <meta
+          property="twitter:url"
+          content={"https://archive.ragtag.moe/channel/" + channelId}
+        />
+        <meta
+          property="twitter:image"
+          content="https://archive.ragtag.moe/favicon.png"
+        />
       </Head>
       <div>
         <div className="px-4 my-16">
