@@ -16,6 +16,7 @@ import {
   K_AMPLITUDE_EVENT_VIDEO_MUTE_TOGGLE,
   K_AMPLITUDE_EVENT_VIDEO_PAUSE,
   K_AMPLITUDE_EVENT_VIDEO_PLAY,
+  K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR,
   K_AMPLITUDE_EVENT_VIDEO_READY_STATE,
   K_AMPLITUDE_EVENT_VIDEO_SEEK,
   K_AMPLITUDE_EVENT_VIDEO_VOLUME_ADJUST,
@@ -52,6 +53,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [lastActive, setLastActive] = React.useState(0);
   const [activeCaption, setActiveCaption] = React.useState(-1);
+  const [isVideoErrored, setIsVideoErrored] = React.useState(false);
 
   const { logEvent } = useAmplitude();
 
@@ -73,6 +75,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const getPlayerState = () => {
     return {
+      srcVideo,
+      srcAudio,
       isPlaying,
       videoReady,
       audioReady,
@@ -105,6 +109,27 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refVideo.current.play();
     }
     setIsPlaying((now) => !now);
+  };
+
+  const handleMediaError = (
+    e:
+      | React.SyntheticEvent<HTMLVideoElement, Event>
+      | React.SyntheticEvent<HTMLAudioElement, Event>
+  ) => {
+    const error =
+      // @ts-ignore
+      e.nativeEvent.path?.[0]?.error ||
+      // @ts-ignore
+      e.nativeEvent.originalTarget?.error ||
+      new Error("Unknown error");
+
+    setIsVideoErrored(true);
+    console.error("Error playing video: ", error.message);
+    console.error(e);
+    logEvent(K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR, {
+      ...getPlayerState(),
+      error: error.message,
+    });
   };
 
   const nudgeTime = (delta: number) => {
@@ -263,10 +288,16 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           className={[
             "absolute inset-0 pointer-events-none z-10 flex flex-col justify-center bg-black bg-opacity-25",
             "transition duration-200",
-            isLoading ? "opacity-100" : "opacity-0",
+            isLoading || isVideoErrored ? "opacity-100" : "opacity-0",
           ].join(" ")}
         >
-          <LoaderRing />
+          {isVideoErrored ? (
+            <div className="text-center">
+              <p>Error playing video</p>
+            </div>
+          ) : (
+            <LoaderRing />
+          )}
         </div>
         <div
           className="absolute inset-x-0 bottom-0 z-20 px-6 transition duration-200"
@@ -402,6 +433,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           onWaiting={() => setVideoReady(false)}
           onStalled={() => setVideoReady(false)}
           onTimeUpdate={() => setVideoReady(true)}
+          onError={handleMediaError}
         >
           {captions.map(({ lang, src }) => {
             return (
@@ -426,6 +458,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           onWaiting={() => setAudioReady(false)}
           onStalled={() => setAudioReady(false)}
           onLoadedData={() => setAudioReady(true)}
+          onError={handleMediaError}
           onTimeUpdate={() => {
             setAudioReady(true);
             setPlaybackProgress(refAudio.current.currentTime);

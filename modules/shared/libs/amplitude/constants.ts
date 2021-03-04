@@ -9,3 +9,4 @@ export const K_AMPLITUDE_EVENT_VIDEO_CAPTIONS_CYCLE = "video_captions_cycle";
 export const K_AMPLITUDE_EVENT_VIDEO_FULLSCREEN_TOGGLE =
   "video_fullscreen_toggle";
 export const K_AMPLITUDE_EVENT_VIDEO_READY_STATE = "video_ready_state";
+export const K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR = "video_playback_error";
