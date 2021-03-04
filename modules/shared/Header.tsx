@@ -11,8 +11,26 @@ const Header = () => {
 
   const doSearch = (e: any) => {
     e.preventDefault();
+
+    // Try to parse search
+    try {
+      const url = new URL(search);
+      if (["www.youtube.com", "youtube.com"].includes(url.hostname)) {
+        if (url.pathname.includes("/channel/")) {
+          router.push(url.pathname);
+          return;
+        } else if (url.pathname === "/watch" && url.searchParams.has("v")) {
+          router.push("/watch?v=" + url.searchParams.get("v"));
+          return;
+        }
+      } else if (url.hostname === "youtu.be") {
+        router.push("/watch?v=" + url.pathname.substr(1));
+        return;
+      }
+    } catch (e) {}
+
     router.push("/search?q=" + encodeURIComponent(search));
-    return false;
+    return;
   };
 
   return (
@@ -42,7 +60,7 @@ const Header = () => {
             >
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search or enter YouTube URL"
                 aria-label="Search box"
                 className="
                   w-full rounded px-4 py-1 md:mx-2

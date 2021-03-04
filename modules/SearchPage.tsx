@@ -24,7 +24,11 @@ const SearchPage = (props: SearchPageProps) => {
         <title>{q} - Ragtag Archive</title>
       </Head>
       <div>
-        <PaginatedResults {...rest} />
+        {props.results.hits.total.value === 0 ? (
+          <h1 className="text-3xl mt-16 text-center">No results</h1>
+        ) : (
+          <PaginatedResults {...rest} />
+        )}
       </div>
     </PageBase>
   );
