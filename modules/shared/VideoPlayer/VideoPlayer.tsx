@@ -11,6 +11,16 @@ import {
   IconVolume,
   IconVolumeMute,
 } from "../icons";
+import {
+  K_AMPLITUDE_EVENT_VIDEO_CAPTIONS_CYCLE,
+  K_AMPLITUDE_EVENT_VIDEO_MUTE_TOGGLE,
+  K_AMPLITUDE_EVENT_VIDEO_PAUSE,
+  K_AMPLITUDE_EVENT_VIDEO_PLAY,
+  K_AMPLITUDE_EVENT_VIDEO_READY_STATE,
+  K_AMPLITUDE_EVENT_VIDEO_SEEK,
+  K_AMPLITUDE_EVENT_VIDEO_VOLUME_ADJUST,
+} from "../libs/amplitude/constants";
+import { useAmplitude } from "../libs/amplitude/useAmplitude";
 import LoaderRing from "./components/LoaderRing";
 
 type CaptionsTrack = {
@@ -43,20 +53,44 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [lastActive, setLastActive] = React.useState(0);
   const [activeCaption, setActiveCaption] = React.useState(-1);
 
+  const { logEvent } = useAmplitude();
+
   const hasCaptions = captions.length > 0;
 
-  const handleCaptionsButton = () =>
+  const handleCaptionsButton = () => {
     setActiveCaption((now) => ((now + 2) % (captions.length + 1)) - 1);
+    logEvent(K_AMPLITUDE_EVENT_VIDEO_CAPTIONS_CYCLE, getPlayerState());
+  };
 
   const handleMuteUnmute = () => {
     setAudioVolume((now) => (now === 0 ? 0.5 : 0));
+    logEvent(K_AMPLITUDE_EVENT_VIDEO_MUTE_TOGGLE, getPlayerState());
   };
 
   const pingActivity = () => {
     setLastActive(new Date().getTime());
   };
 
+  const getPlayerState = () => {
+    return {
+      isPlaying,
+      videoReady,
+      audioReady,
+      playbackProgress,
+      audioVolume,
+      isFullscreen,
+      hasCaptions,
+      activeCaption: captions?.[activeCaption]?.lang || "",
+    };
+  };
+
   const handlePlayPause = () => {
+    if (isPlaying) {
+      logEvent(K_AMPLITUDE_EVENT_VIDEO_PAUSE, getPlayerState());
+    } else {
+      logEvent(K_AMPLITUDE_EVENT_VIDEO_PLAY, getPlayerState());
+    }
+
     if (!refVideo.current || !refAudio.current) return;
     pingActivity();
 
@@ -128,6 +162,23 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       document.exitFullscreen();
       setIsFullscreen(false);
     }
+    logEvent(K_AMPLITUDE_EVENT_VIDEO_CAPTIONS_CYCLE, getPlayerState());
+  };
+
+  const handleSeek = (val: number) => {
+    pingActivity();
+    setPlaybackProgress(val);
+    if (refVideo.current) {
+      refVideo.current.pause();
+      refVideo.current.currentTime = val;
+      setVideoReady(false);
+    }
+    if (refAudio.current) {
+      refAudio.current.pause();
+      refAudio.current.currentTime = val;
+      setAudioReady(false);
+    }
+    logEvent(K_AMPLITUDE_EVENT_VIDEO_SEEK, getPlayerState());
   };
 
   const avSync = () => {
@@ -157,6 +208,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   React.useEffect(() => {
     avSync();
   }, [dVideoReady, dAudioReady, dIsPlaying, playbackProgress]);
+
+  React.useEffect(() => {
+    logEvent(K_AMPLITUDE_EVENT_VIDEO_READY_STATE, getPlayerState());
+  }, [videoReady, audioReady]);
 
   React.useEffect(() => {
     document.addEventListener("visibilitychange", avSync);
@@ -239,21 +294,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
               value={playbackProgress}
               min={0}
               max={refVideo.current?.duration}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                pingActivity();
-                setPlaybackProgress(val);
-                if (refVideo.current) {
-                  refVideo.current.pause();
-                  refVideo.current.currentTime = val;
-                  setVideoReady(false);
-                }
-                if (refAudio.current) {
-                  refAudio.current.pause();
-                  refAudio.current.currentTime = val;
-                  setAudioReady(false);
-                }
-              }}
+              onChange={(e) => handleSeek(Number(e.target.value))}
             />
           </div>
           <div className="flex flex-row justify-between">
@@ -295,6 +336,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 onChange={(e) => {
                   setAudioVolume(Number(e.target.value));
                   pingActivity();
+                  logEvent(
+                    K_AMPLITUDE_EVENT_VIDEO_VOLUME_ADJUST,
+                    getPlayerState()
+                  );
                 }}
               />
 
