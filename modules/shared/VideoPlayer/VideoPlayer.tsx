@@ -22,6 +22,7 @@ import {
   K_AMPLITUDE_EVENT_VIDEO_VOLUME_ADJUST,
 } from "../libs/amplitude/constants";
 import { useAmplitude } from "../libs/amplitude/useAmplitude";
+import { checkAutoplay } from "../util";
 import LoaderRing from "./components/LoaderRing";
 
 type CaptionsTrack = {
@@ -35,6 +36,7 @@ export type VideoPlayerProps = {
   srcPoster: string;
   captions?: CaptionsTrack[];
   onPlaybackProgress?: (progress: number) => any;
+  autoplay?: boolean;
 };
 
 const VideoPlayer = (props: VideoPlayerProps) => {
@@ -45,9 +47,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const refVideo = React.useRef<HTMLVideoElement>(null);
   const refAudio = React.useRef<HTMLAudioElement>(null);
 
-  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [isPlaying, setIsPlaying] = React.useState(props.autoplay);
   const [videoReady, setVideoReady] = React.useState(false);
-  const [audioReady, setAudioReady] = React.useState(false);
+  const [audioReady, setAudioReady] = React.useState(true);
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [audioVolume, setAudioVolume] = React.useState(1);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
@@ -88,6 +90,15 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     };
   };
 
+  const tryPlayVideo = async () => {
+    try {
+      await refAudio.current.play();
+      await refVideo.current.play();
+    } catch (_) {
+      setIsPlaying(false);
+    }
+  };
+
   const handlePlayPause = () => {
     if (isPlaying) {
       logEvent(K_AMPLITUDE_EVENT_VIDEO_PAUSE, getPlayerState());
@@ -104,8 +115,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     } else {
       if (!videoReady || !audioReady) return;
 
-      refAudio.current.play();
-      refVideo.current.play();
+      tryPlayVideo();
+      refAudio.current.volume = audioVolume;
     }
     setIsPlaying((now) => !now);
   };
@@ -222,8 +233,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     // Sync playback state
     const ended = refAudio.current.ended || refVideo.current.ended;
     if (isPlaying && dVideoReady && dAudioReady && !ended) {
-      refVideo.current.play();
-      refAudio.current.play();
+      tryPlayVideo();
     } else {
       refVideo.current.pause();
       refAudio.current.pause();
@@ -262,6 +272,15 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     if (activeCaption >= 0)
       refVideo.current.textTracks[activeCaption].mode = "showing";
   }, [activeCaption]);
+
+  React.useEffect(() => {
+    if (props.autoplay) {
+      checkAutoplay().then((can) => {
+        console.log({ can });
+        if (can) setIsPlaying(true);
+      });
+    }
+  }, []);
 
   const isLoading =
     !refVideo.current ||
@@ -443,6 +462,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           onStalled={() => setVideoReady(false)}
           onTimeUpdate={() => setVideoReady(true)}
           onError={handleMediaError}
+          playsInline
+          muted
         >
           {captions.map(({ lang, src }) => {
             return (
@@ -466,6 +487,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           onSeeked={() => setAudioReady(true)}
           onWaiting={() => setAudioReady(false)}
           onStalled={() => setAudioReady(false)}
+          onLoad={() => setAudioReady(true)}
           onLoadedData={() => setAudioReady(true)}
           onError={handleMediaError}
           onTimeUpdate={() => {

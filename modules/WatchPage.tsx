@@ -106,6 +106,7 @@ const WatchPage = (props: WatchPageProps) => {
                   };
                 })}
               onPlaybackProgress={setPlaybackProgress}
+              autoplay
             />
           </div>
         </div>
