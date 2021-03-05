@@ -8,7 +8,7 @@ import {
 } from "../modules/shared/config";
 import { ElasticSearchResult, VideoMetadata } from "../modules/shared/database";
 import WatchPage, { WatchPageProps } from "../modules/WatchPage";
-import { apiRelatedVideos, apiSearch } from "./api/v1/search";
+import { apiRelatedVideos, apiSearch, apiSearchRaw } from "./api/v1/search";
 import { apiVideo } from "./api/video";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -25,6 +25,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       const _searchResult = searchResult.data as ElasticSearchResult<VideoMetadata>;
       if (_searchResult.hits.total.value === 0) return { notFound: true };
       const videoInfo = _searchResult.hits.hits[0]._source;
+
+      // Grab number of videos by channel
+      const _channelSearch = await apiSearch({
+        channel_id: videoInfo.channel_id,
+        size: 0,
+      });
+      const channelVideoCount = (_channelSearch.data as ElasticSearchResult<VideoMetadata>)
+        .hits.total.value;
 
       // Fetch file list from GDrive if not available in database
       const files = Array.isArray(videoInfo.files)
@@ -58,6 +66,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         relatedVideos: related.hits.hits
           .map((hit) => hit._source)
           .filter((video) => video.video_id !== v),
+        channelVideoCount,
       };
 
       return { props };

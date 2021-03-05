@@ -5,11 +5,10 @@ import Linkify from "react-linkify";
 import { VideoMetadata } from "./shared/database";
 import { DRIVE_BASE_URL } from "./shared/config";
 import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
-import { formatBytes, formatDate } from "./shared/format";
+import { formatDate } from "./shared/format";
 import ChatReplayPanel from "./shared/ChatReplayPanel";
 import VideoCard from "./shared/VideoCard";
 import Link from "next/link";
-import { IconDownload, IconYouTube } from "./shared/icons";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
 import VideoActionButtons from "./shared/VideoActionButtons";
 
@@ -19,6 +18,7 @@ export type WatchPageProps = {
   videoInfo: VideoMetadata;
   hasChat: boolean;
   relatedVideos: VideoMetadata[];
+  channelVideoCount: number;
 };
 
 const WatchPage = (props: WatchPageProps) => {
@@ -29,9 +29,7 @@ const WatchPage = (props: WatchPageProps) => {
     DRIVE_BASE_URL + "/" + videoInfo.video_id + "/" + videoInfo.video_id;
   const thumbURL = videoBase + ".webp";
   const chatURL = videoBase + ".chat.json";
-  const mkvURL = videoBase + ".mkv";
-  const mkvSize =
-    videoInfo.files.find(({ name }) => name.endsWith(".mkv"))?.size || -1;
+  const channelBase = DRIVE_BASE_URL + "/" + videoInfo.channel_id;
 
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [fmtVideo, fmtAudio] = videoInfo.format_id.split("+");
@@ -117,8 +115,20 @@ const WatchPage = (props: WatchPageProps) => {
             </div>
             <div className="mt-4">
               <Link href={"/channel/" + videoInfo.channel_id}>
-                <a className="mb-4 font-bold text-lg inline-block mb-4 hover:underline">
-                  {videoInfo.channel_name}
+                <a className="mb-4 mb-4 hover:underline flex flex-row">
+                  <img
+                    alt="Channel thumbnail"
+                    src={channelBase + "/profile.jpg"}
+                    className="w-12 h-12 rounded-full"
+                  />
+                  <div className="ml-4">
+                    <p className="font-bold text-lg leading-tight">
+                      {videoInfo.channel_name}
+                    </p>
+                    <span className="text-gray-400 leading-tight">
+                      {props.channelVideoCount} videos
+                    </span>
+                  </div>
                 </a>
               </Link>
               <div className="whitespace-pre-line break-words text-gray-300">

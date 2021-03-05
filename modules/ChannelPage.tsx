@@ -3,6 +3,7 @@ import Head from "next/head";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database";
 import PageBase from "./shared/PageBase";
 import PaginatedResults from "./shared/PaginatedResults";
+import { DRIVE_BASE_URL } from "./shared/config";
 
 export type ChannelPageProps = {
   channelId: string;
@@ -31,7 +32,7 @@ const ChannelPage = (props: ChannelPageProps) => {
         />
         <meta
           property="og:image"
-          content="https://archive.ragtag.moe/favicon.png"
+          content={DRIVE_BASE_URL + "/" + channelId + "/profile.jpg"}
         />
         <meta property="twitter:card" content="summary" />
         <meta property="twitter:title" content={channelName} />
@@ -42,7 +43,7 @@ const ChannelPage = (props: ChannelPageProps) => {
         />
         <meta
           property="twitter:image"
-          content="https://archive.ragtag.moe/favicon.png"
+          content={DRIVE_BASE_URL + "/" + channelId + "/profile.jpg"}
         />
       </Head>
       <div>
