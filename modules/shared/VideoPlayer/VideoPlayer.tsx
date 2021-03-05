@@ -1,6 +1,6 @@
 import React from "react";
 import { formatSeconds } from "../format";
-import { useDebounce } from "../hooks/useDebounce";
+import { useThrottle } from "../hooks/useThrottle";
 import {
   IconClosedCaptioningRegular,
   IconClosedCaptioningSolid,
@@ -98,13 +98,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     if (!refVideo.current || !refAudio.current) return;
     pingActivity();
 
-    refVideo.current.currentTime = refAudio.current.currentTime;
-    if (!videoReady || !audioReady) return;
-
     if (isPlaying) {
       refAudio.current.pause();
       refVideo.current.pause();
     } else {
+      if (!videoReady || !audioReady) return;
+
       refAudio.current.play();
       refVideo.current.play();
     }
@@ -206,6 +205,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     logEvent(K_AMPLITUDE_EVENT_VIDEO_SEEK, getPlayerState());
   };
 
+  const syncDebounce = 1000;
+  const dVideoReady = useThrottle(videoReady, syncDebounce);
+  const dAudioReady = useThrottle(audioReady, syncDebounce);
+
   const avSync = () => {
     if (!refAudio.current || !refVideo.current) return;
 
@@ -218,7 +221,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
     // Sync playback state
     const ended = refAudio.current.ended || refVideo.current.ended;
-    if (isPlaying && videoReady && audioReady && !ended) {
+    if (isPlaying && dVideoReady && dAudioReady && !ended) {
       refVideo.current.play();
       refAudio.current.play();
     } else {
@@ -227,12 +230,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   };
 
-  const dVideoReady = useDebounce(videoReady, 200);
-  const dAudioReady = useDebounce(audioReady, 200);
-  const dIsPlaying = useDebounce(isPlaying, 200);
   React.useEffect(() => {
     avSync();
-  }, [dVideoReady, dAudioReady, dIsPlaying, playbackProgress]);
+  }, [dVideoReady, dAudioReady, isPlaying, playbackProgress]);
 
   React.useEffect(() => {
     logEvent(K_AMPLITUDE_EVENT_VIDEO_READY_STATE, getPlayerState());
@@ -264,7 +264,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   }, [activeCaption]);
 
   const isLoading =
-    !refVideo.current || !refAudio.current || !videoReady || !audioReady;
+    !refVideo.current ||
+    !refAudio.current ||
+    !dVideoReady ||
+    !dAudioReady ||
+    !videoReady ||
+    !audioReady;
 
   const controlsVisible = new Date().getTime() - lastActive < 5000;
 
@@ -425,7 +430,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           className="w-full h-full absolute"
           preload="auto"
           crossOrigin="anonymous"
-          // poster={srcPoster}
           onClick={handlePlayPause}
           onCanPlay={() => setVideoReady(true)}
           onPlaying={() => setVideoReady(true)}
