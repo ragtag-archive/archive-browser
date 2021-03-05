@@ -32,7 +32,12 @@ const WatchPage = (props: WatchPageProps) => {
   const channelBase = DRIVE_BASE_URL + "/" + videoInfo.channel_id;
 
   const [isChatVisible, setIsChatVisible] = React.useState(false);
+  const [innerHeight, setInnerHeight] = React.useState(null);
   const refMobileScrollTarget = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    setInnerHeight(window.innerHeight);
+  }, [window.innerHeight]);
 
   React.useEffect(() => {
     if (isChatVisible)
@@ -81,10 +86,10 @@ const WatchPage = (props: WatchPageProps) => {
         <meta property="twitter:image" content={thumbURL} />
       </Head>
       <div
-        className={[
-          "flex lg:flex-row flex-col lg:h-auto",
-          isChatVisible ? "h-screen" : "",
-        ].join(" ")}
+        className={["flex lg:flex-row flex-col lg:h-auto"].join(" ")}
+        style={{
+          height: isChatVisible ? innerHeight : "auto",
+        }}
       >
         <div className="w-full lg:w-3/4">
           <div className="lg:absolute lg:top-0" ref={refMobileScrollTarget} />
