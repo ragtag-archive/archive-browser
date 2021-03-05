@@ -4,6 +4,7 @@ import { VideoMetadata } from "./database";
 import { formatBytes, formatDate, formatSeconds } from "./format";
 import { format } from "timeago.js";
 import { IconDownload, IconYouTube } from "./icons";
+import VideoActionButtons from "./VideoActionButtons";
 
 export type VideoCardProps = {
   video?: VideoMetadata;
@@ -14,9 +15,6 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
   const videoBase =
     DRIVE_BASE_URL + "/" + video?.video_id + "/" + video?.video_id;
   const thumbURL = videoBase + ".webp";
-  const mkvURL = videoBase + ".mkv";
-  const mkvSize =
-    video.files?.find(({ name }) => name.endsWith(".mkv"))?.size || -1;
 
   return (
     <div
@@ -77,40 +75,7 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
                 "en_US"
               )}
             </p>
-            {!small && (
-              <div className="flex flex-row mt-2">
-                <a
-                  href={mkvURL}
-                  className="
-                    bg-gray-800
-                    hover:bg-gray-700
-                    focus:bg-gray-900 focus:outline-none
-                    px-4 py-2 mr-2 rounded
-                    transition duration-200
-                    flex flex-row items-center
-                  "
-                >
-                  <IconDownload className="w-4 h-4 mr-3" />
-                  Download ({formatBytes(mkvSize)})
-                </a>
-                <a
-                  href={"https://youtu.be/" + video.video_id}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="
-                    bg-gray-800
-                    hover:bg-gray-700
-                    focus:bg-gray-900 focus:outline-none
-                    px-4 py-2 mr-2 rounded
-                    transition duration-200
-                    flex flex-row items-center
-                  "
-                >
-                  <IconYouTube className="w-4 h-4 mr-3" />
-                  Watch on YouTube
-                </a>
-              </div>
-            )}
+            {!small && <VideoActionButtons video={video} />}
           </>
         ) : (
           <div>
