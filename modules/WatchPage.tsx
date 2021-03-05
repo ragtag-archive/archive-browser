@@ -11,6 +11,7 @@ import VideoCard from "./shared/VideoCard";
 import Link from "next/link";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
 import VideoActionButtons from "./shared/VideoActionButtons";
+import { useWindowSize } from "./shared/hooks/useWindowSize";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -32,12 +33,8 @@ const WatchPage = (props: WatchPageProps) => {
   const channelBase = DRIVE_BASE_URL + "/" + videoInfo.channel_id;
 
   const [isChatVisible, setIsChatVisible] = React.useState(false);
-  const [innerHeight, setInnerHeight] = React.useState(null);
   const refMobileScrollTarget = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    setInnerHeight(window.innerHeight);
-  }, [window.innerHeight]);
+  const { innerWidth, innerHeight } = useWindowSize();
 
   React.useEffect(() => {
     if (isChatVisible)
@@ -88,7 +85,7 @@ const WatchPage = (props: WatchPageProps) => {
       <div
         className={["flex lg:flex-row flex-col lg:h-auto"].join(" ")}
         style={{
-          height: isChatVisible ? innerHeight : "auto",
+          height: isChatVisible && innerWidth < 640 ? innerHeight : "auto",
         }}
       >
         <div className="w-full lg:w-3/4">
