@@ -284,6 +284,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         className="w-full h-0 relative overflow-hidden"
         style={{ paddingBottom: "56.25%" }}
       >
+        <img className="absolute inset-0" aria-hidden src={srcPoster} />
         <div
           className={[
             "absolute inset-0 pointer-events-none z-10 flex flex-col justify-center bg-black bg-opacity-25",
@@ -424,7 +425,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           className="w-full h-full absolute"
           preload="auto"
           crossOrigin="anonymous"
-          poster={srcPoster}
+          // poster={srcPoster}
           onClick={handlePlayPause}
           onCanPlay={() => setVideoReady(true)}
           onPlaying={() => setVideoReady(true)}
