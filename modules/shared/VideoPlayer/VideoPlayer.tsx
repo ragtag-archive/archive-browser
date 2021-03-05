@@ -92,11 +92,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const tryPlayVideo = async () => {
     try {
-      await refAudio.current.play();
+      await refAudio.current.play().catch(() => setIsPlaying(false));
       await refVideo.current.play();
-    } catch (_) {
-      setIsPlaying(false);
-    }
+    } catch (_) {}
   };
 
   const handlePlayPause = () => {
