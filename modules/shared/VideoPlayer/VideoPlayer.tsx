@@ -1,5 +1,6 @@
 import React from "react";
 import { formatSeconds } from "../format";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useThrottle } from "../hooks/useThrottle";
 import {
   IconClosedCaptioningRegular,
@@ -51,7 +52,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [videoReady, setVideoReady] = React.useState(false);
   const [audioReady, setAudioReady] = React.useState(true);
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
-  const [audioVolume, setAudioVolume] = React.useState(1);
+  const [audioVolume, setAudioVolume] = useLocalStorage("player:volume", 1);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [lastActive, setLastActive] = React.useState(0);
   const [activeCaption, setActiveCaption] = React.useState(-1);
