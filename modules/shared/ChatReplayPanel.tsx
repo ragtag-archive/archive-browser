@@ -6,12 +6,13 @@ import ChatReplay from "./ChatReplay";
 export type ChatReplayPanelProps = {
   src: string;
   currentTimeSeconds: number;
+  onChatToggle?: (isVisible: boolean) => any;
 };
 
 const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [replayData, setReplayData] = React.useState<ChatMessage[]>(null);
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
-  const [isChatVisible, setIsChatVisible] = React.useState(true);
+  const [isChatVisible, setIsChatVisible] = React.useState(false);
   const [isErrored, setIsErrored] = React.useState(false);
   const refChatScrollDiv = React.useRef<HTMLDivElement>(null);
 
@@ -31,6 +32,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
       }
 
       setReplayData(data.data);
+      setIsChatVisible(true);
     } catch (ex) {
       setIsErrored(true);
     }
@@ -50,6 +52,10 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
         behavior: "smooth",
       });
   }, [props.currentTimeSeconds]);
+
+  React.useEffect(() => {
+    props.onChatToggle?.(isChatVisible);
+  }, [isChatVisible]);
 
   if (replayData === null)
     return (
@@ -75,35 +81,31 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
     );
 
   return (
-    <div>
-      <div className="relative">
-        <div
-          className={[
-            "px-2 border border-gray-800 rounded",
-            "overflow-y-scroll resize-y",
-            "transition-all duration-200",
-            isChatVisible ? "h-96" : "h-0",
-          ].join(" ")}
-          style={{
-            overscrollBehavior: "contain",
-          }}
-          ref={refChatScrollDiv}
-        >
-          {isChatVisible ? (
+    <div className="h-full flex flex-col">
+      {isChatVisible && (
+        <div className="relative flex-1">
+          <div
+            className={[
+              "px-2 border border-gray-800 rounded",
+              "overflow-y-scroll absolute inset-0",
+              "transition-all duration-200",
+            ].join(" ")}
+            style={{
+              overscrollBehavior: "contain",
+            }}
+            ref={refChatScrollDiv}
+          >
             <ChatReplay
               currentTimeSeconds={props.currentTimeSeconds}
               replayData={replayData}
             />
-          ) : (
-            <div>Chat disabled</div>
-          )}
+          </div>
         </div>
-        <div className="absolute right-0 bottom-0 w-4 h-4 bg-gray-800 pointer-events-none" />
-      </div>
+      )}
       <button
         type="button"
         onClick={() => setIsChatVisible((now) => !now)}
-        className="w-full text-center bg-gray-900 hover:bg-gray-800 focus:ring focus:outline-none rounded transition duration-200"
+        className="w-full py-2 text-center bg-gray-900 hover:bg-gray-800 focus:ring focus:outline-none rounded transition duration-200"
       >
         {isChatVisible ? "Hide chat replay" : "Show chat replay"}
       </button>

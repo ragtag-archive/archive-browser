@@ -16,14 +16,14 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
     video.files?.find(({ name }) => name.endsWith(".mkv"))?.size || -1;
 
   return (
-    <div className="flex flex-row mt-2">
+    <div className="flex md:flex-row flex-col md:w-auto w-full mt-2">
       <a
         href={mkvURL}
         className="
           bg-gray-800
           hover:bg-gray-700
           focus:bg-gray-900 focus:outline-none
-          px-4 py-2 mr-2 rounded
+          px-4 py-2 md:mr-2 mb-2 md:mb-0 rounded
           transition duration-200
           flex flex-row items-center
         "
@@ -39,7 +39,7 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
           bg-gray-800
           hover:bg-gray-700
           focus:bg-gray-900 focus:outline-none
-          px-4 py-2 mr-2 rounded
+          px-4 py-2 md:mr-2 mb-2 md:mb-0 rounded
           transition duration-200
           flex flex-row items-center
         "

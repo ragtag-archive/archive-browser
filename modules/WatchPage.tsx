@@ -31,6 +31,14 @@ const WatchPage = (props: WatchPageProps) => {
   const chatURL = videoBase + ".chat.json";
   const channelBase = DRIVE_BASE_URL + "/" + videoInfo.channel_id;
 
+  const [isChatVisible, setIsChatVisible] = React.useState(false);
+  const refMobileScrollTarget = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (isChatVisible)
+      refMobileScrollTarget.current?.scrollIntoView({ behavior: "smooth" });
+  }, [isChatVisible]);
+
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [fmtVideo, fmtAudio] = videoInfo.format_id.split("+");
   const urlVideo =
@@ -72,8 +80,14 @@ const WatchPage = (props: WatchPageProps) => {
         <meta property="twitter:description" content={videoInfo.channel_name} />
         <meta property="twitter:image" content={thumbURL} />
       </Head>
-      <div className="flex md:flex-row flex-col">
-        <div className={"w-full md:w-3/4"}>
+      <div
+        className={[
+          "flex lg:flex-row flex-col lg:h-auto",
+          isChatVisible ? "h-screen" : "",
+        ].join(" ")}
+      >
+        <div className="w-full lg:w-3/4">
+          <div className="lg:absolute lg:top-0" ref={refMobileScrollTarget} />
           <div className="relative bg-gray-400">
             <VideoPlayer
               key={urlVideo}
@@ -92,6 +106,28 @@ const WatchPage = (props: WatchPageProps) => {
               onPlaybackProgress={setPlaybackProgress}
             />
           </div>
+        </div>
+        <div
+          className={[
+            "w-full lg:w-1/4 lg:pl-4",
+            isChatVisible ? "flex-1" : "",
+          ].join(" ")}
+        >
+          {!hasChat ? (
+            <div className="border border-gray-800 rounded p-4 text-center">
+              <p>Chat replay unavailable</p>
+            </div>
+          ) : (
+            <ChatReplayPanel
+              src={chatURL}
+              currentTimeSeconds={playbackProgress}
+              onChatToggle={setIsChatVisible}
+            />
+          )}
+        </div>
+      </div>
+      <div className="flex lg:flex-row flex-col">
+        <div className="w-full lg:w-3/4">
           <div className="mt-4 mx-6">
             <h1 className="text-2xl mb-2">{videoInfo.title}</h1>
             <div className="flex flex-row justify-between">
@@ -114,23 +150,25 @@ const WatchPage = (props: WatchPageProps) => {
               <VideoActionButtons video={videoInfo} />
             </div>
             <div className="mt-4">
-              <Link href={"/channel/" + videoInfo.channel_id}>
-                <a className="mb-4 mb-4 hover:underline flex flex-row">
-                  <img
-                    alt="Channel thumbnail"
-                    src={channelBase + "/profile.jpg"}
-                    className="w-12 h-12 rounded-full"
-                  />
-                  <div className="ml-4">
-                    <p className="font-bold text-lg leading-tight">
-                      {videoInfo.channel_name}
-                    </p>
-                    <span className="text-gray-400 leading-tight">
-                      {props.channelVideoCount} videos
-                    </span>
-                  </div>
-                </a>
-              </Link>
+              <div className="inline-block">
+                <Link href={"/channel/" + videoInfo.channel_id}>
+                  <a className="mb-4 mb-4 hover:underline flex flex-row">
+                    <img
+                      alt="Channel thumbnail"
+                      src={channelBase + "/profile.jpg"}
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <div className="ml-4">
+                      <p className="font-bold text-lg leading-tight">
+                        {videoInfo.channel_name}
+                      </p>
+                      <span className="text-gray-400 leading-tight">
+                        {props.channelVideoCount} videos
+                      </span>
+                    </div>
+                  </a>
+                </Link>
+              </div>
               <div className="whitespace-pre-line break-words text-gray-300">
                 <Linkify
                   componentDecorator={(href, text, key) => (
@@ -151,17 +189,7 @@ const WatchPage = (props: WatchPageProps) => {
             </div>
           </div>
         </div>
-        <div className="w-full md:w-1/4 md:pl-4">
-          {!hasChat ? (
-            <div className="border border-gray-800 rounded p-4 text-center">
-              <p>Chat replay unavailable</p>
-            </div>
-          ) : (
-            <ChatReplayPanel
-              src={chatURL}
-              currentTimeSeconds={playbackProgress}
-            />
-          )}
+        <div className="w-full lg:w-1/4 lg:pl-4">
           <div className="mt-6">
             <h2 className="text-xl font-bold mb-2">Related videos</h2>
             <div>
