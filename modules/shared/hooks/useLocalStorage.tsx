@@ -3,7 +3,10 @@ import React from "react";
 /**
  * https://usehooks.com/useLocalStorage/
  */
-export function useLocalStorage<T>(key: string, initialValue: T) {
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [T, (value: T | ((val: T) => T)) => void] {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = React.useState<T>(() => {

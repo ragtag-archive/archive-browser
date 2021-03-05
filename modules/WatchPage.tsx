@@ -197,7 +197,7 @@ const WatchPage = (props: WatchPageProps) => {
             <h2 className="text-xl font-bold mb-2">Related videos</h2>
             <div>
               {relatedVideos.map((video) => (
-                <div className="mb-4">
+                <div className="mb-4" key={video.video_id}>
                   <VideoCard small video={video} key={video.video_id} />
                 </div>
               ))}
