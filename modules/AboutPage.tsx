@@ -17,7 +17,7 @@ const AboutPage = () => {
           archived at the highest quality available.
         </p>
         <p>
-          This project started on January 20th, 2021. Any videos that are
+          This project started on February 20th, 2021. Any videos that are
           already gone by that date won't be available here.
         </p>
         <p>
