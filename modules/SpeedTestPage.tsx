@@ -37,11 +37,12 @@ const SpeedTestPage = () => {
       if (isNaN(throttledSpeed)) return;
       logEvent(K_AMPLITUDE_EVENT_SPEED_TEST, {
         speed: Number(throttledSpeed),
+        unit,
       });
     } catch (ex) {
       console.error(ex);
     }
-  }, [throttledSpeed]);
+  }, [throttledSpeed, unit]);
 
   const beginTest = () => {
     setIsTestRunning(true);
