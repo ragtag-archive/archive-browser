@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { IconFileCode, IconFileImport, IconInfoCircle, IconTV } from "./icons";
+import {
+  IconFileCode,
+  IconFileImport,
+  IconInfoCircle,
+  IconTachometerAlt,
+  IconTV,
+} from "./icons";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -34,6 +40,12 @@ const Sidebar = (props: SidebarProps) => {
           <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
             <IconFileImport className={iconStyle} />
             Request
+          </a>
+        </Link>
+        <Link href="/speedtest">
+          <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
+            <IconTachometerAlt className={iconStyle} />
+            Speed test
           </a>
         </Link>
         <Link href="/about">
