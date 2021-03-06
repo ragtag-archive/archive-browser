@@ -3,10 +3,15 @@ import axios from "axios";
 import { DRIVE_BASE_URL } from "./shared/config";
 import PageBase from "./shared/PageBase";
 import { formatBytes } from "./shared/format";
+import { useAmplitude } from "./shared/libs/amplitude/useAmplitude";
+import { K_AMPLITUDE_EVENT_SPEED_TEST } from "./shared/libs/amplitude/constants";
+import { useThrottle } from "./shared/hooks/useThrottle";
 
 const SpeedTestPage = () => {
   const testFile = DRIVE_BASE_URL + "/_/benchmark/100M.bin";
   const testFileSize = 104857600;
+
+  const { logEvent } = useAmplitude();
 
   const [isTestRunning, setIsTestRunning] = React.useState(false);
   const [downloaded, setDownloaded] = React.useState(0);
@@ -25,6 +30,18 @@ const SpeedTestPage = () => {
     setUnit(_unit + "ps");
     setDownloaded(loaded);
   };
+
+  const throttledSpeed = useThrottle(speed, 1000);
+  React.useEffect(() => {
+    try {
+      if (isNaN(throttledSpeed)) return;
+      logEvent(K_AMPLITUDE_EVENT_SPEED_TEST, {
+        speed: Number(throttledSpeed),
+      });
+    } catch (ex) {
+      console.error(ex);
+    }
+  }, [throttledSpeed]);
 
   const beginTest = () => {
     setIsTestRunning(true);
