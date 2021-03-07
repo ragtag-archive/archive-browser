@@ -2,12 +2,15 @@ import React from "react";
 import Head from "next/head";
 import { WorkerStatus } from "../pages/api/v1/status";
 import { DRIVE_BASE_URL } from "./shared/config";
+import { format } from "timeago.js";
 import PageBase from "./shared/PageBase";
 
 type StatusCardProps = {
   title: string;
   ok: boolean | null;
   statusText: string;
+  videoId?: string;
+  timestamp?: string;
 };
 
 const StatusCard = (props: StatusCardProps) => {
@@ -27,11 +30,43 @@ const StatusCard = (props: StatusCardProps) => {
           {props.statusText}
         </div>
       </div>
+      {props.videoId && (
+        <div className="text-gray-500 flex flex-row justify-between">
+          <span>
+            Last worked on{" "}
+            <a
+              href={"https://youtu.be/" + props.videoId}
+              target="_blank"
+              rel="noreferrer noopener nofollow"
+              className="text-gray-400"
+            >
+              {props.videoId}
+            </a>
+          </span>
+          <span>{props.timestamp && format(props.timestamp)}</span>
+        </div>
+      )}
     </div>
   );
 };
 
+const K_EVENT_TEXT = {
+  work_begin: "Archiving video",
+  work_end: "Video successfully archived",
+  work_failed: "Archival failed",
+  video_downloading: "Downloading video",
+  video_failed: "Error downloading video",
+  video_downloaded: "Video downloaded",
+  video_uploading: "Uploading video",
+  video_uploaded: "Video uploaded",
+
+  worker_updated: "Worker updated itself",
+  rate_limit: "Rate limited, will retry in an hour",
+};
+
 const StatusPage = () => {
+  const [time, setTime] = React.useState(Date.now());
+  const [refreshMessage, setRefreshMessage] = React.useState("Loading...");
   const [status, setStatus] = React.useState<StatusCardProps[]>([
     { title: "Loading...", ok: null, statusText: "" },
   ]);
@@ -84,8 +119,16 @@ const StatusPage = () => {
         res.forEach((s) =>
           stat.push({
             title: "Worker " + s.source,
-            ok: s.event === "rate_limit" ? false : null,
-            statusText: s.event + " " + s.data.video_id,
+            ok: ["rate_limit", "work_failed", "video_failed"].includes(s.event)
+              ? false
+              : ["video_uploaded", "video_downloaded", "work_end"].includes(
+                  s.event
+                )
+              ? true
+              : null,
+            statusText: K_EVENT_TEXT[s.event],
+            videoId: s.data.video_id,
+            timestamp: s.timestamp,
           })
         );
       })
@@ -97,9 +140,19 @@ const StatusPage = () => {
   };
 
   React.useEffect(() => {
-    fetchStatus();
+    if (Math.floor(time / 1000) % 10 === 0) {
+      fetchStatus();
+      setRefreshMessage("Reloading...");
+      return;
+    }
 
-    const interval = setInterval(fetchStatus, 10000);
+    const timeLeft = 10 - (Math.floor(time / 1000) % 10);
+    setRefreshMessage("Reloading in " + timeLeft);
+  }, [time]);
+
+  React.useEffect(() => {
+    fetchStatus();
+    const interval = setInterval(() => setTime(Date.now()), 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -111,6 +164,7 @@ const StatusPage = () => {
       <div className="max-w-xl mx-auto">
         <div className="px-4 pb-8">
           <h1 className="text-3xl mt-16 text-center">Service Status</h1>
+          <p className="text-lg text-center">{refreshMessage}</p>
         </div>
 
         {status.map((stat) => (
