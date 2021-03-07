@@ -5,6 +5,8 @@ import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { NEXT_PUBLIC_HCAPTCHA_SITE_KEY } from "./shared/config";
 import axios from "axios";
 import Link from "next/link";
+import { useAmplitude } from "./shared/libs/amplitude/useAmplitude";
+import { K_AMPLITUDE_EVENT_ARCHIVAL_REQUEST } from "./shared/libs/amplitude/constants";
 
 export type RequestPageProps = {};
 
@@ -14,6 +16,8 @@ const RequestPage = (props: RequestPageProps) => {
   const [error, setError] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const { logEvent } = useAmplitude();
 
   const captchaRef = React.useRef<HCaptcha>(null);
 
@@ -74,6 +78,11 @@ const RequestPage = (props: RequestPageProps) => {
     captchaRef.current?.resetCaptcha();
     if (res.ok) setMessage(res.message);
     else setError(res.message);
+
+    logEvent(K_AMPLITUDE_EVENT_ARCHIVAL_REQUEST, {
+      ...res,
+      videoId,
+    });
   };
 
   return (
