@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  IconExclamationCirlce,
   IconFileCode,
   IconFileImport,
   IconInfoCircle,
@@ -25,9 +26,10 @@ const Sidebar = (props: SidebarProps) => {
         className={[
           "fixed z-40",
           "left-0 top-0 bottom-0",
-          "pt-16 md:w-72 w-full bg-gray-900",
+          "pt-16 md:w-72 w-3/4 bg-gray-900",
           "transition-all duration-200",
           isOpen ? "left-0" : "md:-left-72 -left-full",
+          "flex flex-col",
         ].join(" ")}
       >
         <Link href="/channels">
@@ -42,12 +44,9 @@ const Sidebar = (props: SidebarProps) => {
             Request
           </a>
         </Link>
-        <Link href="/speedtest">
-          <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
-            <IconTachometerAlt className={iconStyle} />
-            Speed test
-          </a>
-        </Link>
+
+        <div className="flex-1" />
+
         <Link href="/about">
           <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
             <IconInfoCircle className={iconStyle} />
@@ -63,6 +62,19 @@ const Sidebar = (props: SidebarProps) => {
           >
             <IconFileCode className={iconStyle} />
             API
+          </a>
+        </Link>
+
+        <Link href="/status">
+          <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
+            <IconExclamationCirlce className={iconStyle} />
+            Status
+          </a>
+        </Link>
+        <Link href="/speedtest">
+          <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
+            <IconTachometerAlt className={iconStyle} />
+            Speed test
           </a>
         </Link>
       </div>
