@@ -9,8 +9,9 @@ type StatusCardProps = {
   title: string;
   ok: boolean | null;
   statusText: string;
+
   videoId?: string;
-  timestamp?: string;
+  timestamp?: number;
 };
 
 const StatusCard = (props: StatusCardProps) => {
@@ -72,7 +73,9 @@ const StatusPage = () => {
   ]);
 
   const fetchStatus = async () => {
-    const stat = [{ title: "Website", ok: true, statusText: "Online" }];
+    const stat: StatusCardProps[] = [
+      { title: "Website", ok: true, statusText: "Online" },
+    ];
 
     // Database status
     await fetch("/api/v1/search")
