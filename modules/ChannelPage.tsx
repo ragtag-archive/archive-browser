@@ -69,7 +69,7 @@ const ChannelPage = (props: ChannelPageProps) => {
             </a>
           </div>
         </div>
-        <PaginatedResults {...rest} />
+        <PaginatedResults grid {...rest} />
       </div>
     </PageBase>
   );

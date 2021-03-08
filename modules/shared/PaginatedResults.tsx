@@ -3,17 +3,19 @@ import { useRouter } from "next/router";
 import { ElasticSearchResult, VideoMetadata } from "./database";
 import Link from "next/link";
 import VideoCard from "./VideoCard";
-import {formatNumber} from "./format";
+import { formatNumber } from "./format";
 
 export type PaginatedResultsProps = {
   results: ElasticSearchResult<VideoMetadata>;
   page: number;
   from: number;
   size: number;
+  grid?: boolean;
 };
 
 const PaginatedResults = (props: PaginatedResultsProps) => {
   const { results, page, from, size } = props;
+  const grid = props.grid;
   const router = useRouter();
   const videos = results.hits.hits;
 
@@ -23,14 +25,25 @@ const PaginatedResults = (props: PaginatedResultsProps) => {
 
   return (
     <>
-        <p className="md:px-0 px-4">
-          Showing results {from + 1}-
-          {Math.min(results.hits.total.value, from + size)} of{" "}
-          {formatNumber(results.hits.total.value)}
-        </p>
-      {videos.map(({ _source: video }) => (
-        <VideoCard video={video} key={video.video_id} />
-      ))}
+      <p className="md:px-0 px-4">
+        Showing results {from + 1}-
+        {Math.min(results.hits.total.value, from + size)} of{" "}
+        {formatNumber(results.hits.total.value)}
+      </p>
+      <div>
+        {videos.map(({ _source: video }) => (
+          <div
+            className={
+              grid
+                ? "w-full sm:w-1/2 md:w-1/3 lg:w-1/4 sm:px-2 py-4 inline-block"
+                : ""
+            }
+            key={video.video_id}
+          >
+            <VideoCard small={grid} video={video} key={video.video_id} />
+          </div>
+        ))}
+      </div>
       <div className="my-4 text-center">
         {hasPrev && (
           <Link
