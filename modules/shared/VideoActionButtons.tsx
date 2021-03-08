@@ -73,6 +73,7 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
           aria-label="More download options"
         >
           <IconEllipsisV className="w-4 h-4" />
+          <span className="md:hidden ml-3">More download options</span>
         </a>
         {isMenuOpen && (
           <div className="absolute z-10 left-0 top-10 bg-gray-800 rounded overflow-hidden">
