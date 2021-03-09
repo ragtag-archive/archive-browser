@@ -103,9 +103,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       payload: { queuedIds, failedIds },
     });
   } else if (captcha && typeof captcha === "string") {
-    /**
-     * Validate video ID
-     */
+    return res
+      .status(400)
+      .json({
+        ok: false,
+        message:
+          "Requests are temporarily suspended due to increasing volumes of spam",
+      });
+
+    /*
+    // Validate video ID
     const v = req.query.v;
     if (!v || typeof v !== "string")
       return res.status(400).json({ ok: false, message: "Missing query v" });
@@ -114,9 +121,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         .status(400)
         .json({ ok: false, message: "Invalid YouTube video ID" });
 
-    /**
-     * Validate hCaptcha
-     */
+    // Validate hCaptcha
     const hcap = await axios.request({
       method: "post",
       url: "https://hcaptcha.com/siteverify",
@@ -129,9 +134,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (!hcap.data.success)
       return res.status(400).json({ ok: false, message: "Invalid CAPTCHA" });
 
-    /**
-     * Insert video into queue
-     */
+    // Insert video into queue
     const result = await axios
       .request({
         method: "put",
@@ -150,5 +153,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ? "Video queued successfully"
         : "Error inserting video into queue",
     });
+    */
   } else return res.status(400).json({ ok: false, message: "Missing CAPTCHA" });
 };
