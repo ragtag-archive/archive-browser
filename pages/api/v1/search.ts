@@ -45,8 +45,18 @@ export const apiStorageStatistics = async (): Promise<StorageStatistics> => {
     },
   });
 
+  const countRes = await axios.request({
+    method: "get",
+    baseURL: ES_BACKEND_URL,
+    url: "/" + ES_INDEX + "/_count",
+    auth: {
+      username: ES_BASIC_USERNAME,
+      password: ES_BASIC_PASSWORD,
+    },
+  });
+
   return {
-    videos: res.data?.hits?.total?.value || -1,
+    videos: countRes.data?.count || res.data?.hits?.total?.value || -1,
     files: res.data?.aggregations?.size?.doc_count || -1,
     size: res.data?.aggregations?.size?.sum_size?.value || -1,
     duration: res.data?.aggregations?.total_duration?.value || -1,
