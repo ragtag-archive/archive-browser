@@ -144,4 +144,25 @@ const RequestPage = (props: RequestPageProps) => {
   );
 };
 
-export default RequestPage;
+const RequestSuspendedPage = () => (
+  <PageBase>
+    <Head>
+      <title>Archival Request - Ragtag Archive</title>
+    </Head>
+    <div>
+      <div className="px-4 max-w-xl mx-auto">
+        <h1 className="text-3xl mt-16 text-center">Archival request</h1>
+        <p className="text-lg text-center mb-16">
+          Anonymous video submissions are temporarily suspended due to
+          increasing volumes of spam. Please contact the website owner from the{" "}
+          <Link href="/about">
+            <a className="underline">About page</a>
+          </Link>{" "}
+          for more information.
+        </p>
+      </div>
+    </div>
+  </PageBase>
+);
+
+export default RequestSuspendedPage;
