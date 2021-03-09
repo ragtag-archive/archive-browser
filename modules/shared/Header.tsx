@@ -15,7 +15,11 @@ const Header = () => {
     // Try to parse search
     try {
       const url = new URL(search);
-      if (["www.youtube.com", "youtube.com"].includes(url.hostname)) {
+      if (
+        ["www.youtube.com", "youtube.com", "m.youtube.com"].includes(
+          url.hostname
+        )
+      ) {
         if (url.pathname.includes("/channel/")) {
           router.push(url.pathname);
           return;
