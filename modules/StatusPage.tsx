@@ -94,7 +94,7 @@ const StatusPage = () => {
       .then((res) => {
         if (!res.ok) throw new Error("Not ok");
         stat.push({
-          title: "Content download",
+          title: "Content server",
           ok: true,
           statusText: "Online",
         });

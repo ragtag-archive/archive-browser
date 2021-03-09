@@ -8,7 +8,7 @@ type VideoActionButtonsProps = {
   video: VideoMetadata;
 };
 
-const buttonStyle = `
+export const buttonStyle = `
   bg-gray-800
   hover:bg-gray-700
   focus:bg-gray-900 focus:outline-none
