@@ -1,8 +1,8 @@
 {
-  "name": "next-ts-tailwind",
+  "name": "archive-browser",
   "version": "0.1.0",
   "private": false,
-  "license": "MIT",
+  "license": "",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

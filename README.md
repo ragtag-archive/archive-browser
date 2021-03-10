@@ -1,3 +1,3 @@
 # archive-browser
 
-Web UI to browse video archives
+Frontend for [Ragtag Archive](https://archive.ragtag.moe).
