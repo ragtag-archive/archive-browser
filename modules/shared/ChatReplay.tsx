@@ -27,6 +27,8 @@ function bsearch<T>(
   return iM;
 }
 
+const proxyHost = "archive-yt3-ggpht-proxy.ragtag.moe";
+
 const ChatReplay = (props: ChatReplayProps) => {
   const { replayData, currentTimeSeconds } = props;
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
@@ -50,6 +52,12 @@ const ChatReplay = (props: ChatReplayProps) => {
     const maxMessages = 50;
     setMessages(replayData.slice(Math.max(0, index - maxMessages), index));
   }, [replayData, currentTimeSeconds]);
+
+  const proxyURL = (url: string): string => {
+    const u = new URL(url);
+    u.hostname = proxyHost;
+    return u.toString();
+  };
 
   return (
     <div className="w-full break-words">
@@ -77,7 +85,7 @@ const ChatReplay = (props: ChatReplayProps) => {
                       {msg.author.name}
                       {msg.author.badges && msg.author.badges[0].icons ? (
                         <img
-                          src={msg.author.badges[0].icons[1].url}
+                          src={proxyURL(msg.author.badges[0].icons[1].url)}
                           className="inline-block ml-2"
                           aria-hidden
                         />
@@ -106,7 +114,7 @@ const ChatReplay = (props: ChatReplayProps) => {
                     <div className="inline-block">{msg.author.name}</div>
                     {msg.author.badges && msg.author.badges[0].icons ? (
                       <img
-                        src={msg.author.badges[0].icons[1].url}
+                        src={proxyURL(msg.author.badges[0].icons[1].url)}
                         className="inline-block ml-2"
                         aria-hidden
                       />
@@ -161,7 +169,7 @@ const ChatReplay = (props: ChatReplayProps) => {
                       Array.isArray(badge.icons) ? (
                         <img
                           key={badge.title}
-                          src={badge.icons?.[1]?.url}
+                          src={proxyURL(badge.icons?.[1]?.url)}
                           className="inline-block ml-2"
                           aria-hidden
                         />
