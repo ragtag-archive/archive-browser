@@ -28,7 +28,7 @@ const PageBase = (props: PageBaseProps) => {
       >
         <span className="px-6 py-2">
           We're experiencing increased traffic to our website. Things will
-          break. Come back a few days if you have problems accessing content.
+          break. Come back in a few days if you have problems accessing content.
         </span>
         <span>
           <a
