@@ -100,7 +100,6 @@ const StatusPage = () => {
     await fetch(DRIVE_BASE_URL + fileURL)
       .then((res) => res.json())
       .then((res) => {
-        if (!res.ok) throw new Error("Not ok");
         stat.push({
           title: "Content server",
           ok: true,
@@ -110,7 +109,7 @@ const StatusPage = () => {
       .catch((d) => {
         console.log(d);
         stat.push({
-          title: "Content download",
+          title: "Content server",
           ok: false,
           statusText: "Error",
         });
