@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import { WorkerStatus } from "../pages/api/v1/status";
+import { apiStatusMessage, WorkerStatus } from "../pages/api/v1/status";
 import { DRIVE_BASE_URL } from "./shared/config";
 import { format } from "timeago.js";
 import PageBase from "./shared/PageBase";
@@ -67,6 +67,7 @@ const K_EVENT_TEXT = {
 
 const StatusPage = () => {
   const [time, setTime] = React.useState(Date.now());
+  const [statusMessage, setStatusMessage] = React.useState("");
   const [refreshMessage, setRefreshMessage] = React.useState("Loading...");
   const [status, setStatus] = React.useState<StatusCardProps[]>([
     { title: "Loading...", ok: null, statusText: "" },
@@ -76,6 +77,10 @@ const StatusPage = () => {
     const stat: StatusCardProps[] = [
       { title: "Website", ok: true, statusText: "Online" },
     ];
+
+    // Grab status message
+    const { message } = await apiStatusMessage();
+    setStatusMessage(message);
 
     // Database status
     const fileURL = await fetch("/api/v1/search")
@@ -172,10 +177,11 @@ const StatusPage = () => {
         <title>Status Page - Ragtag Archive</title>
       </Head>
       <div className="max-w-xl mx-auto">
-        <div className="px-4 pb-8">
+        <div className="px-4 pb-6">
           <h1 className="text-3xl mt-16 text-center">Service Status</h1>
           <p className="text-lg text-center">{refreshMessage}</p>
         </div>
+        <div className="bg-gray-900 p-4 mb-6 rounded">{statusMessage}</div>
 
         {status.map((stat) => (
           <StatusCard key={stat.title} {...stat} />

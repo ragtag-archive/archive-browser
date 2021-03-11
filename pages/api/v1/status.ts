@@ -1,5 +1,6 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
+import { STATUS_UPDATES_ENDPOINT } from "../../../modules/shared/config";
 
 export type WorkerStatus = {
   event:
@@ -13,11 +14,11 @@ export type WorkerStatus = {
     | "video_uploaded"
     | "worker_updated"
     | "rate_limit";
-    source: string;
-    timestamp: number;
-    data: {
-      video_id?: string
-    }
+  source: string;
+  timestamp: number;
+  data: {
+    video_id?: string;
+  };
 };
 
 export const apiStatus = async () => {
@@ -27,6 +28,14 @@ export const apiStatus = async () => {
       baseURL: "https://ragtag-archive-webhook.ragtag.workers.dev/",
     })
     .then((res) => res.data);
+};
+
+export const apiStatusMessage = async (): Promise<{
+  timestamp: number;
+  message: string;
+  showBanner: boolean;
+}> => {
+  return axios.get(STATUS_UPDATES_ENDPOINT).then((res) => res.data);
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
