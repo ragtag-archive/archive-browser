@@ -78,18 +78,26 @@ const StatusPage = () => {
     ];
 
     // Database status
-    await fetch("/api/v1/search")
+    const fileURL = await fetch("/api/v1/search")
       .then((res) => res.json())
       .then((res) => {
-        if (res && res.timed_out === false && res.hits.hits.length > 0)
+        if (res && res.timed_out === false && res.hits.hits.length > 0) {
           stat.push({ title: "Database", ok: true, statusText: "Online" });
+          return (
+            "/" +
+            res.hits.hits[0]._id +
+            "/" +
+            res.hits.hits[0]._source.files?.[0]?.name
+          );
+        }
       })
-      .catch(() =>
-        stat.push({ title: "Database", ok: false, statusText: "Error" })
-      );
+      .catch(() => {
+        stat.push({ title: "Database", ok: false, statusText: "Error" });
+        return "/_/benchmark/ok.json";
+      });
 
     // CF cache
-    await fetch(DRIVE_BASE_URL + "/_/benchmark/ok.json")
+    await fetch(DRIVE_BASE_URL + fileURL)
       .then((res) => res.json())
       .then((res) => {
         if (!res.ok) throw new Error("Not ok");
