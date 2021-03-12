@@ -23,7 +23,7 @@ export type WatchPageProps = {
 };
 
 const getFile = (videoInfo: VideoMetadata, suffix: string) =>
-  videoInfo.files.find((file) => file.name.endsWith(suffix))?.url;
+  videoInfo.files.find((file) => file.name.includes(suffix))?.url;
 
 const WatchPage = (props: WatchPageProps) => {
   if (!props.videoInfo) return <ServiceUnavailablePage />;
