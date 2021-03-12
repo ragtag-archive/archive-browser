@@ -16,4 +16,6 @@ export const checkAutoplay = (): Promise<boolean> =>
   });
 
 export const getRemoteAddress = (req: IncomingMessage): string =>
-  (req.headers["x-forwarded-for"] || req.socket.remoteAddress) as string;
+  (req.headers["cf-connecting-ip"] ||
+    req.headers["x-forwarded-for"] ||
+    req.socket.remoteAddress) as string;
