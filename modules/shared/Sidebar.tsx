@@ -71,12 +71,12 @@ const Sidebar = (props: SidebarProps) => {
             Status
           </a>
         </Link>
-        <Link href="/speedtest">
+        {/*<Link href="/speedtest">
           <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
             <IconTachometerAlt className={iconStyle} />
             Speed test
           </a>
-        </Link>
+        </Link>*/}
       </div>
       <div
         className={[

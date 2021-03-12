@@ -101,6 +101,7 @@ const StatusPage = () => {
         return "/_/benchmark/ok.json";
       });
 
+    /*
     // CF cache
     await fetch(DRIVE_BASE_URL + fileURL)
       .then((res) => res.json())
@@ -119,6 +120,7 @@ const StatusPage = () => {
           statusText: "Error",
         });
       });
+    */
 
     // Worker status
     await fetch("/api/v1/status")

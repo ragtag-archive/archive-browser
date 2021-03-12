@@ -38,7 +38,7 @@ export const apiStatusMessage = async (): Promise<{
   return axios.get(STATUS_UPDATES_ENDPOINT).then((res) => res.data);
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const ApiStatusHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     return res.status(200).json(await apiStatus());
   } else {
@@ -49,3 +49,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .json({ ok: false, code: 405, message: "Method not allowed" });
   }
 };
+
+export default ApiStatusHandler;

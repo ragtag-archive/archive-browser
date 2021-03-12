@@ -1,17 +1,25 @@
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import ChannelsListPage from "../modules/ChannelsListPage";
+import { DRIVE_BASE_URL } from "../modules/shared/config";
+import { signURL } from "../modules/shared/fileAuth";
+import { getRemoteAddress } from "../modules/shared/util";
 import { apiListChannels } from "./api/v1/channels";
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  for (let tries = 0; tries < 5; tries++) {
-    try {
-      const channels = await apiListChannels();
-      return { props: { channels }, revalidate: 60 };
-    } catch (ex) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  try {
+    const channels = await apiListChannels();
+    channels.forEach(
+      (channel) =>
+        (channel.image_url = signURL(
+          DRIVE_BASE_URL + "/" + channel.channel_id + "/profile.jpg",
+          getRemoteAddress(ctx.req)
+        ))
+    );
+    return { props: { channels } };
+  } catch (ex) {
+    console.error(ex);
   }
-  return { props: {}, revalidate: 60 };
+  return { props: {} };
 };
 
 export default ChannelsListPage;

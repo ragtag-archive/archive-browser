@@ -1,9 +1,12 @@
 import { GetServerSideProps } from "next";
 import ChannelPage, { ChannelPageProps } from "../../modules/ChannelPage";
+import { DRIVE_BASE_URL } from "../../modules/shared/config";
 import {
   ElasticSearchResult,
   VideoMetadata,
 } from "../../modules/shared/database";
+import { signFileURLs, signURL } from "../../modules/shared/fileAuth";
+import { getRemoteAddress } from "../../modules/shared/util";
 import { apiSearch } from "../api/v1/search";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -23,9 +26,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   if (results.hits.total.value === 0) return { notFound: true };
 
+  const ip = getRemoteAddress(ctx.req);
+  const channel = results.hits.hits[0]._source;
+  results.hits.hits.forEach((hit) => signFileURLs(hit._source.files, ip));
+
   const props: ChannelPageProps = {
     channelId,
-    channelName: results.hits.hits[0]._source.channel_name,
+    channelName: channel.channel_name,
+    channelImageURL: signURL(
+      DRIVE_BASE_URL + "/" + channel.channel_id + "/profile.jpg",
+      ip
+    ),
 
     results,
     page,

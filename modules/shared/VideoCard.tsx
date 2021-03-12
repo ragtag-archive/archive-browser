@@ -5,6 +5,7 @@ import { formatBytes, formatDate, formatSeconds } from "./format";
 import { format } from "timeago.js";
 import { IconDownload, IconYouTube } from "./icons";
 import VideoActionButtons from "./VideoActionButtons";
+import { signURL } from "./fileAuth";
 
 export type VideoCardProps = {
   video?: VideoMetadata;
@@ -12,9 +13,8 @@ export type VideoCardProps = {
 };
 
 const VideoCard = ({ video, small }: VideoCardProps) => {
-  const videoBase =
-    DRIVE_BASE_URL + "/" + video?.video_id + "/" + video?.video_id;
-  const thumbURL = videoBase + ".webp";
+  const thumbURL = video?.files?.find((file) => file.name.endsWith(".webp"))
+    ?.url;
 
   return (
     <div

@@ -1,5 +1,7 @@
 import { GetServerSideProps } from "next";
 import SearchPage, { SearchPageProps } from "../modules/SearchPage";
+import { signFileURLs } from "../modules/shared/fileAuth";
+import { getRemoteAddress } from "../modules/shared/util";
 import { apiSearch } from "./api/v1/search";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -10,6 +12,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       const size = 25;
       const from = (page - 1) * size;
       const results = (await apiSearch({ q, from, size })).data;
+
+      const ip = getRemoteAddress(ctx.req);
+      results.hits.hits.forEach((hit) => signFileURLs(hit._source.files, ip));
 
       const props: SearchPageProps = {
         q,

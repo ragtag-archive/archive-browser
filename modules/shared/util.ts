@@ -1,3 +1,5 @@
+import { IncomingMessage } from "http";
+
 export const checkAutoplay = (): Promise<boolean> =>
   new Promise((resolve) => {
     try {
@@ -12,3 +14,6 @@ export const checkAutoplay = (): Promise<boolean> =>
       resolve(false);
     }
   });
+
+export const getRemoteAddress = (req: IncomingMessage): string =>
+  (req.headers["x-forwarded-for"] || req.socket.remoteAddress) as string;

@@ -3,12 +3,12 @@ import Head from "next/head";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database";
 import PageBase from "./shared/PageBase";
 import PaginatedResults from "./shared/PaginatedResults";
-import { DRIVE_BASE_URL } from "./shared/config";
 import { IconYouTube } from "./shared/icons";
 
 export type ChannelPageProps = {
   channelId: string;
   channelName: string;
+  channelImageURL: string;
 
   results: ElasticSearchResult<VideoMetadata>;
   page: number;
@@ -17,9 +17,9 @@ export type ChannelPageProps = {
 };
 
 const ChannelPage = (props: ChannelPageProps) => {
-  const { channelId, channelName, ...rest } = props;
+  const { channelId, channelName, channelImageURL, ...rest } = props;
   const description = "Browse archived videos from " + channelName;
-  const profileImage = DRIVE_BASE_URL + "/" + channelId + "/profile.jpg";
+  const profileImage = channelImageURL;
   return (
     <PageBase>
       <Head>

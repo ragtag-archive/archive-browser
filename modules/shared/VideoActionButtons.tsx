@@ -1,5 +1,4 @@
 import React from "react";
-import { DRIVE_BASE_URL } from "./config";
 import { VideoMetadata } from "./database";
 import { formatBytes } from "./format";
 import { IconDownload, IconEllipsisV, IconYouTube } from "./icons";
@@ -16,14 +15,15 @@ export const buttonStyle = `
   transition duration-200
   flex flex-row items-center`;
 
+const getFile = (videoInfo: VideoMetadata, suffix: string) =>
+  videoInfo.files.find((file) => file.name.endsWith(suffix));
+
 const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-  const videoBase =
-    DRIVE_BASE_URL + "/" + video?.video_id + "/" + video?.video_id;
-  const mkvURL = videoBase + ".mkv";
-  const mkvSize =
-    video.files?.find(({ name }) => name.endsWith(".mkv"))?.size || -1;
+  const mkv = getFile(video, ".mkv");
+  const mkvURL = mkv?.url;
+  const mkvSize = mkv?.size || -1;
 
   const [fmtVideo, fmtAudio] = video.format_id.split("+");
 
@@ -36,7 +36,7 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
 
   const fileURLs = video.files
     ?.filter(({ name }) => !name.endsWith(".mkv"))
-    .map(({ name, size }) => ({
+    .map(({ name, size, url }) => ({
       label: name.includes(".f" + fmtVideo + ".")
         ? "Video only"
         : name.includes(".f" + fmtAudio + ".")
@@ -44,9 +44,9 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
         : name.endsWith(".vtt")
         ? "Captions (" + name.split(".")[1] + ")"
         : name.endsWith(".chat.json")
-        ? "Chat logs (JSON)"
+        ? "Chat logs (json)"
         : name.endsWith(".info.json")
-        ? "Metadata (JSON)"
+        ? "Metadata (json)"
         : name.endsWith(".webp")
         ? "Thumbnail (webp)"
         : name.endsWith(".jpg")
@@ -54,6 +54,7 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
         : name,
       name,
       size,
+      url,
     }))
     .sort((a, b) => (a.label > b.label ? 1 : -1));
 
@@ -80,7 +81,7 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
             {fileURLs.map((file) => (
               <a
                 key={file.name}
-                href={DRIVE_BASE_URL + "/" + video.video_id + "/" + file.name}
+                href={file.url}
                 target="_blank"
                 rel="noreferrer noopener nofollow"
                 className="hover:bg-gray-700 focus:bg-gray-900 focus:outline-none block px-4 py-2 transition duration-200"

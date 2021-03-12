@@ -3,7 +3,6 @@ import Head from "next/head";
 import PageBase from "./shared/PageBase";
 import Linkify from "react-linkify";
 import { VideoMetadata } from "./shared/database";
-import { DRIVE_BASE_URL } from "./shared/config";
 import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
 import { formatDate } from "./shared/format";
 import ChatReplayPanel from "./shared/ChatReplayPanel";
@@ -20,17 +19,16 @@ export type WatchPageProps = {
   hasChat: boolean;
   relatedVideos: VideoMetadata[];
   channelVideoCount: number;
+  channelProfileURL: string;
 };
+
+const getFile = (videoInfo: VideoMetadata, suffix: string) =>
+  videoInfo.files.find((file) => file.name.endsWith(suffix))?.url;
 
 const WatchPage = (props: WatchPageProps) => {
   if (!props.videoInfo) return <ServiceUnavailablePage />;
 
   const { videoInfo, hasChat, relatedVideos } = props;
-  const videoBase =
-    DRIVE_BASE_URL + "/" + videoInfo.video_id + "/" + videoInfo.video_id;
-  const thumbURL = videoBase + ".webp";
-  const chatURL = videoBase + ".chat.json";
-  const channelBase = DRIVE_BASE_URL + "/" + videoInfo.channel_id;
 
   const [isChatVisible, setIsChatVisible] = React.useState(false);
   const refMobileScrollTarget = React.useRef<HTMLDivElement>(null);
@@ -43,18 +41,10 @@ const WatchPage = (props: WatchPageProps) => {
 
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [fmtVideo, fmtAudio] = videoInfo.format_id.split("+");
-  const urlVideo =
-    DRIVE_BASE_URL +
-    "/" +
-    videoInfo.video_id +
-    "/" +
-    videoInfo.files.find((file) => file.name.includes(".f" + fmtVideo))?.name;
-  const urlAudio =
-    DRIVE_BASE_URL +
-    "/" +
-    videoInfo.video_id +
-    "/" +
-    videoInfo.files.find((file) => file.name.includes(".f" + fmtAudio))?.name;
+  const urlVideo = getFile(videoInfo, ".f" + fmtVideo);
+  const urlAudio = getFile(videoInfo, ".f" + fmtAudio);
+  const urlThumb = getFile(videoInfo, ".webp");
+  const urlChat = getFile(videoInfo, ".chat.json");
 
   return (
     <PageBase>
@@ -71,7 +61,7 @@ const WatchPage = (props: WatchPageProps) => {
         />
         <meta property="og:title" content={videoInfo.title} />
         <meta property="og:description" content={videoInfo.channel_name} />
-        <meta property="og:image" content={thumbURL} />
+        <meta property="og:image" content={urlThumb} />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta
@@ -80,7 +70,7 @@ const WatchPage = (props: WatchPageProps) => {
         />
         <meta property="twitter:title" content={videoInfo.title} />
         <meta property="twitter:description" content={videoInfo.channel_name} />
-        <meta property="twitter:image" content={thumbURL} />
+        <meta property="twitter:image" content={urlThumb} />
       </Head>
       <div
         className={["flex lg:flex-row flex-col lg:h-auto"].join(" ")}
@@ -95,14 +85,14 @@ const WatchPage = (props: WatchPageProps) => {
               key={urlVideo}
               srcVideo={urlVideo}
               srcAudio={urlAudio}
-              srcPoster={thumbURL}
+              srcPoster={urlThumb}
               captions={videoInfo.files
                 .filter((file) => file.name.endsWith(".vtt"))
                 .map(({ name }) => {
                   const lang = name.split(".")[1];
                   return {
                     lang,
-                    src: DRIVE_BASE_URL + "/" + videoInfo.video_id + "/" + name,
+                    src: getFile(videoInfo, name),
                   };
                 })}
               onPlaybackProgress={setPlaybackProgress}
@@ -122,7 +112,7 @@ const WatchPage = (props: WatchPageProps) => {
             </div>
           ) : (
             <ChatReplayPanel
-              src={chatURL}
+              src={urlChat}
               currentTimeSeconds={playbackProgress}
               onChatToggle={setIsChatVisible}
             />
@@ -158,7 +148,7 @@ const WatchPage = (props: WatchPageProps) => {
                   <a className="mb-4 mb-4 hover:underline flex flex-row">
                     <img
                       alt="Channel thumbnail"
-                      src={channelBase + "/profile.jpg"}
+                      src={props.channelProfileURL}
                       className="w-12 h-12 rounded-full"
                     />
                     <div className="ml-4">

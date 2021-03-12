@@ -5,8 +5,15 @@ import {
   ES_INDEX,
   ES_BASIC_USERNAME,
   ES_BASIC_PASSWORD,
+  DRIVE_BASE_URL,
 } from "../modules/shared/config";
-import { ElasticSearchResult, VideoMetadata } from "../modules/shared/database";
+import {
+  ElasticSearchResult,
+  VideoFile,
+  VideoMetadata,
+} from "../modules/shared/database";
+import { signFileURLs, signURL } from "../modules/shared/fileAuth";
+import { getRemoteAddress } from "../modules/shared/util";
 import WatchPage, { WatchPageProps } from "../modules/WatchPage";
 import { apiRelatedVideos, apiSearch, apiSearchRaw } from "./api/v1/search";
 import { apiVideo } from "./api/video";
@@ -35,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         .hits.total.value;
 
       // Fetch file list from GDrive if not available in database
-      const files = Array.isArray(videoInfo.files)
+      const files: VideoFile[] = Array.isArray(videoInfo.files)
         ? videoInfo.files
         : await apiVideo({ v }).then(({ files }) => files);
 
@@ -57,6 +64,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         console.log(updateres.data);
       }
 
+      // Sign URLs
+      const ip = getRemoteAddress(ctx.req);
+      signFileURLs(videoInfo.files, ip);
+      const channelProfileURL = signURL(
+        DRIVE_BASE_URL + "/" + videoInfo.channel_id + "/profile.jpg",
+        ip
+      );
+      related.hits.hits.forEach((hit) => signFileURLs(hit._source.files, ip));
+
       const props: WatchPageProps = {
         videoInfo: {
           ...videoInfo,
@@ -67,6 +83,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
           .map((hit) => hit._source)
           .filter((video) => video.video_id !== v),
         channelVideoCount,
+        channelProfileURL,
       };
 
       return { props };

@@ -4,7 +4,6 @@ import Head from "next/head";
 import { AggregatedChannel } from "../pages/api/v1/channels";
 import PageBase from "./shared/PageBase";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
-import { DRIVE_BASE_URL } from "./shared/config";
 
 export type ChannelsListPageProps = {
   channels?: AggregatedChannel[];
@@ -28,7 +27,7 @@ const ChannelsListPage = (props: ChannelsListPageProps) => {
             <a className="block border border-gray-800 mb-4 p-6 rounded flex flex-row items-center">
               <img
                 alt="Channel thumbnail"
-                src={DRIVE_BASE_URL + "/" + channel.channel_id + "/profile.jpg"}
+                src={channel.image_url}
                 className="w-16 h-16 rounded-full"
               />
               <div className="pl-4">

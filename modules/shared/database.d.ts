@@ -1,3 +1,9 @@
+export type VideoFile = {
+  name: string,
+  size: number,
+  url?: string
+}
+
 export type VideoMetadata = {
   video_id: string;
   channel_name: string;
@@ -14,7 +20,7 @@ export type VideoMetadata = {
   like_count: number;
   dislike_count: number;
   archived_timestamp: string;
-  files: Array<{ name: string; size: number }>;
+  files: VideoFile[]
 };
 
 export type ElasticSearchDocument<T> = {

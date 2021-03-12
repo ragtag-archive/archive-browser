@@ -5,6 +5,7 @@ export type AggregatedChannel = {
   channel_name: string;
   channel_id: string;
   videos_count: number;
+  image_url?: string;
 };
 
 export const apiListChannels = async (): Promise<AggregatedChannel[]> =>
