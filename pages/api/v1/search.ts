@@ -184,7 +184,7 @@ export const apiSearch = async (query: {
   return apiSearchRaw<ElasticSearchResult<VideoMetadata>>(requestData);
 };
 
-export const apiSearchRaw = <T>(dsl: any) =>
+export const apiSearchRaw = <T = any>(dsl: any) =>
   axios.request<T>({
     method: "get",
     baseURL: ES_BACKEND_URL,
