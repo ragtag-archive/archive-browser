@@ -2,10 +2,15 @@ import jsonwebtoken from "jsonwebtoken";
 import { DRIVE_BASE_URL, FILE_JWT_PRIVATE_KEY } from "./config";
 import { VideoFile } from "./database";
 
+const K_EXTENSION_BYPASS = ["jpg", "webp"];
+
 export const signURL = (url: string, ip: string) => {
   const u = new URL(url);
   const host = u.hostname;
   const path = u.pathname;
+
+  const ext = path.split(".").pop();
+  if (K_EXTENSION_BYPASS.includes(ext)) return url;
 
   const jwt = jsonwebtoken.sign(
     {
