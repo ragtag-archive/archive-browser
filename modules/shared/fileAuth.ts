@@ -16,7 +16,7 @@ export const signURL = (url: string, ip: string) => {
     FILE_JWT_PRIVATE_KEY,
     {
       algorithm: "ES256",
-      expiresIn: "3h",
+      expiresIn: "24h",
       issuer: "archive.ragtag.moe",
     }
   );
