@@ -60,6 +60,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [lastActive, setLastActive] = React.useState(0);
   const [activeCaption, setActiveCaption] = React.useState(enCaptionIndex);
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
+  const [vttStylesheet, setVttStylesheet] = React.useState("");
 
   const handleCaptionsButton = () => {
     setActiveCaption((now) => ((now + 2) % (captions.length + 1)) - 1);
@@ -280,6 +281,17 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   }, []);
 
+  const loadVttStyles = async (url: string) => {
+    const captionText = await fetch(url).then((res) => res.text());
+    const matches = captionText.match(/Style\:(([^#]{2})*)##/m);
+    if (!matches) return;
+    setVttStylesheet(matches[1]);
+  };
+
+  React.useEffect(() => {
+    if (activeCaption >= 0) loadVttStyles(captions[activeCaption].src);
+  }, [activeCaption]);
+
   const isLoading =
     !refVideo.current ||
     !refAudio.current ||
@@ -494,6 +506,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             props.onPlaybackProgress?.(refAudio.current.currentTime);
           }}
         />
+        <style dangerouslySetInnerHTML={{ __html: vttStylesheet }} />
       </div>
     </div>
   );
