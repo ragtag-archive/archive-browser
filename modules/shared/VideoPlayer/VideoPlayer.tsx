@@ -42,7 +42,10 @@ export type VideoPlayerProps = {
 
 const VideoPlayer = (props: VideoPlayerProps) => {
   const { srcVideo, srcAudio, srcPoster } = props;
+  const { logEvent } = useAmplitude();
   const captions = props.captions || [];
+  const hasCaptions = captions.length > 0;
+  const enCaptionIndex = captions.findIndex((cap) => cap.lang === "en");
 
   const refSelf = React.useRef<HTMLDivElement>(null);
   const refVideo = React.useRef<HTMLVideoElement>(null);
@@ -55,12 +58,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [audioVolume, setAudioVolume] = useLocalStorage("player:volume", 1);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [lastActive, setLastActive] = React.useState(0);
-  const [activeCaption, setActiveCaption] = React.useState(-1);
+  const [activeCaption, setActiveCaption] = React.useState(enCaptionIndex);
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
-
-  const { logEvent } = useAmplitude();
-
-  const hasCaptions = captions.length > 0;
 
   const handleCaptionsButton = () => {
     setActiveCaption((now) => ((now + 2) % (captions.length + 1)) - 1);
