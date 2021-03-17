@@ -11,5 +11,9 @@ export const K_AMPLITUDE_EVENT_VIDEO_FULLSCREEN_TOGGLE =
 export const K_AMPLITUDE_EVENT_VIDEO_READY_STATE = "video_ready_state";
 export const K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR = "video_playback_error";
 
+export const K_AMPLITUDE_EVENT_VIDEO_BUTTON_MORE_DOWNLOADS =
+  "video_button_more_downloads";
+export const K_AMPLITUDE_EVENT_VIDEO_DOWNLOAD = "video_download";
+
 export const K_AMPLITUDE_EVENT_SPEED_TEST = "speed_test";
 export const K_AMPLITUDE_EVENT_ARCHIVAL_REQUEST = "archival_request";

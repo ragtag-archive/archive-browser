@@ -2,6 +2,11 @@ import React from "react";
 import { VideoMetadata } from "./database";
 import { formatBytes } from "./format";
 import { IconDownload, IconEllipsisV, IconYouTube } from "./icons";
+import {
+  K_AMPLITUDE_EVENT_VIDEO_BUTTON_MORE_DOWNLOADS,
+  K_AMPLITUDE_EVENT_VIDEO_DOWNLOAD,
+} from "./libs/amplitude/constants";
+import { useAmplitude } from "./libs/amplitude/useAmplitude";
 
 type VideoActionButtonsProps = {
   video: VideoMetadata;
@@ -20,6 +25,7 @@ const getFile = (videoInfo: VideoMetadata, suffix: string) =>
 
 const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const { logEvent } = useAmplitude();
 
   const mkv = getFile(video, ".mkv");
   const mkvURL = mkv?.url;
@@ -32,6 +38,9 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
   ) => {
     e.preventDefault();
     setIsMenuOpen((now) => !now);
+    logEvent(K_AMPLITUDE_EVENT_VIDEO_BUTTON_MORE_DOWNLOADS, {
+      videoId: video.video_id,
+    });
   };
 
   const fileURLs = video.files
@@ -85,13 +94,30 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
                 target="_blank"
                 rel="noreferrer noopener nofollow"
                 className="hover:bg-gray-700 focus:bg-gray-900 focus:outline-none block px-4 py-2 transition duration-200"
+                onClick={() => {
+                  logEvent(K_AMPLITUDE_EVENT_VIDEO_DOWNLOAD, {
+                    videoId: video.video_id,
+                    fileName: file.name,
+                    fileExtension: file.name.split(".").pop(),
+                  });
+                }}
               >
                 {file.label}
               </a>
             ))}
           </div>
         )}
-        <a href={mkvURL} className={buttonStyle}>
+        <a
+          href={mkvURL}
+          className={buttonStyle}
+          onClick={() => {
+            logEvent(K_AMPLITUDE_EVENT_VIDEO_DOWNLOAD, {
+              videoId: video.video_id,
+              fileName: video.video_id + ".mkv",
+              fileExtension: "mkv",
+            });
+          }}
+        >
           <IconDownload className="w-4 h-4 mr-3" />
           Download ({video.height}p{video.fps}, {formatBytes(mkvSize)})
         </a>
