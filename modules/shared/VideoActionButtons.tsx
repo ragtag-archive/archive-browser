@@ -51,7 +51,9 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
         : name.includes(".f" + fmtAudio + ".")
         ? "Audio only"
         : name.endsWith(".vtt")
-        ? "Captions (" + name.split(".")[1] + ")"
+        ? "Captions (vtt, " + name.split(".")[1] + ")"
+        : name.endsWith(".ytt")
+        ? "Captions (srv3, " + name.split(".")[1] + ")"
         : name.endsWith(".chat.json")
         ? "Chat logs (json)"
         : name.endsWith(".info.json")
