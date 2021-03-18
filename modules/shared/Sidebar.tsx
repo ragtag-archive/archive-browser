@@ -2,9 +2,9 @@ import Link from "next/link";
 import {
   IconExclamationCirlce,
   IconFileCode,
-  IconFileImport,
+  // IconFileImport,
   IconInfoCircle,
-  IconTachometerAlt,
+  // IconTachometerAlt,
   IconTV,
 } from "./icons";
 
@@ -53,13 +53,9 @@ const Sidebar = (props: SidebarProps) => {
             About
           </a>
         </Link>
-        <Link href="https://app.swaggerhub.com/apis-docs/aonahara/ragtag-archive/">
-          <a
-            className={linkStyle}
-            tabIndex={isOpen ? 0 : -1}
-            target="_blank"
-            rel="noreferrer noopener nofollow"
-          >
+        {/* <Link href="https://app.swaggerhub.com/apis-docs/aonahara/ragtag-archive/"> */}
+        <Link href="/api-docs">
+          <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
             <IconFileCode className={iconStyle} />
             API
           </a>

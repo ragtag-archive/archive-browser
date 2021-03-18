@@ -96,13 +96,15 @@ export const apiRelatedVideos = async (
   return channel_uploads.data;
 };
 
-type SortField =
-  | "archived_timestamp"
-  | "upload_date"
-  | "duration"
-  | "view_count"
-  | "like_count"
-  | "dislike_count";
+export const ApiSearchSortFields = [
+  "archived_timestamp",
+  "upload_date",
+  "duration",
+  "view_count",
+  "like_count",
+  "dislike_count",
+] as const;
+type SortField = typeof ApiSearchSortFields[number];
 
 export const apiSearch = async (query: {
   q?: string;
