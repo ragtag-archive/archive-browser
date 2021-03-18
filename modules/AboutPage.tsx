@@ -17,8 +17,14 @@ const AboutPage = () => {
           archived at the highest quality available.
         </p>
         <p>
+          We only back up publicly available content. This means you won't find
+          unarchived streams and members-only content here.
+        </p>
+        <p>
           This project started on February 20th, 2021. Any videos that are
-          already gone by that date won't be available here.
+          already gone by that date won't be available here. We're currently not
+          accepting video files for content that's already gone, unless you have
+          complete metadata and chat logs in the format we're currently using.
         </p>
         <p>
           If you have any questions or concerns, feel free to hop on the{" "}

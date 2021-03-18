@@ -38,12 +38,12 @@ const Sidebar = (props: SidebarProps) => {
             Channels
           </a>
         </Link>
-        <Link href="/request">
+        {/* <Link href="/request">
           <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
             <IconFileImport className={iconStyle} />
             Request
           </a>
-        </Link>
+        </Link> */}
 
         <div className="flex-1" />
 

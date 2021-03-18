@@ -28,6 +28,7 @@ const PaginatedResults = (props: PaginatedResultsProps) => {
       <p className="md:px-0 px-4">
         Showing results {from + 1}-
         {Math.min(results.hits.total.value, from + size)} of{" "}
+        {results.hits.total.relation === "eq" ? "" : "around "}
         {formatNumber(results.hits.total.value)}
       </p>
       <div>
