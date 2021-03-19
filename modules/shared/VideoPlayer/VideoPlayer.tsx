@@ -283,7 +283,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const loadVttStyles = async (url: string) => {
     const captionText = await fetch(url).then((res) => res.text());
-    const matches = captionText.match(/Style\:(([^#]{2})*)##/m);
+    const matches = captionText.match(/Style\:([^#]*)##/m);
     if (!matches) return;
     setVttStylesheet(matches[1]);
   };
