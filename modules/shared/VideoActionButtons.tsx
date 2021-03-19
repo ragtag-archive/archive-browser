@@ -69,6 +69,9 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
     }))
     .sort((a, b) => (a.label > b.label ? 1 : -1));
 
+  // Account for aspect ratio wider than 16:9
+  const videoHeight = Math.max(video.height, 0.5625 * video.width);
+
   return (
     <>
       {isMenuOpen && (
@@ -121,7 +124,7 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
           }}
         >
           <IconDownload className="w-4 h-4 mr-3" />
-          Download ({video.height}p{video.fps}, {formatBytes(mkvSize)})
+          Download ({videoHeight}p{video.fps}, {formatBytes(mkvSize)})
         </a>
         <a
           href={"https://youtu.be/" + video.video_id}
