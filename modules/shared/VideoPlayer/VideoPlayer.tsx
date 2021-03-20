@@ -25,6 +25,7 @@ import {
 import { useAmplitude } from "../libs/amplitude/useAmplitude";
 import { checkAutoplay } from "../util";
 import LoaderRing from "./components/LoaderRing";
+import SeekBar from "./SeekBar";
 
 type CaptionsTrack = {
   lang: string;
@@ -218,6 +219,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const syncDebounce = 1000;
   const dVideoReady = useThrottle(videoReady, syncDebounce);
   const dAudioReady = useThrottle(audioReady, syncDebounce);
+  const [lastSync, setLastSync] = React.useState(0);
 
   const avSync = () => {
     if (!refAudio.current || !refVideo.current) return;
@@ -225,9 +227,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     // Sync time
     if (
       Math.abs(refAudio.current.currentTime - refVideo.current.currentTime) >
-      0.5
-    )
+        0.1 &&
+      Date.now() - lastSync > 10000
+    ) {
       refVideo.current.currentTime = refAudio.current.currentTime;
+      setLastSync(Date.now());
+    }
 
     // Sync playback state
     const ended = refAudio.current.ended || refVideo.current.ended;
@@ -346,27 +351,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             opacity: controlsVisible ? 1 : 0,
           }}
         >
-          <div className="w-full h-4 relative group">
-            <div className="absolute bottom-0 bg-white opacity-50 h-1 group-hover:h-2 rounded-full w-full transition-all duration-200" />
-            <div
-              className="absolute bottom-0 bg-blue-500 h-1 group-hover:h-2 rounded-full"
-              style={{
-                transition: "height .2s",
-                width:
-                  (100 * playbackProgress) / (refVideo.current?.duration || 1) +
-                  "%",
-              }}
-            />
-            <input
-              type="range"
-              className="absolute bottom-0 w-full seekbar"
-              aria-label="Seekbar"
-              value={playbackProgress}
-              min={0}
-              max={refVideo.current?.duration}
-              onChange={(e) => handleSeek(Number(e.target.value))}
-            />
-          </div>
+          <SeekBar
+            value={playbackProgress}
+            max={refVideo.current?.duration}
+            onChange={handleSeek}
+          />
           <div className="flex flex-row justify-between">
             <div>
               <button
