@@ -346,6 +346,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         "focus:outline-none",
         isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "",
       ].join(" ")}
+      style={{
+        cursor: controlsVisible ? "auto" : "none",
+      }}
       ref={refSelf}
       onMouseLeave={() => setLastActive(0)}
       onMouseMove={pingActivity}
