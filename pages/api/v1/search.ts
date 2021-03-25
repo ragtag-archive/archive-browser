@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import {
-  DRIVE_BASE_URL,
   ES_BACKEND_URL,
   ES_BASIC_PASSWORD,
   ES_BASIC_USERNAME,
@@ -140,6 +139,7 @@ export const apiSearch = async (query: {
             query: q,
             operator: "OR",
             fuzziness: "AUTO",
+            boost: 10,
           },
         },
       },
@@ -158,7 +158,7 @@ export const apiSearch = async (query: {
             query: q,
             operator: "OR",
             fuzziness: "AUTO",
-            boost: 10,
+            boost: 5,
           },
         },
       }
