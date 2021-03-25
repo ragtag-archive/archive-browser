@@ -34,6 +34,7 @@
   appearance: none;
   background: transparent;
   cursor: pointer;
+  position: relative;
 }
 .slider:focus {
   outline: none;
@@ -44,7 +45,7 @@
   background: #fff;
   width: 10px;
   height: 10px;
-  margin-top: -2.5px;
+  margin-top: -5px;
   border-radius: 10px;
 }
 .slider::-moz-range-thumb {
@@ -58,14 +59,23 @@
   border: 0;
 }
 .slider::-webkit-slider-runnable-track {
-  background: rgba(255, 255, 255, 0.5);
-  height: 5px;
-  margin-bottom: 5px;
+  background: transparent;
+  height: 0;
+  padding: 12px 0;
 }
 .slider::-moz-range-track {
+  background: transparent;
+  height: 0;
+  padding: 12px 0;
+}
+.slider::after {
+  content: " ";
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  top: 50%;
+  margin-top: -1.5px;
   background: rgba(255, 255, 255, 0.5);
-  height: 5px;
-  margin-bottom: 5px;
 }
 
 .video-player:-webkit-full-screen {

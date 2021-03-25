@@ -256,12 +256,21 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
 
     // Sync playback state
-    const ended = refAudio.current.ended || refVideo.current.ended;
+    const ended =
+      refAudio.current.ended ||
+      refVideo.current.ended ||
+      refAudio.current.currentTime === refAudio.current.duration ||
+      refVideo.current.currentTime === refVideo.current.duration;
     if (isPlaying && dVideoReady && dAudioReady && !ended) {
       tryPlayVideo();
     } else {
       refVideo.current.pause();
       refAudio.current.pause();
+    }
+
+    if (ended) {
+      setIsPlaying(false);
+      pingActivity();
     }
 
     updateBufferLength();
@@ -285,12 +294,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     refAudio.current.volume = audioVolume;
   }, [audioVolume]);
 
-  React.useEffect(() => {
-    if (!refSelf.current) return;
-    refSelf.current.addEventListener("mousemove", pingActivity);
-    return () =>
-      refSelf.current?.removeEventListener?.("mousemove", pingActivity);
-  }, [refSelf]);
+  // React.useEffect(() => {
+  // if (!refSelf.current) return;
+  // refSelf.current.addEventListener("mousemove", pingActivity);
+  // return () =>
+  // refSelf.current?.removeEventListener?.("mousemove", pingActivity);
+  // }, [refSelf]);
 
   React.useEffect(() => {
     for (let i = 0; i < refVideo.current.textTracks.length; i++) {
@@ -328,7 +337,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     !videoReady ||
     !audioReady;
 
-  const controlsVisible = new Date().getTime() - lastActive < 5000;
+  const controlsVisible = Date.now() - lastActive < 5000;
 
   return (
     <div
@@ -338,7 +347,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "",
       ].join(" ")}
       ref={refSelf}
-      onMouseOut={() => setLastActive(0)}
+      onMouseLeave={() => setLastActive(0)}
+      onMouseMove={pingActivity}
       onKeyDown={handleKeyDown}
       tabIndex={0}
     >
@@ -379,9 +389,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             max={refVideo.current?.duration}
             buffer={bufferProgress}
             onChange={handleSeek}
+            onMouseMove={pingActivity}
           />
-          <div className="flex flex-row justify-between">
-            <div>
+          <div className="flex justify-between">
+            <div className="flex items-center">
               <button
                 type="button"
                 onClick={handlePlayPause}
@@ -395,38 +406,45 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 )}
               </button>
 
-              <button
-                type="button"
-                onClick={handleMuteUnmute}
-                className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
-                aria-label="Mute/Unmute button"
-              >
-                {audioVolume === 0 ? (
-                  <IconVolumeMute width="1em" height="1em" />
-                ) : (
-                  <IconVolume width="1em" height="1em" />
-                )}
-              </button>
+              <div className="hidden md:flex group">
+                <button
+                  type="button"
+                  onClick={handleMuteUnmute}
+                  className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
+                  aria-label="Mute/Unmute button"
+                >
+                  {audioVolume === 0 ? (
+                    <IconVolumeMute width="1em" height="1em" />
+                  ) : (
+                    <IconVolume width="1em" height="1em" />
+                  )}
+                </button>
 
-              <input
-                type="range"
-                className="slider hidden md:inline-block"
-                aria-label="Volume slider"
-                value={audioVolume}
-                min={0}
-                max={1}
-                step={0.1}
-                onChange={(e) => {
-                  setAudioVolume(Number(e.target.value));
-                  pingActivity();
-                  logEvent(
-                    K_AMPLITUDE_EVENT_VIDEO_VOLUME_ADJUST,
-                    getPlayerState()
-                  );
-                }}
-              />
+                <div
+                  className="
+                    flex
+                    h-12 w-0 group-hover:w-16
+                    overflow-hidden
+                    transition-all duration-200
+                  "
+                >
+                  <input
+                    type="range"
+                    className="slider w-16"
+                    aria-label="Volume slider"
+                    value={audioVolume}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    onChange={(e) => {
+                      setAudioVolume(Number(e.target.value));
+                      pingActivity();
+                    }}
+                  />
+                </div>
+              </div>
 
-              <p className="inline-block ml-4 py-2">
+              <p className="ml-4">
                 {formatSeconds(playbackProgress)} /{" "}
                 {formatSeconds(refVideo.current?.duration || 0)}
               </p>

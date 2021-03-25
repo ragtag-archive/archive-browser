@@ -5,7 +5,8 @@ export type SeekBarProps = {
   value: number;
   max: number;
   buffer?: number;
-  onChange: (value: number) => any;
+  onChange: (value: number) => void;
+  onMouseMove?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
 const SeekBar = (props: SeekBarProps) => {
@@ -20,6 +21,8 @@ const SeekBar = (props: SeekBarProps) => {
     const percent = Math.min(1, Math.max(0, (e.clientX - rect.x) / rect.width));
     setHoverPercentX(percent);
     if (isScrubbing) onChange(percent * max);
+
+    props.onMouseMove?.(e);
   };
 
   return (
@@ -32,36 +35,37 @@ const SeekBar = (props: SeekBarProps) => {
         }}
         onMouseUp={() => setIsScrubbing(false)}
         onMouseMove={handleMouseMove}
-        onMouseOver={() => setIsMouseOver(true)}
-        onMouseOut={() => setIsMouseOver(false)}
+        onMouseEnter={() => setIsMouseOver(true)}
+        onMouseLeave={() => setIsMouseOver(false)}
         aria-label="Seekbar"
         aria-role="range"
         aria-valuenow={value}
       >
-        <div className="absolute bottom-1 bg-white opacity-50 h-1 group-hover:h-2 w-full transition-all duration-200" />
+        <div className="absolute bottom-1 w-full pt-4 pb-2 -mb-2">
+          <div className="relative w-full h-0.5 group-hover:h-1 transition-all duration-200">
+            <div className="absolute bg-white opacity-50 h-full w-full" />
+            <div
+              className="absolute bg-white opacity-50 h-full"
+              style={{
+                width: 100 * (buffer / max) + "%",
+              }}
+            />
+            <div
+              className="absolute bg-white opacity-50 h-full"
+              style={{
+                width: 100 * (isMouseOver ? hoverPercentX : 0) + "%",
+              }}
+            />
+            <div
+              className="absolute bg-blue-500 h-full"
+              style={{
+                width: (100 * value) / max + "%",
+              }}
+            />
+          </div>
+        </div>
         <div
-          className="absolute bottom-1 bg-white opacity-50 h-1 group-hover:h-2"
-          style={{
-            transition: "height .2s",
-            width: 100 * (buffer / max) + "%",
-          }}
-        />
-        <div
-          className="absolute bottom-1 bg-white opacity-50 h-1 group-hover:h-2"
-          style={{
-            transition: "height .2s",
-            width: 100 * (isMouseOver ? hoverPercentX : 0) + "%",
-          }}
-        />
-        <div
-          className="absolute bottom-1 bg-blue-500 h-1 group-hover:h-2"
-          style={{
-            transition: "height .2s",
-            width: (100 * value) / max + "%",
-          }}
-        />
-        <div
-          className="absolute -top-10 bg-black bg-opacity-75 px-2 py-1 rounded"
+          className="absolute -top-10 bg-black bg-opacity-75 px-2 py-1 rounded pointer-events-none"
           style={{
             opacity: isMouseOver ? 1 : 0,
             left: hoverPercentX * 100 + "%",
