@@ -56,6 +56,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [videoReady, setVideoReady] = React.useState(false);
   const [audioReady, setAudioReady] = React.useState(true);
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
+  const [bufferProgress, setBufferProgress] = React.useState(0);
   const [audioVolume, setAudioVolume] = useLocalStorage("player:volume", 1);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [lastActive, setLastActive] = React.useState(0);
@@ -90,6 +91,26 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       hasCaptions,
       activeCaption: captions?.[activeCaption]?.lang || "",
     };
+  };
+
+  const updateBufferLength = () => {
+    if (!refVideo.current || !refAudio.current) return;
+
+    let maxVideo = 0;
+    let maxAudio = 0;
+    for (let i = 0; i < refVideo.current.buffered.length; i++)
+      maxVideo =
+        refVideo.current.buffered.start(i) <= playbackProgress
+          ? Math.max(maxVideo, refVideo.current.buffered.end(i))
+          : maxVideo;
+    for (let i = 0; i < refAudio.current.buffered.length; i++)
+      maxAudio =
+        refAudio.current.buffered.start(i) <= playbackProgress
+          ? Math.max(maxAudio, refAudio.current.buffered.end(i))
+          : maxAudio;
+
+    const maxBuffer = Math.min(maxVideo, maxAudio);
+    setBufferProgress(maxBuffer);
   };
 
   const tryPlayVideo = async () => {
@@ -242,6 +263,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refVideo.current.pause();
       refAudio.current.pause();
     }
+
+    updateBufferLength();
   };
 
   React.useEffect(() => {
@@ -344,16 +367,17 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           )}
         </div>
         <div
-          className="absolute inset-x-0 bottom-0 z-20 px-6 transition duration-200"
+          className="absolute inset-x-0 bottom-0 z-20 px-6 pt-2 transition duration-200"
           style={{
             background:
-              "linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 100%)",
+              "linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%)",
             opacity: controlsVisible ? 1 : 0,
           }}
         >
           <SeekBar
             value={playbackProgress}
             max={refVideo.current?.duration}
+            buffer={bufferProgress}
             onChange={handleSeek}
           />
           <div className="flex flex-row justify-between">
@@ -386,7 +410,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
               <input
                 type="range"
-                className="slider"
+                className="slider hidden md:inline-block"
                 aria-label="Volume slider"
                 value={audioVolume}
                 min={0}

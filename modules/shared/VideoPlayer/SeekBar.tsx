@@ -4,14 +4,16 @@ import { formatSeconds } from "../format";
 export type SeekBarProps = {
   value: number;
   max: number;
+  buffer?: number;
   onChange: (value: number) => any;
 };
 
 const SeekBar = (props: SeekBarProps) => {
   const { value, max, onChange } = props;
+  const buffer = props.buffer || 0;
   const [isScrubbing, setIsScrubbing] = React.useState(false);
   const [hoverPercentX, setHoverPercentX] = React.useState(0);
-  const [isTimePopupVisible, setIsTimePopupVisible] = React.useState(false);
+  const [isMouseOver, setIsMouseOver] = React.useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -30,13 +32,27 @@ const SeekBar = (props: SeekBarProps) => {
         }}
         onMouseUp={() => setIsScrubbing(false)}
         onMouseMove={handleMouseMove}
-        onMouseOver={() => setIsTimePopupVisible(true)}
-        onMouseOut={() => setIsTimePopupVisible(false)}
+        onMouseOver={() => setIsMouseOver(true)}
+        onMouseOut={() => setIsMouseOver(false)}
         aria-label="Seekbar"
-        aria-role="slider"
+        aria-role="range"
         aria-valuenow={value}
       >
         <div className="absolute bottom-1 bg-white opacity-50 h-1 group-hover:h-2 w-full transition-all duration-200" />
+        <div
+          className="absolute bottom-1 bg-white opacity-50 h-1 group-hover:h-2"
+          style={{
+            transition: "height .2s",
+            width: 100 * (buffer / max) + "%",
+          }}
+        />
+        <div
+          className="absolute bottom-1 bg-white opacity-50 h-1 group-hover:h-2"
+          style={{
+            transition: "height .2s",
+            width: 100 * (isMouseOver ? hoverPercentX : 0) + "%",
+          }}
+        />
         <div
           className="absolute bottom-1 bg-blue-500 h-1 group-hover:h-2"
           style={{
@@ -45,9 +61,9 @@ const SeekBar = (props: SeekBarProps) => {
           }}
         />
         <div
-          className="absolute -top-10 bg-black bg-opacity-50 px-2 py-1 rounded"
+          className="absolute -top-10 bg-black bg-opacity-75 px-2 py-1 rounded"
           style={{
-            opacity: isTimePopupVisible ? 1 : 0,
+            opacity: isMouseOver ? 1 : 0,
             left: hoverPercentX * 100 + "%",
           }}
         >
