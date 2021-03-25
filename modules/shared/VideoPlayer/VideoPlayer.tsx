@@ -342,7 +342,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   return (
     <div
       className={[
-        "video-player bg-gray-900",
+        "video-player bg-black",
         "focus:outline-none",
         isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "",
       ].join(" ")}
@@ -357,7 +357,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         style={{ paddingBottom: "56.25%" }}
       >
         <img
-          className="absolute inset-0 w-full h-full"
+          className={
+            "absolute inset-0 w-full h-full " +
+            (bufferProgress > 0 ? "hidden" : "")
+          }
           aria-hidden
           src={srcPoster}
         />
