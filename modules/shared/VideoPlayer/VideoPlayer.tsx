@@ -26,6 +26,7 @@ import { checkAutoplay } from "../util";
 import LoaderRing from "./components/LoaderRing";
 import SeekBar from "./SeekBar";
 import { CaptionsRenderer } from "react-srv3";
+import { useAnimationFrame } from "../hooks/useAnimationFrame";
 
 type CaptionsTrack = {
   lang: string;
@@ -58,6 +59,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [videoReady, setVideoReady] = React.useState(false);
   const [audioReady, setAudioReady] = React.useState(true);
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
+  const [videoTime, setVideoTime] = React.useState(0);
   const [bufferProgress, setBufferProgress] = React.useState(0);
   const [audioVolume, setAudioVolume] = useLocalStorage("player:volume", 1);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
@@ -65,6 +67,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [activeCaption, setActiveCaption] = React.useState(enCaptionIndex);
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
   const [srv3CaptionXMLs, setSrv3CaptionXMLs] = React.useState([]);
+
+  useAnimationFrame(() => {
+    if (refVideo.current !== null) setVideoTime(refVideo.current.currentTime);
+  });
 
   const handleCaptionsButton = () => {
     setActiveCaption((now) => ((now + 2) % (captions.length + 1)) - 1);
@@ -482,11 +488,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             </div>
           </div>
         </div>
-        {activeCaption > -1 && (
+        {activeCaption > -1 && srv3CaptionXMLs[activeCaption] && (
           <div className="w-full h-full absolute z-10 pointer-events-none">
             <CaptionsRenderer
-              srv3={srv3CaptionXMLs[activeCaption] || ""}
-              currentTime={playbackProgress}
+              srv3={srv3CaptionXMLs[activeCaption]}
+              currentTime={videoTime}
             />
           </div>
         )}
@@ -507,19 +513,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           onError={handleMediaError}
           playsInline
           muted
-        >
-          {/* captions.map(({ lang, src }) => {
-            return (
-              <track
-                key={lang}
-                kind="subtitles"
-                label={lang}
-                srcLang={lang}
-                src={src}
-              />
-            );
-            }) */}
-        </video>
+        />
         <audio
           preload="auto"
           ref={refAudio}
