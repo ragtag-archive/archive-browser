@@ -87,7 +87,7 @@ const WatchPage = (props: WatchPageProps) => {
               srcAudio={urlAudio}
               srcPoster={urlThumb}
               captions={videoInfo.files
-                .filter((file) => file.name.endsWith(".vtt"))
+                .filter((file) => file.name.endsWith(".ytt"))
                 .map(({ name }) => {
                   const lang = name.split(".")[1];
                   return {

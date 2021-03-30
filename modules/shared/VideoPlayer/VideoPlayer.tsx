@@ -20,12 +20,12 @@ import {
   K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR,
   K_AMPLITUDE_EVENT_VIDEO_READY_STATE,
   K_AMPLITUDE_EVENT_VIDEO_SEEK,
-  K_AMPLITUDE_EVENT_VIDEO_VOLUME_ADJUST,
 } from "../libs/amplitude/constants";
 import { useAmplitude } from "../libs/amplitude/useAmplitude";
 import { checkAutoplay } from "../util";
 import LoaderRing from "./components/LoaderRing";
 import SeekBar from "./SeekBar";
+import { CaptionsRenderer } from "react-srv3";
 
 type CaptionsTrack = {
   lang: string;
@@ -46,7 +46,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const { logEvent } = useAmplitude();
   const captions = props.captions || [];
   const hasCaptions = captions.length > 0;
-  const enCaptionIndex = captions.findIndex((cap) => cap.lang === "en");
+  const enCaptionIndex = captions.findIndex(
+    (cap) => cap.lang === "en" || cap.lang.startsWith("en-")
+  );
 
   const refSelf = React.useRef<HTMLDivElement>(null);
   const refVideo = React.useRef<HTMLVideoElement>(null);
@@ -62,7 +64,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [lastActive, setLastActive] = React.useState(0);
   const [activeCaption, setActiveCaption] = React.useState(enCaptionIndex);
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
-  const [vttStylesheet, setVttStylesheet] = React.useState("");
+  const [srv3CaptionXMLs, setSrv3CaptionXMLs] = React.useState([]);
 
   const handleCaptionsButton = () => {
     setActiveCaption((now) => ((now + 2) % (captions.length + 1)) - 1);
@@ -294,21 +296,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     refAudio.current.volume = audioVolume;
   }, [audioVolume]);
 
-  // React.useEffect(() => {
-  // if (!refSelf.current) return;
-  // refSelf.current.addEventListener("mousemove", pingActivity);
-  // return () =>
-  // refSelf.current?.removeEventListener?.("mousemove", pingActivity);
-  // }, [refSelf]);
-
-  React.useEffect(() => {
-    for (let i = 0; i < refVideo.current.textTracks.length; i++) {
-      refVideo.current.textTracks[i].mode = "hidden";
-    }
-    if (activeCaption >= 0)
-      refVideo.current.textTracks[activeCaption].mode = "showing";
-  }, [activeCaption]);
-
   React.useEffect(() => {
     if (props.autoplay) {
       checkAutoplay().then((can) => {
@@ -318,15 +305,16 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   }, []);
 
-  const loadVttStyles = async (url: string) => {
-    const captionText = await fetch(url).then((res) => res.text());
-    const matches = captionText.match(/Style\:([^#]*)##/m);
-    if (!matches) return;
-    setVttStylesheet(matches[1]);
+  const loadCaptions = async (url: string) => {
+    await fetch(url)
+      .then((res) => res.text())
+      .then((text) =>
+        setSrv3CaptionXMLs((now) => ({ ...now, [activeCaption]: text }))
+      );
   };
 
   React.useEffect(() => {
-    if (activeCaption >= 0) loadVttStyles(captions[activeCaption].src);
+    if (activeCaption >= 0) loadCaptions(captions[activeCaption].src);
   }, [activeCaption]);
 
   const isLoading =
@@ -369,7 +357,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         />
         <div
           className={[
-            "absolute inset-0 pointer-events-none z-10 flex flex-col justify-center bg-black bg-opacity-25",
+            "absolute inset-0 pointer-events-none z-20 flex flex-col justify-center bg-black bg-opacity-25",
             "transition duration-200",
             isLoading || isVideoErrored ? "opacity-100" : "opacity-0",
           ].join(" ")}
@@ -383,7 +371,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           )}
         </div>
         <div
-          className="absolute inset-x-0 bottom-0 z-20 px-6 pt-2 transition duration-200"
+          className="absolute inset-x-0 bottom-0 z-30 px-6 pt-2 transition duration-200"
           style={{
             background:
               "linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%)",
@@ -494,6 +482,14 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             </div>
           </div>
         </div>
+        {activeCaption > -1 && (
+          <div className="w-full h-full absolute z-10 pointer-events-none">
+            <CaptionsRenderer
+              srv3={srv3CaptionXMLs[activeCaption] || ""}
+              currentTime={playbackProgress}
+            />
+          </div>
+        )}
         <video
           ref={refVideo}
           src={srcVideo}
@@ -512,7 +508,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           playsInline
           muted
         >
-          {captions.map(({ lang, src }) => {
+          {/* captions.map(({ lang, src }) => {
             return (
               <track
                 key={lang}
@@ -522,7 +518,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 src={src}
               />
             );
-          })}
+            }) */}
         </video>
         <audio
           preload="auto"
@@ -543,7 +539,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             props.onPlaybackProgress?.(refAudio.current.currentTime);
           }}
         />
-        <style dangerouslySetInnerHTML={{ __html: vttStylesheet }} />
       </div>
     </div>
   );
