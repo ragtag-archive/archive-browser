@@ -68,6 +68,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
   const [srv3CaptionXMLs, setSrv3CaptionXMLs] = React.useState([]);
 
+  const avDuration = Math.min(
+    refAudio.current?.duration || 0,
+    refVideo.current?.duration || 0
+  );
+
   useAnimationFrame(() => {
     if (refVideo.current !== null) setVideoTime(refVideo.current.currentTime);
   });
@@ -173,14 +178,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const nudgeTime = (delta: number) => {
     setPlaybackProgress((now) => {
-      const newTime = Math.max(
-        0,
-        Math.min(
-          now + delta,
-          refAudio.current.duration,
-          refVideo.current.duration
-        )
-      );
+      const newTime = Math.max(0, Math.min(now + delta, avDuration));
       refAudio.current.currentTime = newTime;
       refVideo.current.currentTime = newTime;
       return newTime;
@@ -386,7 +384,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         >
           <SeekBar
             value={playbackProgress}
-            max={refVideo.current?.duration}
+            max={avDuration}
             buffer={bufferProgress}
             onChange={handleSeek}
             onMouseMove={pingActivity}
@@ -445,8 +443,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
               </div>
 
               <p className="ml-4">
-                {formatSeconds(playbackProgress)} /{" "}
-                {formatSeconds(refVideo.current?.duration || 0)}
+                {formatSeconds(playbackProgress)} / {formatSeconds(avDuration)}
               </p>
             </div>
             <div>

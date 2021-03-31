@@ -38,7 +38,6 @@ const SeekBar = (props: SeekBarProps) => {
         onMouseEnter={() => setIsMouseOver(true)}
         onMouseLeave={() => setIsMouseOver(false)}
         aria-label="Seekbar"
-        aria-role="range"
         aria-valuenow={value}
       >
         <div className="absolute bottom-1 w-full pt-4 pb-2 -mb-2">
