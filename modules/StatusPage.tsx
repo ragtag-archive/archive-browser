@@ -28,21 +28,7 @@ const StatusCard = (props: StatusCardProps) => {
               : "text-red-500"
           }
         >
-          <Linkify
-            componentDecorator={(href, text, key) => (
-              <a
-                key={key}
-                href={href}
-                className="text-white underline"
-                target="_blank"
-                rel="noreferrer noopener nofollow"
-              >
-                {text}
-              </a>
-            )}
-          >
-            {props.statusText}
-          </Linkify>
+          {props.statusText}
         </div>
       </div>
       {props.videoId && (
@@ -197,7 +183,23 @@ const StatusPage = () => {
           <h1 className="text-3xl mt-16 text-center">Service Status</h1>
           <p className="text-lg text-center">{refreshMessage}</p>
         </div>
-        <div className="bg-gray-900 p-4 mb-6 rounded">{statusMessage}</div>
+        <div className="bg-gray-900 p-4 mb-6 rounded">
+          <Linkify
+            componentDecorator={(href, text, key) => (
+              <a
+                key={key}
+                href={href}
+                className="text-white underline"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+              >
+                {text}
+              </a>
+            )}
+          >
+            {statusMessage}
+          </Linkify>
+        </div>
 
         {status.map((stat) => (
           <StatusCard key={stat.title} {...stat} />
