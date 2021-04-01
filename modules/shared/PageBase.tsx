@@ -1,4 +1,5 @@
 import React from "react";
+import Linkify from "react-linkify";
 import Head from "next/head";
 import Header from "./Header";
 import { apiStatusMessage } from "../../pages/api/v1/status";
@@ -36,7 +37,23 @@ const PageBase = (props: PageBaseProps) => {
           (bannerHide ? "hidden" : "")
         }
       >
-        <span className="px-6 py-2">{bannerMessage}</span>
+        <span className="px-6 py-2">
+          <Linkify
+            componentDecorator={(href, text, key) => (
+              <a
+                key={key}
+                href={href}
+                className="text-white underline"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+              >
+                {text}
+              </a>
+            )}
+          >
+            {bannerMessage}
+          </Linkify>
+        </span>
         <span>
           <a
             href="#"

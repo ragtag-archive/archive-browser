@@ -1,7 +1,7 @@
 import React from "react";
+import Linkify from "react-linkify";
 import Head from "next/head";
 import { apiStatusMessage, WorkerStatus } from "../pages/api/v1/status";
-import { DRIVE_BASE_URL } from "./shared/config";
 import { format } from "timeago.js";
 import PageBase from "./shared/PageBase";
 
@@ -28,7 +28,21 @@ const StatusCard = (props: StatusCardProps) => {
               : "text-red-500"
           }
         >
-          {props.statusText}
+          <Linkify
+            componentDecorator={(href, text, key) => (
+              <a
+                key={key}
+                href={href}
+                className="text-white underline"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+              >
+                {text}
+              </a>
+            )}
+          >
+            {props.statusText}
+          </Linkify>
         </div>
       </div>
       {props.videoId && (
