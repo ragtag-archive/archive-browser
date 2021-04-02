@@ -5090,9 +5090,9 @@ react-refresh@0.8.3:
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
 react-srv3@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-srv3/-/react-srv3-1.0.3.tgz#15534c264cf015548641ac836f5d670cc975dd09"
-  integrity sha512-aE1HYcOnhDjlVw81fwxhHbHnOsiSnmEwGPBJTI50resHMxxZnIgwyiRpd7IJLR5nlB6DAoED+3vdxtRtOo5dhQ==
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-srv3/-/react-srv3-1.0.4.tgz#f1a10318f40e67e5e77812bef43f75dd35fe9363"
+  integrity sha512-fKRX+F4d3gkzQ+VZxopovBO/aUV32s6Z+Rwt1SqmhFo7RSdFeXmhHuHx0jL/E99H7Y4mIMw4isplajGFfR2TnA==
   dependencies:
     fast-xml-parser "^3.19.0"
     he "^1.2.0"
