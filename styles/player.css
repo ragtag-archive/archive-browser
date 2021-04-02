@@ -123,3 +123,15 @@
     transform: rotate(360deg);
   }
 }
+
+/**
+ * react-srv3 caption offset
+ */
+.react-srv3-caption-window {
+  transition: margin-bottom 0.2s;
+}
+.controls-visible .react-srv3-caption-window[data-ap="6"],
+.controls-visible .react-srv3-caption-window[data-ap="7"],
+.controls-visible .react-srv3-caption-window[data-ap="8"] {
+  margin-bottom: 72px;
+}

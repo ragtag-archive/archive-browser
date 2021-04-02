@@ -486,7 +486,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
           </div>
         </div>
         {activeCaption > -1 && srv3CaptionXMLs[activeCaption] && (
-          <div className="w-full h-full absolute z-10 pointer-events-none">
+          <div
+            className={
+              "w-full h-full absolute z-10 pointer-events-none " +
+              (controlsVisible ? "controls-visible" : "")
+            }
+          >
             <CaptionsRenderer
               srv3={srv3CaptionXMLs[activeCaption]}
               currentTime={videoTime}
