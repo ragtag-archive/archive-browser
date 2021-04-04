@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import {
   IconExclamationCirlce,
@@ -13,7 +14,7 @@ type SidebarProps = {
   onClose?: () => any;
 };
 
-const Sidebar = (props: SidebarProps) => {
+const Sidebar = React.memo((props: SidebarProps) => {
   const { isOpen } = props;
 
   const linkStyle =
@@ -83,6 +84,6 @@ const Sidebar = (props: SidebarProps) => {
       />
     </>
   );
-};
+});
 
 export default Sidebar;

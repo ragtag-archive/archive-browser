@@ -1,7 +1,6 @@
 import React from "react";
 import Head from "next/head";
 import PageBase from "./shared/PageBase";
-import Linkify from "react-linkify";
 import { VideoMetadata } from "./shared/database";
 import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
 import { formatDate } from "./shared/format";
@@ -11,6 +10,7 @@ import Link from "next/link";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
 import VideoActionButtons from "./shared/VideoActionButtons";
 import { useWindowSize } from "./shared/hooks/useWindowSize";
+import MemoLinkify from "./shared/MemoLinkify";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -163,21 +163,9 @@ const WatchPage = (props: WatchPageProps) => {
                 </Link>
               </div>
               <div className="whitespace-pre-line break-words text-gray-300">
-                <Linkify
-                  componentDecorator={(href, text, key) => (
-                    <a
-                      key={key}
-                      href={href}
-                      className="text-blue-300 hover:underline focus:outline-none focus:underline"
-                      target="_blank"
-                      rel="noreferrer noopener nofollow"
-                    >
-                      {text}
-                    </a>
-                  )}
-                >
+                <MemoLinkify linkClassName="text-blue-300 hover:underline focus:outline-none focus:underline">
                   {videoInfo.description}
-                </Linkify>
+                </MemoLinkify>
               </div>
             </div>
           </div>

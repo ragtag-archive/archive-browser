@@ -1,18 +1,16 @@
+import React from "react";
 import Link from "next/link";
-import { DRIVE_BASE_URL } from "./config";
 import { VideoMetadata } from "./database";
-import { formatBytes, formatDate, formatSeconds } from "./format";
+import { formatDate, formatSeconds } from "./format";
 import { format } from "timeago.js";
-import { IconDownload, IconYouTube } from "./icons";
 import VideoActionButtons from "./VideoActionButtons";
-import { signURL } from "./fileAuth";
 
 export type VideoCardProps = {
   video?: VideoMetadata;
   small?: boolean;
 };
 
-const VideoCard = ({ video, small }: VideoCardProps) => {
+const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
   const thumbURL = video?.files?.find((file) => file.name.endsWith(".webp"))
     ?.url;
 
@@ -88,6 +86,6 @@ const VideoCard = ({ video, small }: VideoCardProps) => {
       </div>
     </div>
   );
-};
+});
 
 export default VideoCard;

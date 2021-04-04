@@ -3,6 +3,7 @@ import Linkify from "react-linkify";
 import Head from "next/head";
 import Header from "./Header";
 import { apiStatusMessage } from "../../pages/api/v1/status";
+import MemoLinkify from "./MemoLinkify";
 
 export type PageBaseProps = {
   children?: React.ReactNode;
@@ -38,21 +39,9 @@ const PageBase = (props: PageBaseProps) => {
         }
       >
         <span className="px-6 py-2">
-          <Linkify
-            componentDecorator={(href, text, key) => (
-              <a
-                key={key}
-                href={href}
-                className="text-white underline"
-                target="_blank"
-                rel="noreferrer noopener nofollow"
-              >
-                {text}
-              </a>
-            )}
-          >
+          <MemoLinkify linkClassName="text-white underline">
             {bannerMessage}
-          </Linkify>
+          </MemoLinkify>
         </span>
         <span>
           <a

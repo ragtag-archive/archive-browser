@@ -23,7 +23,7 @@ export const buttonStyle = `
 const getFile = (videoInfo: VideoMetadata, suffix: string) =>
   videoInfo.files.find((file) => file.name.endsWith(suffix));
 
-const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
+const VideoActionButtons = React.memo(({ video }: VideoActionButtonsProps) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { logEvent } = useAmplitude();
 
@@ -138,6 +138,6 @@ const VideoActionButtons = ({ video }: VideoActionButtonsProps) => {
       </div>
     </>
   );
-};
+});
 
 export default VideoActionButtons;

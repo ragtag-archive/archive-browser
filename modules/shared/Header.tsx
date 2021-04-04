@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Sidebar from "./Sidebar";
 import { IconBars } from "./icons";
 
-const Header = () => {
+const Header = React.memo(() => {
   const router = useRouter();
   const [search, setSearch] = React.useState((router.query.q as string) || "");
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -81,6 +81,6 @@ const Header = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
     </>
   );
-};
+});
 
 export default Header;
