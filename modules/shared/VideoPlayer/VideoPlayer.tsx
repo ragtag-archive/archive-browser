@@ -63,7 +63,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [bufferProgress, setBufferProgress] = React.useState(0);
   const [audioVolume, setAudioVolume] = useLocalStorage("player:volume", 1);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
-  const [lastActive, setLastActive] = React.useState(0);
+  const [lastActive, setLastActive] = React.useState(Date.now());
   const [activeCaption, setActiveCaption] = React.useState(enCaptionIndex);
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
   const [srv3CaptionXMLs, setSrv3CaptionXMLs] = React.useState([]);
@@ -73,8 +73,28 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     refVideo.current?.duration || 0
   );
 
+  const threshStartSync = 0.2;
+  const threshSynced = 0.1;
+  const threshTimeReset = 2;
+
   useAnimationFrame(() => {
-    if (refVideo.current !== null) setVideoTime(refVideo.current.currentTime);
+    if (!refVideo.current || !refAudio.current) return;
+    const a = refAudio.current;
+    const v = refVideo.current;
+
+    // Update video time state
+    setVideoTime(v.currentTime);
+
+    // Check sync
+    const playing = !a.paused || !v.paused;
+    const timeDiff = Math.abs(a.currentTime - v.currentTime);
+    if (timeDiff > threshStartSync && playing) {
+      if (a.currentTime > v.currentTime && !a.paused) a.pause();
+      else if (v.currentTime > a.currentTime && !v.paused) v.pause();
+    } else if (timeDiff < threshSynced && playing) {
+      if (a.paused) a.play();
+      if (v.paused) v.play();
+    }
   });
 
   const handleCaptionsButton = () => {
@@ -246,20 +266,9 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const syncDebounce = 1000;
   const dVideoReady = useThrottle(videoReady, syncDebounce);
   const dAudioReady = useThrottle(audioReady, syncDebounce);
-  const [lastSync, setLastSync] = React.useState(0);
 
   const avSync = () => {
     if (!refAudio.current || !refVideo.current) return;
-
-    // Sync time
-    if (
-      Math.abs(refAudio.current.currentTime - refVideo.current.currentTime) >
-        0.1 &&
-      Date.now() - lastSync > 10000
-    ) {
-      refVideo.current.currentTime = refAudio.current.currentTime;
-      setLastSync(Date.now());
-    }
 
     // Sync playback state
     const ended =
@@ -268,7 +277,11 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refAudio.current.currentTime === refAudio.current.duration ||
       refVideo.current.currentTime === refVideo.current.duration;
     if (isPlaying && dVideoReady && dAudioReady && !ended) {
-      tryPlayVideo();
+      const timeDelta = Math.abs(
+        refVideo.current.currentTime - refAudio.current.currentTime
+      );
+      if (timeDelta < threshSynced || timeDelta > threshStartSync)
+        tryPlayVideo();
     } else {
       refVideo.current.pause();
       refAudio.current.pause();

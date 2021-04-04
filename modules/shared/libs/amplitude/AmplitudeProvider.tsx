@@ -3,7 +3,10 @@ import AmplitudeContext from "./AmplitudeContext";
 
 const AmplitudeProvider = (props: any) => {
   const logEvent = (eventName: string, eventProperties?: any) => {
-    if (typeof window !== "undefined") {
+    if (
+      typeof window !== "undefined" &&
+      process.env.NEXT_PUBLIC_AMPLITUDE_KEY
+    ) {
       try {
         const amplitude = require("amplitude-js");
         amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_KEY, undefined, {});
