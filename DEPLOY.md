@@ -169,6 +169,7 @@ ES_INDEX=youtube-archive
 ES_BACKEND_URL=http://localhost:9200
 ES_AUTHORIZATION=
 DRIVE_BASE_URL=http://localhost:8080
+ENABLE_SIGN_URLS=false
 ```
 
 ### Insert some data
