@@ -1,15 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-  ES_BACKEND_URL,
-  ES_BASIC_PASSWORD,
-  ES_BASIC_USERNAME,
-  ES_INDEX,
-} from "../../../modules/shared/config";
-import axios from "axios";
+import { ES_INDEX } from "../../../modules/shared/config";
 import {
   ElasticSearchResult,
   VideoMetadata,
-} from "../../../modules/shared/database";
+} from "../../../modules/shared/database.d";
+import { Elastic } from "../../../modules/shared/database";
 
 export type StorageStatistics = {
   videos: number;
@@ -44,14 +39,9 @@ export const apiStorageStatistics = async (): Promise<StorageStatistics> => {
     },
   });
 
-  const countRes = await axios.request({
+  const countRes = await Elastic.request({
     method: "get",
-    baseURL: ES_BACKEND_URL,
     url: "/" + ES_INDEX + "/_count",
-    auth: {
-      username: ES_BASIC_USERNAME,
-      password: ES_BASIC_PASSWORD,
-    },
   });
 
   return {
@@ -187,14 +177,9 @@ export const apiSearch = async (query: {
 };
 
 export const apiSearchRaw = <T = any>(dsl: any) =>
-  axios.request<T>({
+  Elastic.request<T>({
     method: "get",
-    baseURL: ES_BACKEND_URL,
     url: "/" + ES_INDEX + "/_search",
-    auth: {
-      username: ES_BASIC_USERNAME,
-      password: ES_BASIC_PASSWORD,
-    },
     data: dsl,
   });
 

@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { ChatMessage } from "./database";
+import { ChatMessage } from "./database.d";
 import ChatReplay from "./ChatReplay";
 
 export type ChatReplayPanelProps = {

@@ -4,7 +4,7 @@ import { DRIVE_BASE_URL } from "../../modules/shared/config";
 import {
   ElasticSearchResult,
   VideoMetadata,
-} from "../../modules/shared/database";
+} from "../../modules/shared/database.d";
 import { signFileURLs, signURL } from "../../modules/shared/fileAuth";
 import { getRemoteAddress } from "../../modules/shared/util";
 import { apiSearch } from "../api/v1/search";

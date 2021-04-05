@@ -1,6 +1,9 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-import { STATUS_UPDATES_ENDPOINT } from "../../../modules/shared/config";
+import {
+  STATUS_UPDATES_ENDPOINT,
+  WORKER_STATUS_ENDPOINT,
+} from "../../../modules/shared/config";
 
 export type WorkerStatus = {
   event:
@@ -25,7 +28,7 @@ export const apiStatus = async () => {
   return axios
     .request({
       method: "get",
-      baseURL: "https://ragtag-archive-webhook.ragtag.workers.dev/",
+      baseURL: WORKER_STATUS_ENDPOINT,
     })
     .then((res) => res.data);
 };

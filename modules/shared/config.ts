@@ -1,27 +1,56 @@
-// Database
-export const DRIVE_BASE_URL = "https://archive-content.ragtag.moe";
-export const ES_INDEX = "youtube-archive";
-export const ES_BACKEND_URL = process.env.ES_BACKEND_URL;
-export const ES_BASIC_USERNAME = process.env.ES_BASIC_USERNAME;
-export const ES_BASIC_PASSWORD = process.env.ES_BASIC_PASSWORD;
+/**
+ * Database configuration
+ * Elasticsearch 7.11
+ *
+ * ES_INDEX - primary index where video data is stored
+ * ES_BACKEND_URL - endpoint
+ * ES_AUTHORIZATION - authorization header (e.g. "Basic bmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXA=")
+ */
+export const ES_INDEX = process.env.ES_INDEX || "youtube-archive";
+export const ES_BACKEND_URL =
+  process.env.ES_BACKEND_URL || "http://127.0.0.1:9200";
+export const ES_AUTHORIZATION = process.env.ES_AUTHORIZATION;
 
+/**
+ * URL for video archival queue, used to insert videos
+ * from the request page.
+ *
+ * It follows the API specified in the following page
+ * https://tasq.ragtag.workers.dev/
+ */
 export const TASQ_QUEUE_URL = process.env.TASQ_QUEUE_URL;
+
+/**
+ * Various status updates
+ * Open the URL in your browser to see what the data looks like.
+ */
 export const STATUS_UPDATES_ENDPOINT =
   "https://archive-status-updates.ragtag.workers.dev";
+export const WORKER_STATUS_ENDPOINT =
+  "https://ragtag-archive-webhook.ragtag.workers.dev";
 
-// HCaptcha
+/**
+ * HCaptcha configuration for Request page
+ */
 export const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY;
 export const NEXT_PUBLIC_HCAPTCHA_SITE_KEY =
   process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY;
 
-// Bulk request page
+/**
+ * JWT public key for bulk request page
+ */
 export const JWT_PUBLIC_KEY =
   "-----BEGIN PUBLIC KEY-----\n" +
   process.env.JWT_PUBLIC_KEY +
   "\n-----END PUBLIC KEY-----";
 export const BULK_INSERT_ROLE = process.env.BULK_INSERT_ROLE;
 
-// File URL signing
+/**
+ * URL where files are served
+ */
+export const DRIVE_BASE_URL =
+  process.env.DRIVE_BASE_URL || "https://archive-content.ragtag.moe";
+export const ENABLE_SIGN_URLS = true;
 export const FILE_JWT_PRIVATE_KEY =
   "-----BEGIN EC PRIVATE KEY-----\n" +
   process.env.FILE_JWT_PRIVATE_KEY +

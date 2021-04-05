@@ -1,5 +1,5 @@
 import React from "react";
-import { VideoMetadata } from "./database";
+import { VideoMetadata } from "./database.d";
 import { formatBytes } from "./format";
 import { IconDownload, IconEllipsisV, IconYouTube } from "./icons";
 import {

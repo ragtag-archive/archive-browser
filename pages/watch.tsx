@@ -1,17 +1,11 @@
-import axios from "axios";
 import { GetServerSideProps } from "next";
-import {
-  ES_BACKEND_URL,
-  ES_INDEX,
-  ES_BASIC_USERNAME,
-  ES_BASIC_PASSWORD,
-  DRIVE_BASE_URL,
-} from "../modules/shared/config";
+import { ES_INDEX, DRIVE_BASE_URL } from "../modules/shared/config";
 import {
   ElasticSearchResult,
   VideoFile,
   VideoMetadata,
-} from "../modules/shared/database";
+} from "../modules/shared/database.d";
+import { Elastic } from "../modules/shared/database";
 import { signFileURLs, signURL } from "../modules/shared/fileAuth";
 import { getRemoteAddress } from "../modules/shared/util";
 import WatchPage, { WatchPageProps } from "../modules/WatchPage";
@@ -49,18 +43,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       // Update database if file list not available
       if (!Array.isArray(videoInfo.files)) {
         console.log("Updating DB with files", files);
-        const updateres = await axios
-          .request({
-            method: "post",
-            baseURL: ES_BACKEND_URL,
-            url: "/" + ES_INDEX + "/_update/" + v,
-            auth: {
-              username: ES_BASIC_USERNAME,
-              password: ES_BASIC_PASSWORD,
-            },
-            data: { doc: { files } },
-          })
-          .catch(({ response }) => response);
+        const updateres = await Elastic.request({
+          method: "post",
+          url: "/" + ES_INDEX + "/_update/" + v,
+          data: { doc: { files } },
+        }).catch(({ response }) => response);
         console.log(updateres.data);
       }
 

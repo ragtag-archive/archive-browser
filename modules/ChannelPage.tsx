@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import { ElasticSearchResult, VideoMetadata } from "./shared/database";
+import { ElasticSearchResult, VideoMetadata } from "./shared/database.d";
 import PageBase from "./shared/PageBase";
 import PaginatedResults from "./shared/PaginatedResults";
 import { IconYouTube } from "./shared/icons";

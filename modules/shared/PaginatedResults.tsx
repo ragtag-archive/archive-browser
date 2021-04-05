@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { ElasticSearchResult, VideoMetadata } from "./database";
+import { ElasticSearchResult, VideoMetadata } from "./database.d";
 import Link from "next/link";
 import VideoCard from "./VideoCard";
 import { formatNumber } from "./format";

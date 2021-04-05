@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { VideoMetadata } from "./database";
+import { VideoMetadata } from "./database.d";
 import { formatDate, formatSeconds } from "./format";
 import { format } from "timeago.js";
 import VideoActionButtons from "./VideoActionButtons";

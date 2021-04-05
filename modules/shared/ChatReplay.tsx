@@ -1,5 +1,5 @@
 import React from "react";
-import { ChatMessage } from "./database";
+import { ChatMessage } from "./database.d";
 import { formatSeconds } from "./format";
 
 export type ChatReplayProps = {

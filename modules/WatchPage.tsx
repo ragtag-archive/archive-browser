@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import PageBase from "./shared/PageBase";
-import { VideoMetadata } from "./shared/database";
+import { VideoMetadata } from "./shared/database.d";
 import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
 import { formatDate } from "./shared/format";
 import ChatReplayPanel from "./shared/ChatReplayPanel";

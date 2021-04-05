@@ -1,10 +1,16 @@
 import jsonwebtoken from "jsonwebtoken";
-import { DRIVE_BASE_URL, FILE_JWT_PRIVATE_KEY } from "./config";
-import { VideoFile } from "./database";
+import {
+  DRIVE_BASE_URL,
+  ENABLE_SIGN_URLS,
+  FILE_JWT_PRIVATE_KEY,
+} from "./config";
+import { VideoFile } from "./database.d";
 
 const K_EXTENSION_BYPASS = ["jpg", "webp"];
 
 export const signURL = (url: string, ip: string) => {
+  if (!ENABLE_SIGN_URLS) return url;
+
   const u = new URL(url);
   const host = u.hostname;
   const path = u.pathname;

@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import PageBase from "./shared/PageBase";
-import { ElasticSearchResult, VideoMetadata } from "./shared/database";
+import { ElasticSearchResult, VideoMetadata } from "./shared/database.d";
 import PaginatedResults from "./shared/PaginatedResults";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import PageBase from "./shared/PageBase";
-import { ElasticSearchResult, VideoMetadata } from "./shared/database";
+import { ElasticSearchResult, VideoMetadata } from "./shared/database.d";
 import VideoCard from "./shared/VideoCard";
 import { StorageStatistics } from "../pages/api/v1/search";
 import { formatBytes, formatNumber } from "./shared/format";
