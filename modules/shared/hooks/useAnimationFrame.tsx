@@ -5,7 +5,10 @@ import React from "react";
  *
  * Taken from https://css-tricks.com/using-requestanimationframe-with-react-hooks/
  */
-export const useAnimationFrame = (callback: (deltaTime: number) => void) => {
+export const useAnimationFrame = (
+  callback: (deltaTime: number) => void,
+  dependencies: any[] = []
+) => {
   // Use useRef for mutable variables that we want to persist
   // without triggering a re-render on their change
   const requestRef = React.useRef(0);
@@ -23,5 +26,5 @@ export const useAnimationFrame = (callback: (deltaTime: number) => void) => {
   React.useEffect(() => {
     requestRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(requestRef.current);
-  }, []); // Make sure the effect runs only once
+  }, dependencies);
 };

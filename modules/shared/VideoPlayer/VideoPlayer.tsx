@@ -86,16 +86,36 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     setVideoTime(v.currentTime);
 
     // Check sync
-    const playing = !a.paused || !v.paused;
     const timeDiff = Math.abs(a.currentTime - v.currentTime);
-    if (timeDiff > threshStartSync && playing) {
-      if (a.currentTime > v.currentTime && !a.paused) a.pause();
-      else if (v.currentTime > a.currentTime && !v.paused) v.pause();
-    } else if (timeDiff < threshSynced && playing) {
-      if (a.paused) a.play();
-      if (v.paused) v.play();
+    if (isPlaying) {
+      if (timeDiff > threshStartSync) {
+        if (timeDiff > threshTimeReset) {
+          v.currentTime = a.currentTime;
+        } else {
+          if (a.currentTime > v.currentTime && !a.paused) a.pause();
+          else if (v.currentTime > a.currentTime && !v.paused) v.pause();
+        }
+      } else if (timeDiff < threshSynced) {
+        if (a.paused) a.play();
+        if (v.paused) v.play();
+      }
+    } else {
+      if (!a.paused) a.pause();
+      if (!v.paused) v.pause();
     }
-  });
+
+    // Check if ended
+    const ended =
+      refAudio.current.ended ||
+      refVideo.current.ended ||
+      refAudio.current.currentTime === refAudio.current.duration ||
+      refVideo.current.currentTime === refVideo.current.duration;
+
+    if (ended) {
+      setIsPlaying(false);
+      pingActivity();
+    }
+  }, [isPlaying]);
 
   const handleCaptionsButton = () => {
     setActiveCaption((now) => ((now + 2) % (captions.length + 1)) - 1);
@@ -146,12 +166,14 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     setBufferProgress(maxBuffer);
   };
 
-  const tryPlayVideo = async () => {
-    try {
-      await refAudio.current.play().catch(() => setIsPlaying(false));
-      await refVideo.current.play();
-    } catch (_) {}
-  };
+  const tryPlayVideo = async () =>
+    refAudio.current
+      .play()
+      .then(() => refVideo.current.play())
+      .catch((e) => {
+        console.error(e);
+        setIsPlaying(false);
+      });
 
   const handlePlayPause = () => {
     if (isPlaying) {
@@ -167,10 +189,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refAudio.current.pause();
       refVideo.current.pause();
     } else {
-      if (!videoReady || !audioReady) return;
-
       tryPlayVideo();
-      refAudio.current.volume = audioVolume;
     }
     setIsPlaying((now) => !now);
   };
@@ -251,12 +270,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     pingActivity();
     setPlaybackProgress(val);
     if (refVideo.current) {
-      refVideo.current.pause();
+      // refVideo.current.pause();
       refVideo.current.currentTime = val;
       setVideoReady(false);
     }
     if (refAudio.current) {
-      refAudio.current.pause();
+      // refAudio.current.pause();
       refAudio.current.currentTime = val;
       setAudioReady(false);
     }
@@ -267,56 +286,22 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const dVideoReady = useThrottle(videoReady, syncDebounce);
   const dAudioReady = useThrottle(audioReady, syncDebounce);
 
-  const avSync = () => {
-    if (!refAudio.current || !refVideo.current) return;
-
-    // Sync playback state
-    const ended =
-      refAudio.current.ended ||
-      refVideo.current.ended ||
-      refAudio.current.currentTime === refAudio.current.duration ||
-      refVideo.current.currentTime === refVideo.current.duration;
-    if (isPlaying && dVideoReady && dAudioReady && !ended) {
-      const timeDelta = Math.abs(
-        refVideo.current.currentTime - refAudio.current.currentTime
-      );
-      if (timeDelta < threshSynced || timeDelta > threshStartSync)
-        tryPlayVideo();
-    } else {
-      refVideo.current.pause();
-      refAudio.current.pause();
-    }
-
-    if (ended) {
-      setIsPlaying(false);
-      pingActivity();
-    }
-
-    updateBufferLength();
-  };
-
   React.useEffect(() => {
-    avSync();
-  }, [dVideoReady, dAudioReady, isPlaying, playbackProgress]);
+    updateBufferLength();
+  }, [playbackProgress]);
 
   React.useEffect(() => {
     logEvent(K_AMPLITUDE_EVENT_VIDEO_READY_STATE, getPlayerState());
   }, [videoReady, audioReady]);
 
   React.useEffect(() => {
-    document.addEventListener("visibilitychange", avSync);
-    return () => document.removeEventListener("visibilitychange", avSync);
-  }, [isPlaying]);
-
-  React.useEffect(() => {
-    if (!refVideo.current) return;
+    if (!refAudio.current) return;
     refAudio.current.volume = audioVolume;
   }, [audioVolume]);
 
   React.useEffect(() => {
     if (props.autoplay) {
       checkAutoplay().then((can) => {
-        console.log({ can });
         if (can) setIsPlaying(true);
       });
     }
@@ -335,12 +320,13 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   }, [activeCaption]);
 
   const isLoading =
-    !refVideo.current ||
-    !refAudio.current ||
-    !dVideoReady ||
-    !dAudioReady ||
-    !videoReady ||
-    !audioReady;
+    (!refVideo.current ||
+      !refAudio.current ||
+      !dVideoReady ||
+      !dAudioReady ||
+      !videoReady ||
+      !audioReady) &&
+    !(!refVideo.current?.paused && !refAudio.current?.paused);
 
   const controlsVisible = Date.now() - lastActive < 5000;
 
