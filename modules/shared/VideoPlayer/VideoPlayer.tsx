@@ -55,6 +55,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const refVideo = React.useRef<HTMLVideoElement>(null);
   const refAudio = React.useRef<HTMLAudioElement>(null);
 
+  const [now, setNow] = React.useState(Date.now());
+  const [isDebugVisible, setIsDebugVisible] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(props.autoplay);
   const [videoReady, setVideoReady] = React.useState(false);
   const [audioReady, setAudioReady] = React.useState(true);
@@ -68,14 +70,18 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
   const [srv3CaptionXMLs, setSrv3CaptionXMLs] = React.useState([]);
 
+  const [isContextVisible, setIsContextVisible] = React.useState(false);
+  const [contextX, setContextX] = React.useState(0);
+  const [contextY, setContextY] = React.useState(0);
+
   const avDuration = Math.min(
     refAudio.current?.duration || 0,
     refVideo.current?.duration || 0
   );
 
-  const threshStartSync = 0.2;
-  const threshSynced = 0.1;
+  const threshStartSync = React.useRef(0.25);
   const threshTimeReset = 2;
+  const syncDebug = React.useRef("");
 
   useAnimationFrame(() => {
     if (!refVideo.current || !refAudio.current) return;
@@ -84,25 +90,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
     // Update video time state
     setVideoTime(v.currentTime);
-
-    // Check sync
-    const timeDiff = Math.abs(a.currentTime - v.currentTime);
-    if (isPlaying) {
-      if (timeDiff > threshStartSync) {
-        if (timeDiff > threshTimeReset) {
-          v.currentTime = a.currentTime;
-        } else {
-          if (a.currentTime > v.currentTime && !a.paused) a.pause();
-          else if (v.currentTime > a.currentTime && !v.paused) v.pause();
-        }
-      } else if (timeDiff < threshSynced) {
-        if (a.paused) a.play();
-        if (v.paused) v.play();
-      }
-    } else {
-      if (!a.paused) a.pause();
-      if (!v.paused) v.pause();
-    }
 
     // Check if ended
     const ended =
@@ -114,8 +101,47 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     if (ended) {
       setIsPlaying(false);
       pingActivity();
+      return;
     }
-  }, [isPlaying]);
+
+    setNow(Date.now());
+
+    setIsPlaying((_isPlaying) => {
+      // Check sync
+      const timeDiff = Math.abs(a.currentTime - v.currentTime);
+      syncDebug.current = "";
+      if (_isPlaying) {
+        if (timeDiff > threshStartSync.current) {
+          if (timeDiff > threshTimeReset) {
+            syncDebug.current = "reset";
+            v.currentTime = a.currentTime;
+            a.play();
+            v.play();
+          } else {
+            if (a.currentTime > v.currentTime) {
+              syncDebug.current = "a>v";
+              a.pause();
+              v.play();
+            } else if (v.currentTime > a.currentTime) {
+              syncDebug.current = "a<v";
+              v.pause();
+              a.play();
+            }
+          }
+        } else {
+          syncDebug.current = ">>";
+          if (a.paused) a.play();
+          if (v.paused) v.play();
+        }
+      } else {
+        syncDebug.current = "||";
+        console.log("e");
+        if (!a.paused) a.pause();
+        if (!v.paused) v.pause();
+      }
+      return _isPlaying;
+    });
+  });
 
   const handleCaptionsButton = () => {
     setActiveCaption((now) => ((now + 2) % (captions.length + 1)) - 1);
@@ -255,6 +281,14 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     }
   };
 
+  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const playerRect = e.currentTarget.getBoundingClientRect();
+    setContextX(e.clientX - playerRect.left);
+    setContextY(e.clientY - playerRect.top);
+    setIsContextVisible((now) => !now);
+  };
+
   const handleFullscreen = () => {
     if (!document.fullscreenElement) {
       refSelf.current?.requestFullscreen();
@@ -344,8 +378,62 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       onMouseLeave={() => setLastActive(0)}
       onMouseMove={pingActivity}
       onKeyDown={handleKeyDown}
+      onContextMenu={handleContextMenu}
+      onBlur={() => setIsContextVisible(false)}
       tabIndex={0}
     >
+      {isDebugVisible && (
+        <div
+          data-debug-window
+          className="bg-black bg-opacity-50 text-white absolute left-2 top-2 z-40 p-4 whitespace-pre font-mono"
+        >
+          <div className="float-right">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsDebugVisible(false);
+              }}
+            >
+              [x]
+            </a>
+          </div>
+          {`Debug info
+u: ${isPlaying ? "playing" : "paused"}
+a: ${
+            refAudio.current?.paused ? "paused" : "playing"
+          } ${refAudio.current?.currentTime.toFixed(3)} 
+v: ${
+            refVideo.current?.paused ? "paused" : "playing"
+          } ${refVideo.current?.currentTime.toFixed(3)} 
+d: ${(refAudio.current?.currentTime - refVideo.current?.currentTime).toFixed(3)}
+s: ${syncDebug.current}
+`}
+        </div>
+      )}
+      {isContextVisible && (
+        <>
+          <div
+            className="fixed inset-0 w-full h-full z-40"
+            onClick={() => setIsContextVisible(false)}
+          />
+          <div
+            data-context-menu
+            className="bg-black bg-opacity-50 rounded-lg absolute z-50 overflow-hidden"
+            style={{
+              left: contextX + "px",
+              top: contextY + "px",
+            }}
+          >
+            <div
+              className="cursor-pointer px-6 py-4 hover:bg-black bg-opacity-25"
+              onClick={() => setIsDebugVisible(true)}
+            >
+              Show debug info
+            </div>
+          </div>
+        </>
+      )}
       <div
         className="w-full h-0 relative overflow-hidden"
         style={{ paddingBottom: "56.25%" }}
