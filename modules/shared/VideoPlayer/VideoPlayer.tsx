@@ -480,7 +480,14 @@ s: ${syncDebug.current}
             <div className="flex items-center">
               <button
                 type="button"
-                onClick={handlePlayPause}
+                onMouseUp={(e) => {
+                  e.preventDefault();
+                  handlePlayPause();
+                }}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  handlePlayPause();
+                }}
                 className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
                 aria-label="Play/Pause button"
               >
@@ -591,7 +598,15 @@ s: ${syncDebug.current}
           className="w-full h-full absolute"
           preload="auto"
           crossOrigin="anonymous"
-          onClick={handlePlayPause}
+          onMouseUp={(e) => {
+            e.preventDefault();
+            handlePlayPause();
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            if (controlsVisible) handlePlayPause();
+            else pingActivity();
+          }}
           onCanPlay={() => setVideoReady(true)}
           onPlaying={() => setVideoReady(true)}
           onSeeking={() => setVideoReady(false)}
