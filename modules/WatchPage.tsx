@@ -83,6 +83,7 @@ const WatchPage = (props: WatchPageProps) => {
           <div className="relative bg-gray-400">
             <VideoPlayer
               key={urlVideo}
+              videoId={videoInfo.video_id}
               srcVideo={urlVideo}
               srcAudio={urlAudio}
               srcPoster={urlThumb}

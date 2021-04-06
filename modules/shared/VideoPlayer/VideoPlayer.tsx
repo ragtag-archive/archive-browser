@@ -40,10 +40,12 @@ export type VideoPlayerProps = {
   captions?: CaptionsTrack[];
   onPlaybackProgress?: (progress: number) => any;
   autoplay?: boolean;
+
+  videoId?: string;
 };
 
 const VideoPlayer = (props: VideoPlayerProps) => {
-  const { srcVideo, srcAudio, srcPoster } = props;
+  const { srcVideo, srcAudio, srcPoster, videoId } = props;
   const { logEvent } = useAmplitude();
   const captions = props.captions || [];
   const hasCaptions = captions.length > 0;
@@ -135,7 +137,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         }
       } else {
         syncDebug.current = "||";
-        console.log("e");
         if (!a.paused) a.pause();
         if (!v.paused) v.pause();
       }
@@ -159,6 +160,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const getPlayerState = () => {
     return {
+      videoId,
       srcVideo,
       srcAudio,
       isPlaying,
@@ -475,6 +477,7 @@ s: ${syncDebug.current}
             buffer={bufferProgress}
             onChange={handleSeek}
             onMouseMove={pingActivity}
+            videoId={videoId}
           />
           <div className="flex justify-between">
             <div className="flex items-center">
@@ -617,6 +620,8 @@ s: ${syncDebug.current}
           onError={handleMediaError}
           playsInline
           muted
+          onPlay={() => console.log("video play")}
+          onPause={() => console.log("video pause")}
         />
         <audio
           preload="auto"
@@ -636,6 +641,8 @@ s: ${syncDebug.current}
             setPlaybackProgress(refAudio.current.currentTime);
             props.onPlaybackProgress?.(refAudio.current.currentTime);
           }}
+          onPlay={() => console.log("audio play")}
+          onPause={() => console.log("audio pause")}
         />
       </div>
     </div>
