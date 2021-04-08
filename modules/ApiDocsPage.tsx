@@ -113,9 +113,9 @@ const ApiDocsPage = () => {
           <a
             target="_blank"
             rel="noreferrer noopener nofollow"
-            href="https://www.elastic.co/guide/en/elasticsearch/reference/7.11/query-dsl.html"
+            href="https://www.elastic.co/guide/en/elasticsearch/reference/7.12/query-dsl.html"
           >
-            Elasticsearch 7.11 Query DSL
+            Elasticsearch 7.12 Query DSL
           </a>
           .
         </p>
