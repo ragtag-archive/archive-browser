@@ -177,7 +177,7 @@ export const apiSearch = async (query: {
   // Log the search
   if (q) {
     const searchLog: ElasticSearchLog = {
-      query: q,
+      query: q.trim().replace(/\s+/g, " ").toLowerCase(),
       timestamp: new Date().toISOString(),
     };
     await Elastic.request({
