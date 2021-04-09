@@ -190,6 +190,30 @@ export const apiSearch = async (query: {
   return apiSearchRaw<ElasticSearchResult<VideoMetadata>>(requestData);
 };
 
+export const apiSearchCompletion = async (term: string): Promise<string[]> => {
+  const aggs = await Elastic.request({
+    method: "post",
+    url: "/" + ES_INDEX_SEARCH_LOG + "/_search",
+    data: {
+      query: {
+        match: {
+          query: term,
+        },
+      },
+      size: 0,
+      aggs: {
+        top: {
+          terms: {
+            field: "query.keyword",
+            size: 10,
+          },
+        },
+      },
+    },
+  });
+  return aggs.data.aggregations.top.buckets.map((bucket) => bucket.key);
+};
+
 export const apiSearchRaw = <T = any>(dsl: any) =>
   Elastic.request<T>({
     method: "get",
@@ -205,7 +229,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     );
     res.json(searchRes.data);
   } else {
-    const searchRes = await apiSearch(req.query);
-    res.json(searchRes.data);
+    if (req.query.completion)
+      res.json(await apiSearchCompletion(String(req.query.q)));
+    else res.json((await apiSearch(req.query)).data);
   }
 };
