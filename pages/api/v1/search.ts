@@ -180,7 +180,7 @@ export const apiSearch = async (query: {
       query: q,
       timestamp: new Date().toISOString(),
     };
-    Elastic.request({
+    await Elastic.request({
       method: "post",
       url: "/" + ES_INDEX_SEARCH_LOG + "/_doc",
       data: searchLog,
