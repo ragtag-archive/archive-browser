@@ -1,8 +1,12 @@
+/**
+ * Video data
+ */
+
 export type VideoFile = {
-  name: string,
-  size: number,
-  url?: string
-}
+  name: string;
+  size: number;
+  url?: string;
+};
 
 export type VideoMetadata = {
   video_id: string;
@@ -20,7 +24,7 @@ export type VideoMetadata = {
   like_count: number;
   dislike_count: number;
   archived_timestamp: string;
-  files: VideoFile[]
+  files: VideoFile[];
 };
 
 export type ElasticSearchDocument<T> = {
@@ -49,6 +53,10 @@ export type ElasticSearchResult<T> = {
     hits: Array<ElasticSearchDocument<T>>;
   };
 };
+
+/**
+ * Chat replay
+ */
 
 type ChatMessageBase = {
   time_in_seconds: number;
@@ -118,3 +126,12 @@ export type ChatMessage =
   | ChatTextMessage
   | ChatMembershipItem
   | ChatPaidMessage;
+
+/**
+ * Search logs
+ */
+
+export type ElasticSearchLog = {
+  timestamp: string;
+  query: string;
+};

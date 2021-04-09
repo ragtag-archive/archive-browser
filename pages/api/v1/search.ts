@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { ES_INDEX } from "../../../modules/shared/config";
+import { ES_INDEX, ES_INDEX_SEARCH_LOG } from "../../../modules/shared/config";
 import {
+  ElasticSearchLog,
   ElasticSearchResult,
   VideoMetadata,
 } from "../../../modules/shared/database.d";
@@ -171,6 +172,19 @@ export const apiSearch = async (query: {
         [query.sort]: query.sort_order || "asc",
       },
     ];
+  }
+
+  // Log the search
+  if (q) {
+    const searchLog: ElasticSearchLog = {
+      query: q,
+      timestamp: new Date().toISOString(),
+    };
+    Elastic.request({
+      method: "post",
+      url: "/" + ES_INDEX_SEARCH_LOG + "/_doc",
+      data: searchLog,
+    });
   }
 
   return apiSearchRaw<ElasticSearchResult<VideoMetadata>>(requestData);

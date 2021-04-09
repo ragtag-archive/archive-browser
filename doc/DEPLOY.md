@@ -47,87 +47,28 @@ Which should yield an output similar to this:
 
 If you see that output, the database is ready.
 
-### Create the index and mappings
+### Create indices and mappings
 
-To create the index, send the following request:
+To create the indices, send the following requests:
 
 ```bash
 $ curl -XPUT http://localhost:9200/youtube-archive
+$ curl -XPUT http://localhost:9200/youtube-archive-searches
 ```
 
-Next, update the index mappings. Save the following data in a file. Let's call it `index-mappings.json`:
+Next, update the index mappings. You should see JSON files in the `doc/mappings` folder of this repository.
 
-```json
-{
-  "properties" : {
-    "archived_timestamp" : {
-      "type" : "date"
-    },
-    "channel_id" : {
-      "type" : "keyword"
-    },
-    "channel_name" : {
-      "type" : "text"
-    },
-    "description" : {
-      "type" : "text"
-    },
-    "dislike_count" : {
-      "type" : "long"
-    },
-    "duration" : {
-      "type" : "integer"
-    },
-    "files" : {
-      "type" : "nested",
-      "properties" : {
-        "name" : {
-          "type" : "keyword"
-        },
-        "size" : {
-          "type" : "long"
-        }
-      }
-    },
-    "format_id" : {
-      "type" : "keyword"
-    },
-    "fps" : {
-      "type" : "integer"
-    },
-    "height" : {
-      "type" : "integer"
-    },
-    "like_count" : {
-      "type" : "long"
-    },
-    "title" : {
-      "type" : "text"
-    },
-    "upload_date" : {
-      "type" : "date",
-      "format" : "yyyy-MM-dd"
-    },
-    "video_id" : {
-      "type" : "keyword"
-    },
-    "view_count" : {
-      "type" : "long"
-    },
-    "width" : {
-      "type" : "integer"
-    }
-  }
-}
-```
-
-To insert that mapping into the index, run the following command:
+To insert those mappings into the indices, run the following commands:
 
 ```bash
 $ curl -XPUT \
     -H 'Content-Type: application/json' \
-    -d '@index-mappings.json' \
+    -d '@youtube-archive.json' \
     http://localhost:9200/youtube-archive/_mapping
+$ curl -XPUT \
+    -H 'Content-Type: application/json' \
+    -d '@youtube-archive-searches.json' \
+    http://localhost:9200/youtube-archive-searches/_mapping
 ```
 
 The database is now ready.
