@@ -49,26 +49,17 @@ If you see that output, the database is ready.
 
 ### Create indices and mappings
 
-To create the indices, send the following requests:
-
-```bash
-$ curl -XPUT http://localhost:9200/youtube-archive
-$ curl -XPUT http://localhost:9200/youtube-archive-searches
-```
-
-Next, update the index mappings. You should see JSON files in the `doc/mappings` folder of this repository.
-
-To insert those mappings into the indices, run the following commands:
+You should  see JSON files in the `doc/indices` folder of this repository. Those files contain the mappings and settings necessary to create the indices. To create the indices, send the following requests:
 
 ```bash
 $ curl -XPUT \
     -H 'Content-Type: application/json' \
     -d '@youtube-archive.json' \
-    http://localhost:9200/youtube-archive/_mapping
+    http://localhost:9200/youtube-archive
 $ curl -XPUT \
     -H 'Content-Type: application/json' \
     -d '@youtube-archive-searches.json' \
-    http://localhost:9200/youtube-archive-searches/_mapping
+    http://localhost:9200/youtube-archive-searches
 ```
 
 The database is now ready.
