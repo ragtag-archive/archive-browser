@@ -3,11 +3,51 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Sidebar from "./Sidebar";
 import { IconBars } from "./icons";
+import { useQuery } from "react-query";
 
 const Header = React.memo(() => {
   const router = useRouter();
-  const [search, setSearch] = React.useState((router.query.q as string) || "");
+  const initialQuery = (router.query.q as string) || "";
+  const [search, setSearch] = React.useState(initialQuery);
+  const [completionKey, setCompletionKey] = React.useState(initialQuery);
+  const [completionSelectedIndex, setCompletionSelectedIndex] = React.useState(
+    -1
+  );
+  const [isCompletionVisible, setIsCompletionVisible] = React.useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+  const [lastAutocomplete, setLastAutocomplete] = React.useState([]);
+  const { isLoading, data: autocomplete } = useQuery(
+    ["search", completionKey],
+    () =>
+      fetch(
+        "/api/v1/search?completion=1&q=" + encodeURIComponent(completionKey)
+      ).then((res) => res.json())
+  );
+
+  React.useEffect(() => {
+    if (
+      Array.isArray(autocomplete) &&
+      !isLoading &&
+      completionSelectedIndex < 0
+    )
+      setLastAutocomplete(autocomplete);
+  }, [isLoading, autocomplete, completionSelectedIndex]);
+
+  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setCompletionSelectedIndex((now) => {
+        let newIdx = e.key === "ArrowDown" ? now + 1 : now - 1;
+        newIdx = Math.min(Math.max(-1, newIdx), lastAutocomplete.length - 1);
+        setSearch(lastAutocomplete[newIdx] || completionKey);
+        return newIdx;
+      });
+      return;
+    }
+
+    setCompletionSelectedIndex(-1);
+    setCompletionKey(e.currentTarget.value);
+  };
 
   const doSearch = (e: any) => {
     e.preventDefault();
@@ -60,7 +100,7 @@ const Header = React.memo(() => {
             <form
               action="/search"
               onSubmit={doSearch}
-              className="w-full block mx-auto flex justify-center"
+              className="w-full block mx-auto flex justify-center relative"
             >
               <input
                 type="text"
@@ -69,11 +109,40 @@ const Header = React.memo(() => {
                 className="
                   w-full rounded px-4 py-1 md:mx-2
                   bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring
-                  transition duration-100
+                  transition duration-100 z-20
                 "
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyUp={handleKey}
+                onFocus={() => setIsCompletionVisible(true)}
               />
+              {isCompletionVisible && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setIsCompletionVisible(false)}
+                  />
+                  <div className="absolute inset-x-0 top-8 md:mx-2 rounded bg-gray-800 py-1 z-20">
+                    {lastAutocomplete.map((result, idx) => (
+                      <Link
+                        key={result}
+                        href={"/search?q=" + encodeURIComponent(result)}
+                      >
+                        <a
+                          className={
+                            "block py-1 px-4 hover:bg-gray-700" +
+                            (idx === completionSelectedIndex
+                              ? " bg-gray-700"
+                              : "")
+                          }
+                        >
+                          {result}
+                        </a>
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              )}
             </form>
           </div>
         </div>

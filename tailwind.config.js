@@ -41,6 +41,7 @@ module.exports = {
       height: ["group-hover"],
       width: ["group-hover"],
       typography: ["dark"],
+      display: ["group-focus"],
     },
   },
   plugins: [require("@tailwindcss/typography")],

@@ -191,13 +191,23 @@ export const apiSearch = async (query: {
 };
 
 export const apiSearchCompletion = async (term: string): Promise<string[]> => {
+  let query;
+  if (term.length > 0) query = { match: { query: term } };
+  else query = { match_all: {} };
   const aggs = await Elastic.request({
     method: "post",
     url: "/" + ES_INDEX_SEARCH_LOG + "/_search",
     data: {
       query: {
-        match: {
-          query: term,
+        bool: {
+          must: [query],
+          filter: [
+            {
+              range: {
+                timestamp: { gte: "now-14d" },
+              },
+            },
+          ],
         },
       },
       size: 0,
