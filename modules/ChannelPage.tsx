@@ -46,7 +46,13 @@ const ChannelPage = (props: ChannelPageProps) => {
       <div>
         <div className="px-4 my-16">
           <div className="w-32 h-32 mx-auto mb-4 rounded-full relative overflow-hidden">
-            <Image src={profileImage} layout="fill" />
+            <Image
+              src={profileImage}
+              width={128}
+              height={128}
+              layout="fixed"
+              priority
+            />
           </div>
           <p className="text-lg text-center">All videos from</p>
           <h1 className="text-3xl text-center">{channelName}</h1>

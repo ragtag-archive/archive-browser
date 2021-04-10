@@ -28,9 +28,26 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
               className="w-full h-0 relative"
               style={{ paddingBottom: "56.25%" }}
             >
-              <div className="bg-gray-800 animate-pulse absolute inset-0" />
-              {!!video && (
-                <Image src={thumbURL} layout="fill" alt="Video thumbnail" />
+              {!!thumbURL ? (
+                <>
+                  <div className="bg-gray-800 animate-pulse absolute inset-0" />
+                  <Image
+                    src={thumbURL}
+                    width={368}
+                    height={207}
+                    layout="responsive"
+                    alt="Video thumbnail"
+                  />
+                </>
+              ) : (
+                <img
+                  src={
+                    "https://i.ytimg.com/vi_webp/" +
+                    video?.video_id +
+                    "/maxresdefault.webp"
+                  }
+                  className="absolute w-full h-full"
+                />
               )}
               <div className="absolute right-0 bottom-0 bg-black text-white px-2 bg-opacity-75 rounded m-2">
                 {formatSeconds(video?.duration || 0)}

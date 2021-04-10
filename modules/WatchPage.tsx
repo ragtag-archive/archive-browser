@@ -150,9 +150,12 @@ const WatchPage = (props: WatchPageProps) => {
                   <a className="mb-4 mb-4 hover:underline flex flex-row">
                     <div className="w-12 h-12 rounded-full overflow-hidden relative">
                       <Image
+                        priority
                         alt="Channel thumbnail"
                         src={props.channelProfileURL}
-                        layout="fill"
+                        layout="fixed"
+                        width={48}
+                        height={48}
                       />
                     </div>
                     <div className="ml-4">

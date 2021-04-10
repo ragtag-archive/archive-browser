@@ -20,18 +20,23 @@ const ChannelsListPage = (props: ChannelsListPageProps) => {
         <title>Channels - Ragtag Archive</title>
       </Head>
       <div className="">
-        {channels.map((channel) => (
+        {channels.map((channel, idx) => (
           <Link
             key={channel.channel_id}
             href={"/channel/" + channel.channel_id}
           >
             <a className="block border border-gray-800 mb-4 p-6 rounded flex flex-row items-center">
               <div className="w-16 h-16 rounded-full overflow-hidden relative">
-                <Image
-                  alt="Channel thumbnail"
-                  src={channel.image_url}
-                  layout="fill"
-                />
+                {channel.image_url && (
+                  <Image
+                    alt="Channel thumbnail"
+                    src={channel.image_url}
+                    layout="fixed"
+                    width={64}
+                    height={64}
+                    priority={idx < 12}
+                  />
+                )}
               </div>
               <div className="pl-4">
                 <strong className="text-lg">{channel.channel_name}</strong>

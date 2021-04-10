@@ -441,12 +441,14 @@ s: ${syncDebug.current}
         className="w-full h-0 relative overflow-hidden"
         style={{ paddingBottom: "56.25%" }}
       >
-        <Image
-          className={bufferProgress > 0 ? "hidden" : ""}
-          aria-hidden
-          src={srcPoster}
-          layout="fill"
-        />
+        {srcPoster && (
+          <Image
+            className={bufferProgress > 0 ? "hidden" : ""}
+            aria-hidden
+            src={srcPoster}
+            layout="fill"
+          />
+        )}
         <div
           className={[
             "absolute inset-0 pointer-events-none z-20 flex flex-col justify-center bg-black bg-opacity-25",
