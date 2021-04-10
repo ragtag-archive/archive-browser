@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { VideoMetadata } from "./database.d";
 import { formatDate, formatSeconds } from "./format";
 import { format } from "timeago.js";
@@ -29,11 +30,7 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
             >
               <div className="bg-gray-800 animate-pulse absolute inset-0" />
               {!!video && (
-                <img
-                  src={thumbURL}
-                  className="absolute inset-0 w-full h-full"
-                  alt="Video thumbnail"
-                />
+                <Image src={thumbURL} layout="fill" alt="Video thumbnail" />
               )}
               <div className="absolute right-0 bottom-0 bg-black text-white px-2 bg-opacity-75 rounded m-2">
                 {formatSeconds(video?.duration || 0)}

@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { formatSeconds } from "../format";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useThrottle } from "../hooks/useThrottle";
@@ -440,13 +441,11 @@ s: ${syncDebug.current}
         className="w-full h-0 relative overflow-hidden"
         style={{ paddingBottom: "56.25%" }}
       >
-        <img
-          className={
-            "absolute inset-0 w-full h-full " +
-            (bufferProgress > 0 ? "hidden" : "")
-          }
+        <Image
+          className={bufferProgress > 0 ? "hidden" : ""}
           aria-hidden
           src={srcPoster}
+          layout="fill"
         />
         <div
           className={[

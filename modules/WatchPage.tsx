@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import Head from "next/head";
 import PageBase from "./shared/PageBase";
 import { VideoMetadata } from "./shared/database.d";
@@ -147,11 +148,13 @@ const WatchPage = (props: WatchPageProps) => {
               <div className="inline-block">
                 <Link href={"/channel/" + videoInfo.channel_id}>
                   <a className="mb-4 mb-4 hover:underline flex flex-row">
-                    <img
-                      alt="Channel thumbnail"
-                      src={props.channelProfileURL}
-                      className="w-12 h-12 rounded-full"
-                    />
+                    <div className="w-12 h-12 rounded-full overflow-hidden relative">
+                      <Image
+                        alt="Channel thumbnail"
+                        src={props.channelProfileURL}
+                        layout="fill"
+                      />
+                    </div>
                     <div className="ml-4">
                       <p className="font-bold text-lg leading-tight">
                         {videoInfo.channel_name}

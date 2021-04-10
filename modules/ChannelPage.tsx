@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import Head from "next/head";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database.d";
 import PageBase from "./shared/PageBase";
@@ -44,10 +45,9 @@ const ChannelPage = (props: ChannelPageProps) => {
       </Head>
       <div>
         <div className="px-4 my-16">
-          <img
-            src={profileImage}
-            className="w-32 h-32 mx-auto mb-4 rounded-full"
-          />
+          <div className="w-32 h-32 mx-auto mb-4 rounded-full relative overflow-hidden">
+            <Image src={profileImage} layout="fill" />
+          </div>
           <p className="text-lg text-center">All videos from</p>
           <h1 className="text-3xl text-center">{channelName}</h1>
           <div className="flex mt-2 justify-center">
