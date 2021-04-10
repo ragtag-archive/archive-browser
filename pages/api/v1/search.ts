@@ -232,15 +232,7 @@ export const apiSearchRaw = <T = any>(dsl: any) =>
   });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.body) {
-    console.log(req.body);
-    const searchRes = await apiSearchRaw(
-      typeof req.body === "string" ? JSON.parse(req.body) : req.body
-    );
-    res.json(searchRes.data);
-  } else {
-    if (req.query.completion)
-      res.json(await apiSearchCompletion(String(req.query.q)));
-    else res.json((await apiSearch(req.query)).data);
-  }
+  if (req.query.completion)
+    res.json(await apiSearchCompletion(String(req.query.q)));
+  else res.json((await apiSearch(req.query)).data);
 };
