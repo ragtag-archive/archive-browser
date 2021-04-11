@@ -81,9 +81,11 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
               {Intl.NumberFormat("en-US").format(video.view_count)} views
               &middot;{" "}
               <span
-                title={new Date(
-                  video.timestamps?.publishedAt || video.upload_date
-                ).toLocaleString()}
+                title={
+                  video.timestamps?.publishedAt
+                    ? new Date(video.timestamps?.publishedAt).toLocaleString()
+                    : "(exact timestamp unknown)"
+                }
               >
                 Uploaded{" "}
                 {formatDate(

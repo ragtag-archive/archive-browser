@@ -129,9 +129,13 @@ const WatchPage = (props: WatchPageProps) => {
               <p className="text-gray-400">
                 {format(videoInfo.view_count)} views &middot;{" "}
                 <span
-                  title={new Date(
-                    videoInfo.timestamps?.publishedAt || videoInfo.upload_date
-                  ).toLocaleString()}
+                  title={
+                    videoInfo.timestamps?.publishedAt
+                      ? new Date(
+                          videoInfo.timestamps?.publishedAt
+                        ).toLocaleString()
+                      : "(exact timestamp unknown)"
+                  }
                 >
                   Uploaded{" "}
                   {formatDate(
