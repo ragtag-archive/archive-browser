@@ -1,4 +1,4 @@
-{
+
   "mappings": {
     "properties": {
       "archived_timestamp": {
@@ -48,6 +48,22 @@
       "upload_date": {
         "type": "date",
         "format": "yyyy-MM-dd"
+      },
+      "timestamps": {
+        "properties": {
+          "publishedAt": {
+            "type": "date"
+          },
+          "scheduledStartTime": {
+            "type": "date"
+          },
+          "actualStartTime": {
+            "type": "date"
+          },
+          "actualEndTime": {
+            "type": "date"
+          }
+        }
       },
       "video_id": {
         "type": "keyword"
