@@ -1,64 +1,62 @@
 {
-  "settings": {
-    "mappings": {
-      "properties": {
-        "archived_timestamp": {
-          "type": "date"
-        },
-        "channel_id": {
-          "type": "keyword"
-        },
-        "channel_name": {
-          "type": "text"
-        },
-        "description": {
-          "type": "text"
-        },
-        "dislike_count": {
-          "type": "long"
-        },
-        "duration": {
-          "type": "integer"
-        },
-        "files": {
-          "type": "nested",
-          "properties": {
-            "name": {
-              "type": "keyword"
-            },
-            "size": {
-              "type": "long"
-            }
+  "mappings": {
+    "properties": {
+      "archived_timestamp": {
+        "type": "date"
+      },
+      "channel_id": {
+        "type": "keyword"
+      },
+      "channel_name": {
+        "type": "text"
+      },
+      "description": {
+        "type": "text"
+      },
+      "dislike_count": {
+        "type": "long"
+      },
+      "duration": {
+        "type": "integer"
+      },
+      "files": {
+        "type": "nested",
+        "properties": {
+          "name": {
+            "type": "keyword"
+          },
+          "size": {
+            "type": "long"
           }
-        },
-        "format_id": {
-          "type": "keyword"
-        },
-        "fps": {
-          "type": "integer"
-        },
-        "height": {
-          "type": "integer"
-        },
-        "like_count": {
-          "type": "long"
-        },
-        "title": {
-          "type": "text"
-        },
-        "upload_date": {
-          "type": "date",
-          "format": "yyyy-MM-dd"
-        },
-        "video_id": {
-          "type": "keyword"
-        },
-        "view_count": {
-          "type": "long"
-        },
-        "width": {
-          "type": "integer"
         }
+      },
+      "format_id": {
+        "type": "keyword"
+      },
+      "fps": {
+        "type": "integer"
+      },
+      "height": {
+        "type": "integer"
+      },
+      "like_count": {
+        "type": "long"
+      },
+      "title": {
+        "type": "text"
+      },
+      "upload_date": {
+        "type": "date",
+        "format": "yyyy-MM-dd"
+      },
+      "video_id": {
+        "type": "keyword"
+      },
+      "view_count": {
+        "type": "long"
+      },
+      "width": {
+        "type": "integer"
       }
     }
   }
