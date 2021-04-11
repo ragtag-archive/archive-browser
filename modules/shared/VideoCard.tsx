@@ -79,13 +79,26 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
             </Link>
             <p className={["text-gray-400", small && "text-sm"].join(" ")}>
               {Intl.NumberFormat("en-US").format(video.view_count)} views
-              &middot; Uploaded {formatDate(new Date(video.upload_date))}{" "}
-              &middot; Archived{" "}
-              {format(
-                video.archived_timestamp +
-                  (video.archived_timestamp.endsWith("Z") ? "" : "Z"),
-                "en_US"
-              )}
+              &middot;{" "}
+              <span
+                title={new Date(
+                  video.timestamps?.publishedAt || video.upload_date
+                ).toLocaleString()}
+              >
+                Uploaded{" "}
+                {formatDate(
+                  new Date(video.timestamps?.publishedAt || video.upload_date)
+                )}
+              </span>{" "}
+              &middot;{" "}
+              <span title={new Date(video.archived_timestamp).toLocaleString()}>
+                Archived{" "}
+                {format(
+                  video.archived_timestamp +
+                    (video.archived_timestamp.endsWith("Z") ? "" : "Z"),
+                  "en_US"
+                )}
+              </span>
             </p>
             {!small && <VideoActionButtons video={video} />}
           </>

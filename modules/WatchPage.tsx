@@ -127,9 +127,27 @@ const WatchPage = (props: WatchPageProps) => {
             <h1 className="text-2xl mb-2">{videoInfo.title}</h1>
             <div className="flex flex-row justify-between">
               <p className="text-gray-400">
-                {format(videoInfo.view_count)} views &middot; Uploaded{" "}
-                {formatDate(new Date(videoInfo.upload_date))} &middot; Archived{" "}
-                {formatDate(new Date(videoInfo.archived_timestamp))}
+                {format(videoInfo.view_count)} views &middot;{" "}
+                <span
+                  title={new Date(
+                    videoInfo.timestamps?.publishedAt || videoInfo.upload_date
+                  ).toLocaleString()}
+                >
+                  Uploaded{" "}
+                  {formatDate(
+                    new Date(
+                      videoInfo.timestamps?.publishedAt || videoInfo.upload_date
+                    )
+                  )}
+                </span>{" "}
+                &middot;{" "}
+                <span
+                  title={new Date(
+                    videoInfo.archived_timestamp
+                  ).toLocaleString()}
+                >
+                  Archived {formatDate(new Date(videoInfo.archived_timestamp))}
+                </span>
               </p>
               <div>
                 <span className="text-green-500">

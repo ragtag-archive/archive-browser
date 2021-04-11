@@ -167,11 +167,19 @@ export const apiSearch = async (query: {
   };
 
   if (query.sort) {
-    requestData["sort"] = [
+    const sort = [
       {
         [query.sort]: query.sort_order || "asc",
       },
     ];
+
+    if (query.sort === "upload_date") {
+      sort.push({
+        "timestamps.publishedAt": query.sort_order || "asc",
+      });
+    }
+
+    requestData["sort"] = sort;
   }
 
   // Log the search

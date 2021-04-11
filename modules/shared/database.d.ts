@@ -25,6 +25,13 @@ export type VideoMetadata = {
   dislike_count: number;
   archived_timestamp: string;
   files: VideoFile[];
+  timestamps?: {
+    actualStartTime?: string;
+    publishedAt?: string;
+    scheduledStartTime?: string;
+    actualEndTime?: string;
+    discoveredUnavailable?: string;
+  };
 };
 
 export type ElasticSearchDocument<T> = {
