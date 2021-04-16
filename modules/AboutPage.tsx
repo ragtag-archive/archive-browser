@@ -23,8 +23,7 @@ const AboutPage = () => {
         <p>
           This project started on February 20th, 2021. Any videos that are
           already gone by that date won't be available here. We're currently not
-          accepting video files for content that's already gone, unless you have
-          complete metadata and chat logs in the format we're currently using.
+          accepting video files for content that's already gone.
         </p>
         <p>
           If you have any questions or concerns, feel free to hop on the{" "}

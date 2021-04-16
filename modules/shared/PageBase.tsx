@@ -62,8 +62,18 @@ const PageBase = (props: PageBaseProps) => {
       </div>
       <Header />
       <div className="container mx-auto mt-4">{props.children}</div>
-      <div className="my-6 text-gray-500 text-center">
+      <div className="mt-6 text-gray-500 text-center">
         Made with 🍝 by kitsune.
+      </div>
+      <div className="mb-6 text-center">
+        <a
+          href="https://ko-fi.com/kitsune_cw"
+          className="text-gray-500 hover:underline"
+          target="_blank"
+          rel="noreferrer noopener nofollow"
+        >
+          Buy me a coffee
+        </a>
       </div>
     </div>
   );
