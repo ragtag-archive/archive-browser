@@ -19,6 +19,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const downloadChatData = async () => {
     setDownloadProgress(0);
     setReplayData(null);
+    setIsErrored(false);
     try {
       const data = await axios.get(props.src, {
         onDownloadProgress: (progressEvent) => {
@@ -62,11 +63,11 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
       <div
         className="border border-gray-800 rounded p-4 text-center cursor-pointer"
         onClick={() => {
-          if (downloadProgress < 0) downloadChatData();
+          if (isErrored || downloadProgress < 0) downloadChatData();
         }}
       >
         {isErrored ? (
-          <p>Error loading chat</p>
+          <p>Error loading chat, click to retry</p>
         ) : downloadProgress < 0 ? (
           <>
             <p>Chat replay available!</p>

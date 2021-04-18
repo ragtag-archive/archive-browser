@@ -5,6 +5,7 @@ import {
   IconFileCode,
   // IconFileImport,
   IconInfoCircle,
+  IconPlayCircle,
   // IconTachometerAlt,
   IconTV,
 } from "./icons";
@@ -59,6 +60,12 @@ const Sidebar = React.memo((props: SidebarProps) => {
           <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
             <IconFileCode className={iconStyle} />
             API
+          </a>
+        </Link>
+        <Link href="/player">
+          <a className={linkStyle} tabIndex={isOpen ? 0 : -1}>
+            <IconPlayCircle className={iconStyle} />
+            Player
           </a>
         </Link>
 

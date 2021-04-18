@@ -18,7 +18,7 @@ export const buttonStyle = `
   focus:bg-gray-900 focus:outline-none
   px-4 py-2 md:mr-2 mb-2 md:mb-0 rounded
   transition duration-200
-  flex flex-row items-center`;
+  flex flex-row items-center`.replace(/\s+/, " ");
 
 const getFile = (videoInfo: VideoMetadata, suffix: string) =>
   videoInfo.files.find((file) => file.name.endsWith(suffix));

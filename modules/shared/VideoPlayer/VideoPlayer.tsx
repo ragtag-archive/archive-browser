@@ -37,7 +37,7 @@ type CaptionsTrack = {
 export type VideoPlayerProps = {
   srcVideo: string;
   srcAudio: string;
-  srcPoster: string;
+  srcPoster?: string;
   captions?: CaptionsTrack[];
   onPlaybackProgress?: (progress: number) => any;
   autoplay?: boolean;
