@@ -12,8 +12,8 @@ const CustomPlayerPage = () => {
   const { innerWidth, innerHeight } = useWindowSize();
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [urlVideo, setUrlVideo] = React.useState("");
-  const [urlAudio, setUrlAudio] = React.useState("");
   const [urlChat, setUrlChat] = React.useState("");
+  const [urlYtt, setUrlYtt] = React.useState("");
   const [showPlayer, setShowPlayer] = React.useState(false);
 
   const handleFile = (
@@ -50,6 +50,16 @@ const CustomPlayerPage = () => {
                   videoId="custom"
                   srcVideo={urlVideo}
                   srcAudio={urlVideo}
+                  captions={
+                    urlYtt
+                      ? [
+                          {
+                            lang: "en",
+                            src: urlYtt,
+                          },
+                        ]
+                      : undefined
+                  }
                   onPlaybackProgress={setPlaybackProgress}
                 />
               </div>
@@ -117,6 +127,20 @@ const CustomPlayerPage = () => {
                   onChange={(e) => handleFile(e, setUrlChat)}
                 />
               </label>
+              <label
+                className={[buttonStyle, "relative cursor-pointer"].join(" ")}
+              >
+                <span>Select srv3 captions</span>
+                <span className="ml-auto">
+                  {urlYtt ? <IconCheck width="1em" height="1em" /> : null}
+                </span>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => handleFile(e, setUrlYtt)}
+                />
+              </label>
+
               <button
                 type="button"
                 className={[buttonStyle, "mt-8 ml-auto"].join(" ")}
