@@ -28,6 +28,7 @@ function bsearch<T>(
 }
 
 const proxyHost = "archive-yt3-ggpht-proxy.ragtag.moe";
+const regexEmoji = /(:[^:]+:)/g;
 
 const ChatReplay = (props: ChatReplayProps) => {
   const { replayData, currentTimeSeconds } = props;
@@ -54,9 +55,36 @@ const ChatReplay = (props: ChatReplayProps) => {
   }, [replayData, currentTimeSeconds]);
 
   const proxyURL = (url: string): string => {
-    const u = new URL(url);
-    u.hostname = proxyHost;
-    return u.toString();
+    try {
+      const u = new URL(url);
+      u.hostname = proxyHost;
+      return u.toString();
+    } catch (ex) {
+      return "";
+    }
+  };
+
+  const generateMessageContent = (msg: ChatMessage) => {
+    if (!msg.emotes) return msg.message;
+
+    // Process emotes
+    const tokens = msg.message.split(regexEmoji);
+    return tokens.map((token) => {
+      if (!token.startsWith(":")) return token;
+
+      const emoteURL = msg.emotes
+        .find((emote) => emote.name === token)
+        ?.images.find((image) => image.id === "source")?.url;
+
+      if (!emoteURL) return token;
+      return (
+        <img
+          src={proxyURL(emoteURL)}
+          alt={token}
+          className="inline-block w-6 h-6"
+        />
+      );
+    });
   };
 
   return (
@@ -100,7 +128,7 @@ const ChatReplay = (props: ChatReplayProps) => {
                     [{formatSeconds(msg.time_in_seconds)}]
                   </div>
                 </div>
-                <div className="px-4 py-2">{msg.message}</div>
+                <div className="px-4 py-2">{generateMessageContent(msg)}</div>
               </div>
             );
           case "membership_item":
@@ -124,7 +152,7 @@ const ChatReplay = (props: ChatReplayProps) => {
                     [{formatSeconds(msg.time_in_seconds)}]
                   </div>
                 </div>
-                {msg.message}
+                {generateMessageContent(msg)}
               </div>
             );
           case "text_message":
@@ -178,7 +206,7 @@ const ChatReplay = (props: ChatReplayProps) => {
                   </span>
                   <span>[{formatSeconds(msg.time_in_seconds)}]</span>
                 </div>
-                {msg.message}
+                {generateMessageContent(msg)}
               </div>
             );
         }

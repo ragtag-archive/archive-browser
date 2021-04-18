@@ -65,6 +65,22 @@ export type ElasticSearchResult<T> = {
  * Chat replay
  */
 
+type ChatMessageEmoteImage = {
+  url: string;
+  id: string;
+  width?: number;
+  height?: number;
+};
+
+type ChatMessageEmote = {
+  id: string;
+  name: string;
+  shortcuts: string[];
+  search_terms: string[];
+  images: ChatMessageEmoteImage[];
+  is_custom_emoji: boolean;
+};
+
 type ChatMessageBase = {
   time_in_seconds: number;
   action_type: "add_chat_item" | "add_live_chat_ticker_item" | string;
@@ -72,6 +88,7 @@ type ChatMessageBase = {
   timestamp: number;
   time_text: string;
   message: string;
+  emotes?: ChatMessageEmote[];
 };
 
 type ChatMessageImage = {
