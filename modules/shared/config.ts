@@ -12,7 +12,7 @@ export const ES_INDEX_SEARCH_LOG =
   process.env.ES_INDEX_SEARCH_LOG || "youtube-archive-searches";
 export const ES_BACKEND_URL =
   process.env.ES_BACKEND_URL || "http://127.0.0.1:9200";
-export const ES_AUTHORIZATION = process.env.ES_AUTHORIZATION;
+export const ES_AUTHORIZATION = process.env.ES_AUTHORIZATION || "";
 
 /**
  * URL for video archival queue, used to insert videos
