@@ -17,16 +17,16 @@ type ChatExplorerPageProps = {
 };
 
 const inputStyle = `
-  w-full rounded px-4 py-1 mb-4
+  w-full rounded px-4 py-1
   bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring
   transition duration-100`.replace(/\s+/g, " ");
 
 const ChatExplorerPage = (props: ChatExplorerPageProps) => {
   if (!props.v || !props.chatURL) return <ServiceUnavailablePage />;
   const [replayData, setReplayData] = React.useState<ChatMessage[]>(null);
-  const [displayedMessages, setDisplayedMessages] = React.useState<
-    ChatMessage[]
-  >([]);
+  const [filteredMessages, setFilteredMessages] = React.useState<ChatMessage[]>(
+    []
+  );
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
   const [isErrored, setIsErrored] = React.useState(false);
 
@@ -38,15 +38,17 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
   ]);
 
   const applyFilters = () => {
-    const filteredMessages: ChatMessage[] = [];
+    const matching: ChatMessage[] = [];
     for (let i = 0; i < replayData.length; i++) {
       const message = replayData[i];
-      if (messageTypes.includes(message.message_type))
-        filteredMessages.push(message);
+      if (messageTypes.includes(message.message_type)) matching.push(message);
 
-      if (filteredMessages.length >= startIndex + pageSize) break;
+      // if (filteredMessages.length >= startIndex + pageSize) break;
     }
-    setDisplayedMessages(filteredMessages.slice(startIndex));
+    setFilteredMessages(matching);
+    // setFilteredMessages(
+    // filteredMessages.slice(startIndex, startIndex + pageSize)
+    // );
   };
 
   const toggleMessageType = (type: ChatMessageType) => {
@@ -117,7 +119,7 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
                     onChange={(e) =>
                       setStartIndex(
                         Math.min(
-                          replayData.length,
+                          filteredMessages.length,
                           Math.max(0, Number(e.target.value))
                         )
                       )
@@ -133,6 +135,28 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
                     onChange={(e) => setPageSize(Number(e.target.value))}
                   />
                 </label>
+              </div>
+              <div className="flex">
+                <button
+                  type="button"
+                  className={buttonStyle}
+                  onClick={() =>
+                    setStartIndex(Math.max(0, startIndex - pageSize))
+                  }
+                >
+                  Prev
+                </button>
+                <button
+                  type="button"
+                  className={buttonStyle}
+                  onClick={() =>
+                    setStartIndex(
+                      Math.min(filteredMessages.length, startIndex + pageSize)
+                    )
+                  }
+                >
+                  Next
+                </button>
               </div>
               <div className="flex flex-col">
                 <div>Message type</div>
@@ -160,13 +184,19 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
               >
                 Apply filters
               </button>
+              <div>
+                Showing messages {startIndex} to {startIndex + pageSize} of{" "}
+                {filteredMessages.length} matching messages.
+              </div>
             </div>
           </div>
           <div className="flex flex-col flex-1 relative">
             <div className="absolute h-full w-full overflow-y-scroll">
-              {displayedMessages.map((msg) => (
-                <ChatMessageRender key={msg.message_id} message={msg} />
-              ))}
+              {filteredMessages
+                .slice(startIndex, startIndex + pageSize)
+                .map((msg) => (
+                  <ChatMessageRender key={msg.message_id} message={msg} />
+                ))}
             </div>
           </div>
         </div>
