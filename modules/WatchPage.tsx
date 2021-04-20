@@ -5,7 +5,7 @@ import PageBase from "./shared/PageBase";
 import { VideoMetadata } from "./shared/database.d";
 import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
 import { formatDate } from "./shared/format";
-import ChatReplayPanel from "./shared/ChatReplayPanel";
+import ChatReplayPanel from "./shared/ChatReplay/ChatReplayPanel";
 import VideoCard from "./shared/VideoCard";
 import Link from "next/link";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
