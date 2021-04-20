@@ -151,6 +151,14 @@ export type ChatMessage =
   | ChatMembershipItem
   | ChatPaidMessage;
 
+export const ChatMessageTypes = [
+  "paid_message",
+  "membership_item",
+  "text_message",
+  "viewer_engagement_message",
+] as const;
+export type ChatMessageType = typeof ChatMessageTypes[number];
+
 /**
  * Search logs
  */

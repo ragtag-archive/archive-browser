@@ -1,6 +1,5 @@
 import React from "react";
 import { ChatMessage } from "../database.d";
-import { formatSeconds } from "../format";
 import ChatMessageRender from "./ChatMessageRender";
 
 export type ChatReplayProps = {
@@ -49,7 +48,19 @@ const ChatReplay = (props: ChatReplayProps) => {
      * to get the previous `maxMessages` items
      */
     const maxMessages = 50;
-    setMessages(replayData.slice(Math.max(0, index - maxMessages), index));
+    const messages = replayData.slice(Math.max(0, index - maxMessages), index);
+
+    // Make sure there are no duplicate messages
+    const filtered = [];
+    const messageIds = [];
+
+    for (const message of messages) {
+      if (messageIds.includes(message.message_id)) continue;
+      messageIds.push(message.message_id);
+      filtered.push(message);
+    }
+
+    setMessages(filtered);
   }, [replayData, currentTimeSeconds]);
   return (
     <div className="w-full break-words">

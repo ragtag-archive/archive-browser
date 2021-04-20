@@ -21,7 +21,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
     setReplayData(null);
     setIsErrored(false);
     try {
-      const data = await axios.get(props.src, {
+      const data = await axios.get<ChatMessage[]>(props.src, {
         onDownloadProgress: (progressEvent) => {
           setDownloadProgress(progressEvent.loaded);
         },

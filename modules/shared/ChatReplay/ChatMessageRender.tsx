@@ -1,3 +1,4 @@
+import React from "react";
 import { ChatMessage } from "../database.d";
 import { formatSeconds } from "../format";
 
@@ -8,7 +9,7 @@ export type ChatMessageRenderProps = {
 const proxyHost = "archive-yt3-ggpht-proxy.ragtag.moe";
 const regexEmoji = /(:[^:]+:)/g;
 
-const ChatMessageRender = (props: ChatMessageRenderProps) => {
+const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
   const msg = props.message;
 
   const proxyURL = (url: string): string => {
@@ -166,6 +167,6 @@ const ChatMessageRender = (props: ChatMessageRenderProps) => {
   }
 
   return null;
-};
+});
 
 export default ChatMessageRender;

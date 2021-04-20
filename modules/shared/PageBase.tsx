@@ -7,6 +7,7 @@ import MemoLinkify from "./MemoLinkify";
 
 export type PageBaseProps = {
   children?: React.ReactNode;
+  flex?: boolean;
 };
 
 const PageBase = (props: PageBaseProps) => {
@@ -28,13 +29,13 @@ const PageBase = (props: PageBaseProps) => {
   }, []);
 
   return (
-    <div className="bg-black text-white">
+    <div className="bg-black text-white flex flex-col flex-1">
       <Head>
         <link rel="shortcut icon" href="/favicon.png" type="image/png" />
       </Head>
       <div
         className={
-          "bg-blue-600 flex flex-col md:flex-row justify-between fixed bottom-0 left-0 right-0 z-50 " +
+          "bg-blue-600 flex flex-1 flex-col md:flex-row justify-between fixed bottom-0 left-0 right-0 z-50 " +
           (bannerHide ? "hidden" : "")
         }
       >
@@ -61,7 +62,14 @@ const PageBase = (props: PageBaseProps) => {
         </span>
       </div>
       <Header />
-      <div className="container mx-auto mt-4">{props.children}</div>
+      <div
+        className={[
+          "container mx-auto mt-4 flex-1",
+          props.flex ? "flex flex-col" : "",
+        ].join(" ")}
+      >
+        {props.children}
+      </div>
       <div className="mt-6 text-gray-500 text-center">
         Made with 🍝 by kitsune.
       </div>

@@ -8,6 +8,17 @@ html {
   scroll-behavior: smooth;
 }
 
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  @apply flex flex-col;
+}
+#__next {
+  @apply flex flex-1 flex-col;
+}
+
 *::-webkit-scrollbar-track {
   @apply bg-gray-900;
 }

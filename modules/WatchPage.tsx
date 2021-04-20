@@ -9,7 +9,7 @@ import ChatReplayPanel from "./shared/ChatReplay/ChatReplayPanel";
 import VideoCard from "./shared/VideoCard";
 import Link from "next/link";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
-import VideoActionButtons from "./shared/VideoActionButtons";
+import VideoActionButtons, { buttonStyle } from "./shared/VideoActionButtons";
 import { useWindowSize } from "./shared/hooks/useWindowSize";
 import MemoLinkify from "./shared/MemoLinkify";
 
@@ -164,7 +164,7 @@ const WatchPage = (props: WatchPageProps) => {
               </div>
             </div>
             <div className="flex flex-row mt-2">
-              <VideoActionButtons video={videoInfo} />
+              <VideoActionButtons full video={videoInfo} />
             </div>
             <div className="mt-4">
               <div className="inline-block">
