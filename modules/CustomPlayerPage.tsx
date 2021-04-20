@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import ChatReplayPanel from "./shared/ChatReplayPanel";
+import ChatReplayPanel from "./shared/ChatReplay/ChatReplayPanel";
 import { useWindowSize } from "./shared/hooks/useWindowSize";
 import PageBase from "./shared/PageBase";
 import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
