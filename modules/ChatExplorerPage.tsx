@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Head from "next/head";
 import axios from "axios";
 import PageBase from "./shared/PageBase";
@@ -110,12 +111,14 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
       ) : (
         <div className="flex flex-1 self-center w-full max-w-screen-lg">
           <div className="flex flex-col flex-1 px-2">
-            <div
-              className="relative w-full h-0 mb-4"
-              style={{ paddingBottom: "56.25%" }}
-            >
-              <Image layout="fill" src={props.thumbnailURL} />
-            </div>
+            <Link href={"/watch?v=" + props.v}>
+              <a
+                className="block relative w-full h-0 mb-4"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                <Image layout="fill" src={props.thumbnailURL} />
+              </a>
+            </Link>
             <h1 className="text-2xl pb-4">{props.title}</h1>
             <div>
               <div className="flex">
