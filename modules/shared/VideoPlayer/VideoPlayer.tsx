@@ -486,7 +486,7 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
       >
         {srcPoster && (
           <Image
-            className={bufferProgress > 0 ? "hidden" : ""}
+            className={bufferProgress > 0 ? "opacity-0" : ""}
             aria-hidden
             src={srcPoster}
             layout="fill"
