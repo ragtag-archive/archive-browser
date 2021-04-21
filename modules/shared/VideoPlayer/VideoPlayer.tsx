@@ -657,7 +657,7 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
           crossOrigin="anonymous"
           onMouseUp={(e) => {
             e.preventDefault();
-            handlePlayPause();
+            if (e.button === 0) handlePlayPause();
           }}
           onTouchEnd={(e) => {
             e.preventDefault();
