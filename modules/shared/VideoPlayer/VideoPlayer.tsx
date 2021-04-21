@@ -59,7 +59,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const refVideo = React.useRef<HTMLVideoElement>(null);
   const refAudio = React.useRef<HTMLAudioElement>(null);
 
-  const [now, setNow] = React.useState(Date.now());
   const [isDebugVisible, setIsDebugVisible] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(props.autoplay);
   const [videoReady, setVideoReady] = React.useState(false);
@@ -86,11 +85,19 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const threshStartSync = React.useRef(0.25);
   const threshTimeReset = 2;
   const syncDebug = React.useRef("");
+  const lastAnimationFrame = React.useRef(Date.now());
 
   useAnimationFrame(() => {
     if (!refVideo.current || !refAudio.current) return;
     const a = refAudio.current;
     const v = refVideo.current;
+
+    // Update sync threshold
+    const now = Date.now();
+    threshStartSync.current +=
+      (1.5 * (now - lastAnimationFrame.current)) / 1000;
+    threshStartSync.current /= 2;
+    lastAnimationFrame.current = now;
 
     // Update video time state
     setVideoTime(v.currentTime);
@@ -108,8 +115,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       return;
     }
 
-    setNow(Date.now());
-
     setIsPlaying((_isPlaying) => {
       // Check sync
       const timeDiff = Math.abs(a.currentTime - v.currentTime);
@@ -117,7 +122,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       if (_isPlaying) {
         if (timeDiff > threshStartSync.current) {
           if (timeDiff > threshTimeReset) {
-            syncDebug.current = "reset";
+            syncDebug.current = "jumping";
             v.currentTime = a.currentTime;
             a.play();
             v.play();
@@ -133,12 +138,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             }
           }
         } else {
-          syncDebug.current = ">>";
+          syncDebug.current = "synced";
           if (a.paused) a.play();
           if (v.paused) v.play();
         }
       } else {
-        syncDebug.current = "||";
+        syncDebug.current = "paused";
         if (!a.paused) a.pause();
         if (!v.paused) v.pause();
       }
@@ -421,7 +426,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       {isDebugVisible && (
         <div
           data-debug-window
-          className="bg-black bg-opacity-50 text-white absolute left-2 top-2 z-40 p-4 whitespace-pre font-mono"
+          className="bg-black bg-opacity-50 text-white absolute left-2 top-2 z-40 p-4 whitespace-pre font-mono text-sm"
         >
           <div className="float-right">
             <a
@@ -435,15 +440,20 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             </a>
           </div>
           {`Debug info
-u: ${isPlaying ? "playing" : "paused"}
-a: ${
+state: ${isPlaying ? "playing" : "paused"}
+audio: ${
             refAudio.current?.paused ? "paused" : "playing"
-          } ${refAudio.current?.currentTime.toFixed(3)} 
-v: ${
+          } ${refAudio.current?.currentTime.toFixed(3)}s
+video: ${
             refVideo.current?.paused ? "paused" : "playing"
-          } ${refVideo.current?.currentTime.toFixed(3)} 
-d: ${(refAudio.current?.currentTime - refVideo.current?.currentTime).toFixed(3)}
-s: ${syncDebug.current}
+          } ${refVideo.current?.currentTime.toFixed(3)}s
+delta: ${(
+            (refAudio.current?.currentTime - refVideo.current?.currentTime) *
+            1000
+          ).toFixed(2)}ms
+sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
+            syncDebug.current
+          }
 `}
         </div>
       )}
@@ -598,7 +608,9 @@ s: ${syncDebug.current}
                       className="inline-block mr-2"
                     />
                   )}
-                  {captions?.[activeCaption]?.lang || "off"}
+                  <span className="leading-none">
+                    {captions?.[activeCaption]?.lang || "off"}
+                  </span>
                 </button>
               )}
               <button
