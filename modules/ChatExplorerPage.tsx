@@ -120,8 +120,8 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
         </div>
       ) : (
         <div className="flex flex-1 self-center w-full max-w-screen-lg">
-          <div className="flex flex-col flex-1 px-2 relative">
-            <div className="absolute w-full h-full overflow-y-scroll">
+          <div className="flex flex-col flex-1 relative">
+            <div className="absolute w-full h-full overflow-y-scroll px-2">
               <Link href={"/watch?v=" + props.v}>
                 <a
                   className="block relative w-full h-0 mb-4"
@@ -244,7 +244,7 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
             </div>
           </div>
           <div className="flex flex-col flex-1 relative">
-            <div className="absolute h-full w-full overflow-y-scroll">
+            <div className="absolute h-full w-full overflow-y-scroll px-2">
               {filteredMessages
                 .slice(startIndex, startIndex + pageSize)
                 .map((msg) => (
