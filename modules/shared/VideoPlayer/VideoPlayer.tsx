@@ -4,6 +4,7 @@ import { formatSeconds } from "../format";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useThrottle } from "../hooks/useThrottle";
 import {
+  IconCamera,
   IconClosedCaptioningRegular,
   IconClosedCaptioningSolid,
   IconCompress,
@@ -251,6 +252,38 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refVideo.current.currentTime = newTime;
       return newTime;
     });
+  };
+
+  /**
+   * Screenshot current video frame and download it
+   */
+  const captureFrame = () => {
+    if (!refVideo.current) return;
+
+    // Create canvas
+    const canvas = document.createElement("canvas");
+    canvas.width = refVideo.current.videoWidth;
+    canvas.height = refVideo.current.videoHeight;
+    const ctx = canvas.getContext("2d");
+
+    // Draw video frame to canvas
+    ctx.drawImage(refVideo.current, 0, 0, canvas.width, canvas.height);
+
+    // Generate URI and download
+    const uri = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = uri;
+    a.download =
+      "Screenshot " +
+      videoId +
+      " " +
+      Math.floor(refVideo.current.currentTime * 1000) +
+      "ms.png";
+    a.click();
+
+    // Clean up
+    canvas.remove();
+    a.remove();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -568,6 +601,14 @@ s: ${syncDebug.current}
                   {captions?.[activeCaption]?.lang || "off"}
                 </button>
               )}
+              <button
+                type="button"
+                aria-label="Screenshot current video frame"
+                onClick={captureFrame}
+                className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
+              >
+                <IconCamera width="1em" height="1em" />
+              </button>
               <button
                 type="button"
                 aria-label="Toggle fullscreen button"
