@@ -21,6 +21,12 @@ const ChannelPage = (props: ChannelPageProps) => {
   const { channelId, channelName, channelImageURL, ...rest } = props;
   const description = "Browse archived videos from " + channelName;
   const profileImage = channelImageURL;
+
+  React.useEffect(() => {
+    if (!channelId) return;
+    fetch("/api/pv?channel_id=" + channelId);
+  }, [channelId]);
+
   return (
     <PageBase>
       <Head>

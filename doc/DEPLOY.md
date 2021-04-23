@@ -49,17 +49,10 @@ If you see that output, the database is ready.
 
 ### Create indices and mappings
 
-You should  see JSON files in the `doc/indices` folder of this repository. Those files contain the mappings and settings necessary to create the indices. To create the indices, send the following requests:
+You should  see JSON files in the `doc/indices` folder of this repository. Those files contain the mappings and settings necessary to create the indices. To create the indices, run the `create_indices` script:
 
 ```bash
-$ curl -XPUT \
-    -H 'Content-Type: application/json' \
-    -d '@youtube-archive.json' \
-    http://localhost:9200/youtube-archive
-$ curl -XPUT \
-    -H 'Content-Type: application/json' \
-    -d '@youtube-archive-searches.json' \
-    http://localhost:9200/youtube-archive-searches
+node ./create_indices.js http://localhost:9200
 ```
 
 The database is now ready.

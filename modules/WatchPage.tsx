@@ -40,6 +40,16 @@ const WatchPage = (props: WatchPageProps) => {
       refMobileScrollTarget.current?.scrollIntoView({ behavior: "smooth" });
   }, [isChatVisible]);
 
+  React.useEffect(() => {
+    if (!videoInfo) return;
+    fetch(
+      "/api/pv?channel_id=" +
+        videoInfo.channel_id +
+        "&video_id=" +
+        videoInfo.video_id
+    );
+  }, [videoInfo]);
+
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [fmtVideo, fmtAudio] = videoInfo.format_id.split("+");
   const urlVideo = getFile(videoInfo, ".f" + fmtVideo);

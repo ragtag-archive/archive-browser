@@ -9,7 +9,7 @@ import { Elastic } from "../modules/shared/database";
 import { signFileURLs, signURL } from "../modules/shared/fileAuth";
 import { getRemoteAddress } from "../modules/shared/util";
 import WatchPage, { WatchPageProps } from "../modules/WatchPage";
-import { apiRelatedVideos, apiSearch, apiSearchRaw } from "./api/v1/search";
+import { apiRelatedVideos, apiSearch } from "./api/v1/search";
 import { apiVideo } from "./api/video";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

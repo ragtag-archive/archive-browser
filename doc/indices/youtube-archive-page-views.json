@@ -1,0 +1,18 @@
+{
+  "mappings": {
+    "properties": {
+      "timestamp": {
+        "type": "date"
+      },
+      "channel_id": {
+        "type": "keyword"
+      },
+      "video_id": {
+        "type": "keyword"
+      },
+      "ip": {
+        "type": "ip"
+      }
+    }
+  }
+}

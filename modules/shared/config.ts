@@ -4,12 +4,15 @@
  *
  * ES_INDEX - primary index where video data is stored
  * ES_INDEX_SEARCH_LOG - index where searches are logged
+ * ES_INDEX_PAGE_VIEWS - track video and channel page views
  * ES_BACKEND_URL - endpoint
  * ES_AUTHORIZATION - authorization header (e.g. "Basic bmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXA=")
  */
 export const ES_INDEX = process.env.ES_INDEX || "youtube-archive";
 export const ES_INDEX_SEARCH_LOG =
   process.env.ES_INDEX_SEARCH_LOG || "youtube-archive-searches";
+export const ES_INDEX_PAGE_VIEWS =
+  process.env.ES_INDEX_PAGE_VIEWS || "youtube-archive-page-views";
 export const ES_BACKEND_URL =
   process.env.ES_BACKEND_URL || "http://127.0.0.1:9200";
 export const ES_AUTHORIZATION = process.env.ES_AUTHORIZATION || "";
