@@ -4,6 +4,7 @@ import { formatSeconds } from "../format";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useThrottle } from "../hooks/useThrottle";
 import {
+  IconCamera,
   IconClosedCaptioningRegular,
   IconClosedCaptioningSolid,
   IconCompress,
@@ -58,7 +59,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const refVideo = React.useRef<HTMLVideoElement>(null);
   const refAudio = React.useRef<HTMLAudioElement>(null);
 
-  const [now, setNow] = React.useState(Date.now());
   const [isDebugVisible, setIsDebugVisible] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(props.autoplay);
   const [videoReady, setVideoReady] = React.useState(false);
@@ -85,11 +85,19 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const threshStartSync = React.useRef(0.25);
   const threshTimeReset = 2;
   const syncDebug = React.useRef("");
+  const lastAnimationFrame = React.useRef(Date.now());
 
   useAnimationFrame(() => {
     if (!refVideo.current || !refAudio.current) return;
     const a = refAudio.current;
     const v = refVideo.current;
+
+    // Update sync threshold
+    const now = Date.now();
+    threshStartSync.current +=
+      (1.5 * (now - lastAnimationFrame.current)) / 1000;
+    threshStartSync.current /= 2;
+    lastAnimationFrame.current = now;
 
     // Update video time state
     setVideoTime(v.currentTime);
@@ -107,8 +115,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       return;
     }
 
-    setNow(Date.now());
-
     setIsPlaying((_isPlaying) => {
       // Check sync
       const timeDiff = Math.abs(a.currentTime - v.currentTime);
@@ -116,7 +122,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       if (_isPlaying) {
         if (timeDiff > threshStartSync.current) {
           if (timeDiff > threshTimeReset) {
-            syncDebug.current = "reset";
+            syncDebug.current = "jumping";
             v.currentTime = a.currentTime;
             a.play();
             v.play();
@@ -132,12 +138,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             }
           }
         } else {
-          syncDebug.current = ">>";
+          syncDebug.current = "synced";
           if (a.paused) a.play();
           if (v.paused) v.play();
         }
       } else {
-        syncDebug.current = "||";
+        syncDebug.current = "paused";
         if (!a.paused) a.pause();
         if (!v.paused) v.pause();
       }
@@ -251,6 +257,38 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refVideo.current.currentTime = newTime;
       return newTime;
     });
+  };
+
+  /**
+   * Screenshot current video frame and download it
+   */
+  const captureFrame = () => {
+    if (!refVideo.current) return;
+
+    // Create canvas
+    const canvas = document.createElement("canvas");
+    canvas.width = refVideo.current.videoWidth;
+    canvas.height = refVideo.current.videoHeight;
+    const ctx = canvas.getContext("2d");
+
+    // Draw video frame to canvas
+    ctx.drawImage(refVideo.current, 0, 0, canvas.width, canvas.height);
+
+    // Generate URI and download
+    const uri = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = uri;
+    a.download =
+      "Screenshot " +
+      videoId +
+      " " +
+      Math.floor(refVideo.current.currentTime * 1000) +
+      "ms.png";
+    a.click();
+
+    // Clean up
+    canvas.remove();
+    a.remove();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -388,7 +426,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       {isDebugVisible && (
         <div
           data-debug-window
-          className="bg-black bg-opacity-50 text-white absolute left-2 top-2 z-40 p-4 whitespace-pre font-mono"
+          className="bg-black bg-opacity-50 text-white absolute left-2 top-2 z-40 p-4 whitespace-pre font-mono text-sm"
         >
           <div className="float-right">
             <a
@@ -402,15 +440,20 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             </a>
           </div>
           {`Debug info
-u: ${isPlaying ? "playing" : "paused"}
-a: ${
+state: ${isPlaying ? "playing" : "paused"}
+audio: ${
             refAudio.current?.paused ? "paused" : "playing"
-          } ${refAudio.current?.currentTime.toFixed(3)} 
-v: ${
+          } ${refAudio.current?.currentTime.toFixed(3)}s
+video: ${
             refVideo.current?.paused ? "paused" : "playing"
-          } ${refVideo.current?.currentTime.toFixed(3)} 
-d: ${(refAudio.current?.currentTime - refVideo.current?.currentTime).toFixed(3)}
-s: ${syncDebug.current}
+          } ${refVideo.current?.currentTime.toFixed(3)}s
+delta: ${(
+            (refAudio.current?.currentTime - refVideo.current?.currentTime) *
+            1000
+          ).toFixed(2)}ms
+sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
+            syncDebug.current
+          }
 `}
         </div>
       )}
@@ -443,7 +486,7 @@ s: ${syncDebug.current}
       >
         {srcPoster && (
           <Image
-            className={bufferProgress > 0 ? "hidden" : ""}
+            className={bufferProgress > 0 ? "opacity-0" : ""}
             aria-hidden
             src={srcPoster}
             layout="fill"
@@ -565,9 +608,19 @@ s: ${syncDebug.current}
                       className="inline-block mr-2"
                     />
                   )}
-                  {captions?.[activeCaption]?.lang || "off"}
+                  <span className="leading-none">
+                    {captions?.[activeCaption]?.lang || "off"}
+                  </span>
                 </button>
               )}
+              <button
+                type="button"
+                aria-label="Screenshot current video frame"
+                onClick={captureFrame}
+                className="py-3 px-4 focus:outline-none focus:bg-white focus:bg-opacity-25 rounded transition duration-200"
+              >
+                <IconCamera width="1em" height="1em" />
+              </button>
               <button
                 type="button"
                 aria-label="Toggle fullscreen button"
@@ -604,7 +657,7 @@ s: ${syncDebug.current}
           crossOrigin="anonymous"
           onMouseUp={(e) => {
             e.preventDefault();
-            handlePlayPause();
+            if (e.button === 0) handlePlayPause();
           }}
           onTouchEnd={(e) => {
             e.preventDefault();
