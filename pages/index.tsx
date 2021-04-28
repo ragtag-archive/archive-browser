@@ -24,10 +24,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     const ip = getRemoteAddress(ctx.req);
     vRecentArchive.data.hits.hits.forEach((hit) =>
-      signFileURLs(hit._source.files, ip)
+      signFileURLs(hit._source.drive_base, hit._source.files, ip)
     );
     vRecentUpload.data.hits.hits.forEach((hit) =>
-      signFileURLs(hit._source.files, ip)
+      signFileURLs(hit._source.drive_base, hit._source.files, ip)
     );
 
     const sections = [];

@@ -25,6 +25,7 @@ export type VideoMetadata = {
   dislike_count: number;
   archived_timestamp: string;
   files: VideoFile[];
+  drive_base: string;
   timestamps?: {
     actualStartTime?: string;
     publishedAt?: string;

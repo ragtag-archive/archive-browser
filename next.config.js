@@ -1,5 +1,5 @@
 module.exports = {
   images: {
-    domains: ["archive-content.ragtag.moe"],
+    domains: ["3280f0d7872e.ngrok.io", "archive-content.ragtag.moe"],
   },
 };

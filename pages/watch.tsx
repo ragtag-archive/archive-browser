@@ -53,12 +53,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
       // Sign URLs
       const ip = getRemoteAddress(ctx.req);
-      signFileURLs(videoInfo.files, ip);
+      signFileURLs(videoInfo.drive_base, videoInfo.files, ip);
       const channelProfileURL = signURL(
         DRIVE_BASE_URL + "/" + videoInfo.channel_id + "/profile.jpg",
         ip
       );
-      related.hits.hits.forEach((hit) => signFileURLs(hit._source.files, ip));
+      related.hits.hits.forEach((hit) =>
+        signFileURLs(hit._source.drive_base, hit._source.files, ip)
+      );
 
       const props: WatchPageProps = {
         videoInfo: {

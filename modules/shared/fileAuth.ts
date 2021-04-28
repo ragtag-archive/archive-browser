@@ -35,11 +35,21 @@ export const signURL = (url: string, ip: string) => {
   return u.toString();
 };
 
-export const signFileURLs = (files: VideoFile[], ip: string) =>
+export const signFileURLs = (
+  driveBaseFolder: string,
+  files: VideoFile[],
+  ip: string
+) =>
   files.forEach((file, idx) => {
     files[idx].url = signURL(
       file.url ||
-        DRIVE_BASE_URL + "/" + file.name.split(".")[0] + "/" + file.name,
+        DRIVE_BASE_URL +
+          "/gd:" +
+          driveBaseFolder +
+          "/" +
+          file.name.split(".")[0] +
+          "/" +
+          file.name,
       ip
     );
   });

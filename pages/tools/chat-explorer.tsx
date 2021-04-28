@@ -14,7 +14,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const video = _searchResult.data.hits.hits[0]._source;
 
     const ip = getRemoteAddress(ctx.req);
-    signFileURLs(video.files, ip);
+    signFileURLs(video.drive_base, video.files, ip);
 
     const chatFile = video.files.find((file) =>
       file.name.endsWith(".chat.json")

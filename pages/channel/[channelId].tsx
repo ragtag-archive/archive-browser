@@ -28,7 +28,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const ip = getRemoteAddress(ctx.req);
   const channel = results.hits.hits[0]._source;
-  results.hits.hits.forEach((hit) => signFileURLs(hit._source.files, ip));
+  results.hits.hits.forEach((hit) =>
+    signFileURLs(hit._source.drive_base, hit._source.files, ip)
+  );
 
   const props: ChannelPageProps = {
     channelId,

@@ -14,7 +14,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       const results = (await apiSearch({ q, from, size })).data;
 
       const ip = getRemoteAddress(ctx.req);
-      results.hits.hits.forEach((hit) => signFileURLs(hit._source.files, ip));
+      results.hits.hits.forEach((hit) =>
+        signFileURLs(hit._source.drive_base, hit._source.files, ip)
+      );
 
       const props: SearchPageProps = {
         q,
