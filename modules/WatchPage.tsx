@@ -54,7 +54,7 @@ const WatchPage = (props: WatchPageProps) => {
   const [fmtVideo, fmtAudio] = videoInfo.format_id.split("+");
   const urlVideo = getFile(videoInfo, ".f" + fmtVideo);
   const urlAudio = getFile(videoInfo, ".f" + fmtAudio);
-  const urlThumb = getFile(videoInfo, ".webp");
+  const urlThumb = getFile(videoInfo, ".webp") || getFile(videoInfo, ".jpg");
   const urlChat = getFile(videoInfo, ".chat.json");
 
   return (

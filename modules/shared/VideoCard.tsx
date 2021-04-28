@@ -12,8 +12,9 @@ export type VideoCardProps = {
 };
 
 const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
-  const thumbURL = video?.files?.find((file) => file.name.endsWith(".webp"))
-    ?.url;
+  const thumbURL = video?.files?.find(
+    (file) => file.name.endsWith(".webp") || file.name.endsWith(".jpg")
+  )?.url;
 
   return (
     <div
