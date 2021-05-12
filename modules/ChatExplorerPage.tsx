@@ -127,7 +127,7 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
                   className="block relative w-full h-0 mb-4"
                   style={{ paddingBottom: "56.25%" }}
                 >
-                  <Image layout="fill" src={props.thumbnailURL} />
+                  <Image layout="fill" src={props.thumbnailURL} unoptimized />
                 </a>
               </Link>
               <h1 className="text-2xl pb-4">{props.title}</h1>

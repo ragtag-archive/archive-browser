@@ -490,6 +490,7 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
             aria-hidden
             src={srcPoster}
             layout="fill"
+            unoptimized
           />
         )}
         <div

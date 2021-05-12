@@ -38,6 +38,7 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
                     height={207}
                     layout="responsive"
                     alt="Video thumbnail"
+                    unoptimized
                   />
                 </>
               ) : (

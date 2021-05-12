@@ -58,6 +58,7 @@ const ChannelPage = (props: ChannelPageProps) => {
               height={128}
               layout="fixed"
               priority
+              unoptimized
             />
           </div>
           <p className="text-lg text-center">All videos from</p>

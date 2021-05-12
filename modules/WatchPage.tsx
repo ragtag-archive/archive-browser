@@ -188,6 +188,7 @@ const WatchPage = (props: WatchPageProps) => {
                         layout="fixed"
                         width={48}
                         height={48}
+                        unoptimized
                       />
                     </div>
                     <div className="ml-4">

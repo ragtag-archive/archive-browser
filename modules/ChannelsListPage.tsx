@@ -35,6 +35,7 @@ const ChannelsListPage = (props: ChannelsListPageProps) => {
                     width={64}
                     height={64}
                     priority={idx < 12}
+                    unoptimized
                   />
                 )}
               </div>
