@@ -58,6 +58,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const refSelf = React.useRef<HTMLDivElement>(null);
   const refVideo = React.useRef<HTMLVideoElement>(null);
   const refAudio = React.useRef<HTMLAudioElement>(null);
+  const refIsVideoErrored = React.useRef(false);
 
   const [isDebugVisible, setIsDebugVisible] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(props.autoplay);
@@ -71,6 +72,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [lastActive, setLastActive] = React.useState(Date.now());
   const [activeCaption, setActiveCaption] = React.useState(enCaptionIndex);
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
+  const [videoErrorMessage, setVideoErrorMessage] = React.useState("");
   const [srv3CaptionXMLs, setSrv3CaptionXMLs] = React.useState([]);
 
   const [isContextVisible, setIsContextVisible] = React.useState(false);
@@ -88,7 +90,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const lastAnimationFrame = React.useRef(Date.now());
 
   useAnimationFrame(() => {
-    if (!refVideo.current || !refAudio.current) return;
+    if (!refVideo.current || !refAudio.current || refIsVideoErrored) return;
     const a = refAudio.current;
     const v = refVideo.current;
 
@@ -241,9 +243,27 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       e.nativeEvent.originalTarget?.error ||
       new Error("Unknown error");
 
+    setIsPlaying(false);
     setIsVideoErrored(true);
+    refIsVideoErrored.current = true;
     console.error("Error playing video: ", error.message);
     console.error(e);
+
+    // Try to find out the error
+    fetch(srcVideo)
+      .then((res) => res.text())
+      .then((text) => {
+        if (text.startsWith("{")) {
+          const json = JSON.parse(text);
+          setVideoErrorMessage(
+            String(
+              json.message || json.error.message || json.error.code || text
+            )
+          );
+        } else setVideoErrorMessage(text);
+      })
+      .catch((e) => console.error(e));
+
     logEvent(K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR, {
       ...getPlayerState(),
       error: error.message,
@@ -495,14 +515,16 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
         )}
         <div
           className={[
-            "absolute inset-0 pointer-events-none z-20 flex flex-col justify-center bg-black bg-opacity-25",
+            "absolute inset-0 pointer-events-none z-20 flex flex-col justify-center bg-black",
             "transition duration-200",
+            isVideoErrored ? "bg-opacity-75" : "bg-opacity-25",
             isLoading || isVideoErrored ? "opacity-100" : "opacity-0",
           ].join(" ")}
         >
           {isVideoErrored ? (
             <div className="text-center">
               <p>Error playing video</p>
+              <p>{videoErrorMessage}</p>
             </div>
           ) : (
             <LoaderRing />
