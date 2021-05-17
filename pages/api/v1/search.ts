@@ -199,7 +199,7 @@ export const apiSearch = async (query: {
 };
 
 export const apiSearchCompletion = async (term: string): Promise<string[]> => {
-  let query;
+  let query: any;
   if (term.length > 0) query = { match: { query: term } };
   else query = { match_all: {} };
   const aggs = await Elastic.request({
@@ -212,7 +212,7 @@ export const apiSearchCompletion = async (term: string): Promise<string[]> => {
           filter: [
             {
               range: {
-                timestamp: { gte: "now-14d" },
+                timestamp: { gte: "now-7d" },
               },
             },
           ],
@@ -229,7 +229,7 @@ export const apiSearchCompletion = async (term: string): Promise<string[]> => {
       },
     },
   });
-  return aggs.data.aggregations.top.buckets.map((bucket) => bucket.key);
+  return aggs.data.aggregations.top.buckets.map((bucket: any) => bucket.key);
 };
 
 export const apiSearchRaw = <T = any>(dsl: any) =>
