@@ -90,7 +90,8 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const lastAnimationFrame = React.useRef(Date.now());
 
   useAnimationFrame(() => {
-    if (!refVideo.current || !refAudio.current || refIsVideoErrored) return;
+    if (!refVideo.current || !refAudio.current || refIsVideoErrored.current)
+      return;
     const a = refAudio.current;
     const v = refVideo.current;
 
