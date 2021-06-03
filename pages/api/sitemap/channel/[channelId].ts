@@ -29,8 +29,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         `<loc>https://${host}/watch?v=${video._id}</loc>`,
         "<video:video>",
         `<video:thumbnail_loc>${thumbnail_url}</video:thumbnail_loc>`,
-        `<video:title>${video._source.title}</video:title>`,
-        `<video:description>${video._source.description}</video:description>`,
+        `<video:title><![CDATA[${video._source.title}]]></video:title>`,
+        `<video:description><![CDATA[${video._source.description}]]></video:description>`,
         `<video:player_loc>https://${host}/embed/${video._id}</video:player_loc>`,
         `<video:duration>${video._source.duration}</video:duration>`,
         `<video:publication_date>${
