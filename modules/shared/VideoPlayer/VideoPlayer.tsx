@@ -431,6 +431,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       className={[
         "video-player bg-black",
         "focus:outline-none",
+        "w-full h-full",
         isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "",
       ].join(" ")}
       style={{
@@ -502,8 +503,8 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
         </>
       )}
       <div
-        className="w-full h-0 relative overflow-hidden"
-        style={{ paddingBottom: "56.25%" }}
+        className="w-full h-full relative overflow-hidden"
+        // style={{ paddingBottom: "56.25%" }}
       >
         {srcPoster && (
           <Image

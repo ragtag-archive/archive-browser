@@ -12,6 +12,7 @@ import ServiceUnavailablePage from "./ServiceUnavailablePage";
 import VideoActionButtons, { buttonStyle } from "./shared/VideoActionButtons";
 import { useWindowSize } from "./shared/hooks/useWindowSize";
 import MemoLinkify from "./shared/MemoLinkify";
+import VideoPlayerHead from "./shared/VideoPlayerHead";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -59,30 +60,7 @@ const WatchPage = (props: WatchPageProps) => {
 
   return (
     <PageBase>
-      <Head>
-        <title>{videoInfo.title} - Ragtag Archive</title>
-        <meta name="title" content={videoInfo.title} />
-        <meta name="description" content={videoInfo.channel_name} />
-
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Ragtag Archive" />
-        <meta
-          property="og:url"
-          content={"https://archive.ragtag.moe/watch?v=" + videoInfo.video_id}
-        />
-        <meta property="og:title" content={videoInfo.title} />
-        <meta property="og:description" content={videoInfo.channel_name} />
-        <meta property="og:image" content={urlThumb} />
-
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta
-          property="twitter:url"
-          content={"https://archive.ragtag.moe/watch?v=" + videoInfo.video_id}
-        />
-        <meta property="twitter:title" content={videoInfo.title} />
-        <meta property="twitter:description" content={videoInfo.channel_name} />
-        <meta property="twitter:image" content={urlThumb} />
-      </Head>
+      <VideoPlayerHead videoInfo={videoInfo} />
       <div
         className={["flex lg:flex-row flex-col lg:h-auto"].join(" ")}
         style={{
@@ -91,25 +69,30 @@ const WatchPage = (props: WatchPageProps) => {
       >
         <div className="w-full lg:w-3/4">
           <div className="lg:absolute lg:top-0" ref={refMobileScrollTarget} />
-          <div className="relative bg-gray-400">
-            <VideoPlayer
-              key={urlVideo}
-              videoId={videoInfo.video_id}
-              srcVideo={urlVideo}
-              srcAudio={urlAudio}
-              srcPoster={urlThumb}
-              captions={videoInfo.files
-                .filter((file) => file.name.endsWith(".ytt"))
-                .map(({ name }) => {
-                  const lang = name.split(".")[1];
-                  return {
-                    lang,
-                    src: getFile(videoInfo, name),
-                  };
-                })}
-              onPlaybackProgress={setPlaybackProgress}
-              autoplay
-            />
+          <div
+            className="relative bg-gray-400 h-0"
+            style={{ paddingBottom: "56.25%" }}
+          >
+            <div className="absolute inset-0 w-full h-full">
+              <VideoPlayer
+                key={urlVideo}
+                videoId={videoInfo.video_id}
+                srcVideo={urlVideo}
+                srcAudio={urlAudio}
+                srcPoster={urlThumb}
+                captions={videoInfo.files
+                  .filter((file) => file.name.endsWith(".ytt"))
+                  .map(({ name }) => {
+                    const lang = name.split(".")[1];
+                    return {
+                      lang,
+                      src: getFile(videoInfo, name),
+                    };
+                  })}
+                onPlaybackProgress={setPlaybackProgress}
+                autoplay
+              />
+            </div>
           </div>
         </div>
         <div
