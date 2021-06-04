@@ -38,6 +38,21 @@ const LandingPage = (props: LandingPageProps) => {
           </p>
         </div>
 
+        <div className="px-4 text-center mt-4">
+          <div className="bg-blue-600 inline-block px-4 py-2 rounded">
+            If you find this website useful, please help keep us up and running.{" "}
+            <a
+              className="font-bold underline"
+              rel="noreferrer noopener nofollow"
+              href="https://www.patreon.com/kitsune_cw"
+              target="_blank"
+            >
+              Donate
+            </a>
+            .
+          </div>
+        </div>
+
         {videos.map((section, idx) => (
           <div key={section.title} className="py-6">
             <h1 className="text-2xl font-bold px-4 sm:px-2">{section.title}</h1>
