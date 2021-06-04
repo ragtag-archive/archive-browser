@@ -44,24 +44,29 @@ const CustomPlayerPage = () => {
             }}
           >
             <div className="w-full lg:w-3/4">
-              <div className="relative bg-gray-400">
-                <VideoPlayer
-                  key={urlVideo}
-                  videoId="custom"
-                  srcVideo={urlVideo}
-                  srcAudio={urlVideo}
-                  captions={
-                    urlYtt
-                      ? [
-                          {
-                            lang: "en",
-                            src: urlYtt,
-                          },
-                        ]
-                      : undefined
-                  }
-                  onPlaybackProgress={setPlaybackProgress}
-                />
+              <div
+                className="relative bg-gray-400 w-full h-0"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                <div className="absolute inset-0 w-full h-full">
+                  <VideoPlayer
+                    key={urlVideo}
+                    videoId="custom"
+                    srcVideo={urlVideo}
+                    srcAudio={urlVideo}
+                    captions={
+                      urlYtt
+                        ? [
+                            {
+                              lang: "en",
+                              src: urlYtt,
+                            },
+                          ]
+                        : undefined
+                    }
+                    onPlaybackProgress={setPlaybackProgress}
+                  />
+                </div>
               </div>
             </div>
             <div
