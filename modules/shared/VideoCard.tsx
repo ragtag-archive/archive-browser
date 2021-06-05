@@ -98,7 +98,10 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
                 </span>{" "}
                 &middot;{" "}
                 <span
-                  title={new Date(video.archived_timestamp).toLocaleString()}
+                  title={new Date(
+                    video.archived_timestamp +
+                      (video.archived_timestamp.endsWith("Z") ? "" : "Z")
+                  ).toLocaleString()}
                 >
                   Archived{" "}
                   {format(

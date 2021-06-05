@@ -143,11 +143,19 @@ const WatchPage = (props: WatchPageProps) => {
                   &middot;{" "}
                   <span
                     title={new Date(
-                      videoInfo.archived_timestamp
+                      videoInfo.archived_timestamp +
+                        (videoInfo.archived_timestamp.endsWith("Z") ? "" : "Z")
                     ).toLocaleString()}
                   >
                     Archived{" "}
-                    {formatDate(new Date(videoInfo.archived_timestamp))}
+                    {formatDate(
+                      new Date(
+                        videoInfo.archived_timestamp +
+                          (videoInfo.archived_timestamp.endsWith("Z")
+                            ? ""
+                            : "Z")
+                      )
+                    )}
                   </span>
                 </p>
               </ClientRender>
