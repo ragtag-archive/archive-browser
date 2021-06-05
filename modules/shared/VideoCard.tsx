@@ -5,6 +5,7 @@ import { VideoMetadata } from "./database.d";
 import { formatDate, formatSeconds } from "./format";
 import { format } from "timeago.js";
 import VideoActionButtons from "./VideoActionButtons";
+import ClientRender from "./ClientRender";
 
 export type VideoCardProps = {
   video?: VideoMetadata;
@@ -79,31 +80,35 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
                 {video.channel_name}
               </a>
             </Link>
-            <p className={["text-gray-400", small && "text-sm"].join(" ")}>
-              {Intl.NumberFormat("en-US").format(video.view_count)} views
-              &middot;{" "}
-              <span
-                title={
-                  video.timestamps?.publishedAt
-                    ? new Date(video.timestamps?.publishedAt).toLocaleString()
-                    : "(exact timestamp unknown)"
-                }
-              >
-                Uploaded{" "}
-                {formatDate(
-                  new Date(video.timestamps?.publishedAt || video.upload_date)
-                )}
-              </span>{" "}
-              &middot;{" "}
-              <span title={new Date(video.archived_timestamp).toLocaleString()}>
-                Archived{" "}
-                {format(
-                  video.archived_timestamp +
-                    (video.archived_timestamp.endsWith("Z") ? "" : "Z"),
-                  "en_US"
-                )}
-              </span>
-            </p>
+            <ClientRender enableSSR>
+              <p className={["text-gray-400", small && "text-sm"].join(" ")}>
+                {Intl.NumberFormat("en-US").format(video.view_count)} views
+                &middot;{" "}
+                <span
+                  title={
+                    video.timestamps?.publishedAt
+                      ? new Date(video.timestamps?.publishedAt).toLocaleString()
+                      : "(exact timestamp unknown)"
+                  }
+                >
+                  Uploaded{" "}
+                  {formatDate(
+                    new Date(video.timestamps?.publishedAt || video.upload_date)
+                  )}
+                </span>{" "}
+                &middot;{" "}
+                <span
+                  title={new Date(video.archived_timestamp).toLocaleString()}
+                >
+                  Archived{" "}
+                  {format(
+                    video.archived_timestamp +
+                      (video.archived_timestamp.endsWith("Z") ? "" : "Z"),
+                    "en_US"
+                  )}
+                </span>
+              </p>
+            </ClientRender>
             {!small && <VideoActionButtons video={video} />}
           </>
         ) : (

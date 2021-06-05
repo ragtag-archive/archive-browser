@@ -13,6 +13,7 @@ import VideoActionButtons, { buttonStyle } from "./shared/VideoActionButtons";
 import { useWindowSize } from "./shared/hooks/useWindowSize";
 import MemoLinkify from "./shared/MemoLinkify";
 import VideoPlayerHead from "./shared/VideoPlayerHead";
+import ClientRender from "./shared/ClientRender";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -119,33 +120,37 @@ const WatchPage = (props: WatchPageProps) => {
           <div className="mt-4 mx-6">
             <h1 className="text-2xl mb-2">{videoInfo.title}</h1>
             <div className="flex flex-row justify-between">
-              <p className="text-gray-400">
-                {format(videoInfo.view_count)} views &middot;{" "}
-                <span
-                  title={
-                    videoInfo.timestamps?.publishedAt
-                      ? new Date(
-                          videoInfo.timestamps?.publishedAt
-                        ).toLocaleString()
-                      : "(exact timestamp unknown)"
-                  }
-                >
-                  Uploaded{" "}
-                  {formatDate(
-                    new Date(
-                      videoInfo.timestamps?.publishedAt || videoInfo.upload_date
-                    )
-                  )}
-                </span>{" "}
-                &middot;{" "}
-                <span
-                  title={new Date(
-                    videoInfo.archived_timestamp
-                  ).toLocaleString()}
-                >
-                  Archived {formatDate(new Date(videoInfo.archived_timestamp))}
-                </span>
-              </p>
+              <ClientRender enableSSR>
+                <p className="text-gray-400">
+                  {format(videoInfo.view_count)} views &middot;{" "}
+                  <span
+                    title={
+                      videoInfo.timestamps?.publishedAt
+                        ? new Date(
+                            videoInfo.timestamps?.publishedAt
+                          ).toLocaleString()
+                        : "(exact timestamp unknown)"
+                    }
+                  >
+                    Uploaded{" "}
+                    {formatDate(
+                      new Date(
+                        videoInfo.timestamps?.publishedAt ||
+                          videoInfo.upload_date
+                      )
+                    )}
+                  </span>{" "}
+                  &middot;{" "}
+                  <span
+                    title={new Date(
+                      videoInfo.archived_timestamp
+                    ).toLocaleString()}
+                  >
+                    Archived{" "}
+                    {formatDate(new Date(videoInfo.archived_timestamp))}
+                  </span>
+                </p>
+              </ClientRender>
               <div>
                 <span className="text-green-500">
                   {format(videoInfo.like_count)} likes
