@@ -38,6 +38,7 @@ const VideoEmbedPage = (props: VideoEmbedPageProps) => {
       </Head>
       <div className="absolute inset-0">
         <VideoPlayer
+          showWatermark
           videoId={videoInfo.video_id}
           srcVideo={urlVideo}
           srcAudio={urlAudio}

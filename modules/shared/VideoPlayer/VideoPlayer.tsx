@@ -42,12 +42,12 @@ export type VideoPlayerProps = {
   captions?: CaptionsTrack[];
   onPlaybackProgress?: (progress: number) => any;
   autoplay?: boolean;
-
+  showWatermark?: boolean;
   videoId?: string;
 };
 
 const VideoPlayer = (props: VideoPlayerProps) => {
-  const { srcVideo, srcAudio, srcPoster, videoId } = props;
+  const { srcVideo, srcAudio, srcPoster, videoId, showWatermark } = props;
   const { logEvent } = useAmplitude();
   const captions = props.captions || [];
   const hasCaptions = captions.length > 0;
@@ -540,6 +540,16 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
             opacity: controlsVisible ? 1 : 0,
           }}
         >
+          {showWatermark && (
+            <div className="text-sm">
+              <a
+                target="_blank"
+                href={"https://archive.ragtag.moe/watch?v=" + videoId}
+              >
+                Hosted on <span className="font-bold">Ragtag Archive</span>
+              </a>
+            </div>
+          )}
           <SeekBar
             value={playbackProgress}
             max={avDuration}

@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 import { ApiSearchSortFields } from "../pages/api/v1/search";
 import PageBase from "./shared/PageBase";
 
@@ -176,6 +175,33 @@ const ApiDocsPage = () => {
             <li>{x}</li>
           ))}
         </ul>
+        <h2>Embedding videos</h2>
+        <p>
+          Videos from this website can be embedded with the URL{" "}
+          <code>/embed/:videoId</code>. For example,
+        </p>
+        <pre>
+          <code>{`<div style="position:relative;padding-bottom:56.25%">
+  <iframe
+    frameborder="0"
+    allow="fullscreen"
+    src="https://archive.ragtag.moe/embed/vHMV44Uza4g"
+    style="position:absolute;width:100%;height:100%" />
+</div>`}</code>
+        </pre>
+        <p>
+          will create a responsive iframe with a 16:9 aspect ratio like the
+          following:
+        </p>
+        <div className="relative" style={{ paddingBottom: "56.25%" }}>
+          <iframe
+            frameBorder="0"
+            allow="fullscreen"
+            src="/embed/vHMV44Uza4g"
+            className="absolute w-full h-full"
+          />
+        </div>
+        <p>Note that chat replay is not yet available for embedded videos.</p>
       </div>
     </PageBase>
   );
