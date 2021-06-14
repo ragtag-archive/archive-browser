@@ -39,6 +39,7 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
         <img
           src={proxyURL(emoteURL)}
           alt={token}
+          title={token}
           className="inline-block w-6 h-6"
         />
       );
@@ -69,8 +70,9 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
                 {msg.author.badges && msg.author.badges[0].icons ? (
                   <img
                     src={proxyURL(msg.author.badges[0].icons[1].url)}
+                    alt={msg.author.badges[0].title}
+                    title={msg.author.badges[0].title}
                     className="inline-block ml-2"
-                    aria-hidden
                   />
                 ) : null}
               </div>
@@ -98,8 +100,9 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
               {msg.author.badges && msg.author.badges[0].icons ? (
                 <img
                   src={proxyURL(msg.author.badges[0].icons[1].url)}
+                  alt={msg.author.badges[0].title}
+                  title={msg.author.badges[0].title}
                   className="inline-block ml-2"
-                  aria-hidden
                 />
               ) : null}
             </div>
@@ -152,9 +155,10 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
                 Array.isArray(badge.icons) ? (
                   <img
                     key={badge.title}
+                    alt={badge.title}
+                    title={badge.title}
                     src={proxyURL(badge.icons?.[1]?.url)}
                     className="inline-block ml-2"
-                    aria-hidden
                   />
                 ) : null
               )}
