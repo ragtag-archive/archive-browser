@@ -74,8 +74,7 @@ export const apiGetPopularVideos = async (max: number = 8) => {
   // Sort videos
   const scoreArray = Object.keys(scoremap)
     .map((id) => ({ id, score: scoremap[id] }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, max);
+    .sort((a, b) => b.score - a.score);
   const videoIds = scoreArray.map((x) => x.id);
 
   // Get video documents
@@ -92,7 +91,7 @@ export const apiGetPopularVideos = async (max: number = 8) => {
         value: videos.data.docs.length,
       },
       max_score: 0,
-      hits: videos.data.docs,
+      hits: videos.data.docs.filter((hit) => hit._source).slice(0, max),
     },
   };
   return result;
