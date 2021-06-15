@@ -107,8 +107,8 @@ export const apiRegisterPageview = async (params: {
     url: "/" + ES_INDEX_PAGE_VIEWS + "/_doc",
     data: {
       timestamp: new Date().toISOString(),
-      channel_id: params.channelId || "(none)",
-      video_id: params.videoId || "(none)",
+      channel_id: params.channelId,
+      video_id: params.videoId,
       ip: params.ip,
     },
   });
@@ -118,8 +118,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (ip === "127.0.0.1" || ip === "::1") return res.status(204).end();
 
   await apiRegisterPageview({
-    channelId: String(req.query.channel_id),
-    videoId: String(req.query.videoId),
+    channelId: (req.query.channel_id as string) || "(none)",
+    videoId: (req.query.videoId as string) || "(none)",
     ip,
   });
   res.status(204).end();
