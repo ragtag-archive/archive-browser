@@ -3,6 +3,7 @@ import axios from "axios";
 import { ChatMessage } from "../database.d";
 import ChatReplay from "./ChatReplay";
 import { IconChevronDown, IconFilter } from "../icons";
+import { useDebounce } from "../hooks/useDebounce";
 
 export type ChatReplayPanelProps = {
   src: string;
@@ -12,11 +13,17 @@ export type ChatReplayPanelProps = {
 
 const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [replayData, setReplayData] = React.useState<ChatMessage[]>(null);
+  const [filteredReplayData, setFilteredReplayData] = React.useState<
+    ChatMessage[]
+  >(null);
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
   const [isFilterVisible, setIsFilterVisible] = React.useState(false);
+  const [chatFilter, setChatFilter] = React.useState("");
   const [isChatVisible, setIsChatVisible] = React.useState(false);
   const [isErrored, setIsErrored] = React.useState(false);
   const refChatScrollDiv = React.useRef<HTMLDivElement>(null);
+
+  const activeChatFilter = useDebounce(chatFilter, 250);
 
   const downloadChatData = async () => {
     setDownloadProgress(0);
@@ -40,6 +47,15 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
       setIsErrored(true);
     }
   };
+
+  React.useEffect(() => {
+    if (replayData)
+      setFilteredReplayData(
+        replayData.filter((message) =>
+          message.message.toLowerCase().includes(activeChatFilter.toLowerCase())
+        )
+      );
+  }, [activeChatFilter, replayData]);
 
   /**
    * Automatically download chat replay
@@ -120,16 +136,9 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
                   bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring
                   transition duration-100 z-20
                 "
+                value={chatFilter}
+                onChange={(e) => setChatFilter(e.target.value)}
               />
-            </div>
-            <div className="flex">
-              <div className="flex-1">
-                <label>
-                  <input type="checkbox" />
-                  RegEx
-                </label>
-              </div>
-              <button type="button">Filter</button>
             </div>
           </div>
         )}
@@ -149,7 +158,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
           >
             <ChatReplay
               currentTimeSeconds={props.currentTimeSeconds}
-              replayData={replayData}
+              replayData={filteredReplayData}
             />
           </div>
         </div>
