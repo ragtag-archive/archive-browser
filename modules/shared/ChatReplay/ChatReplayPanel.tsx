@@ -51,8 +51,12 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   React.useEffect(() => {
     if (replayData)
       setFilteredReplayData(
-        replayData.filter((message) =>
-          message.message.toLowerCase().includes(activeChatFilter.toLowerCase())
+        replayData.filter(
+          (message) =>
+            !!message.message &&
+            message.message
+              .toLowerCase()
+              .includes(activeChatFilter.toLowerCase())
         )
       );
   }, [activeChatFilter, replayData]);
