@@ -30,9 +30,9 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
     return tokens.map((token) => {
       if (!token.startsWith(":")) return token;
 
-      const emoteURL = msg.emotes
-        .find((emote) => emote.name === token)
-        ?.images.find((image) => image.id === "source")?.url;
+      const images = msg.emotes.find((emote) => emote.name === token)?.images;
+      const emoteURL =
+        images.find((image) => image.id === "source")?.url || images[0]?.url;
 
       if (!emoteURL) return token;
       return (
@@ -72,7 +72,7 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
                     src={proxyURL(msg.author.badges[0].icons[1].url)}
                     alt={msg.author.badges[0].title}
                     title={msg.author.badges[0].title}
-                    className="inline-block ml-2"
+                    className="inline-block ml-2 w-4 h-4"
                   />
                 ) : null}
               </div>
@@ -102,7 +102,7 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
                   src={proxyURL(msg.author.badges[0].icons[1].url)}
                   alt={msg.author.badges[0].title}
                   title={msg.author.badges[0].title}
-                  className="inline-block ml-2"
+                  className="inline-block ml-2 w-4 h-4"
                 />
               ) : null}
             </div>
@@ -158,7 +158,7 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
                     alt={badge.title}
                     title={badge.title}
                     src={proxyURL(badge.icons?.[1]?.url)}
-                    className="inline-block ml-2"
+                    className="inline-block ml-2 w-4 h-4"
                   />
                 ) : null
               )}

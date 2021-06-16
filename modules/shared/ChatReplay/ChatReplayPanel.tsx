@@ -1,6 +1,11 @@
 import React from "react";
 import axios from "axios";
-import { ChatMessage } from "../database.d";
+import {
+  ChatMessage,
+  ChatMessageAuthor,
+  ChatMessageEmote,
+  ChatMessageImage,
+} from "../database.d";
 import ChatReplay from "./ChatReplay";
 import { IconChevronDown, IconFilter } from "../icons";
 import { useDebounce } from "../hooks/useDebounce";
@@ -13,9 +18,8 @@ export type ChatReplayPanelProps = {
 
 const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [replayData, setReplayData] = React.useState<ChatMessage[]>(null);
-  const [filteredReplayData, setFilteredReplayData] = React.useState<
-    ChatMessage[]
-  >(null);
+  const [filteredReplayData, setFilteredReplayData] =
+    React.useState<ChatMessage[]>(null);
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
   const [isFilterVisible, setIsFilterVisible] = React.useState(false);
   const [chatFilter, setChatFilter] = React.useState("");
@@ -30,35 +34,163 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
     setReplayData(null);
     setIsErrored(false);
     try {
-      const data = await axios.get<ChatMessage[]>(props.src, {
+      const data = await axios.get(props.src, {
         onDownloadProgress: (progressEvent) => {
           setDownloadProgress(progressEvent.loaded);
         },
       });
 
-      // Check if data is valid
-      if (typeof data.data === "string") {
-        JSON.parse(data.data);
+      let _replayData: ChatMessage[] = data.data;
+
+      // Check chat format
+      if (typeof data.data === "string" && data.data.startsWith("[")) {
+        // JSON array, assume format matches `ChatMessage[]`
+        console.log("[chat] Attempting to parse as JSON");
+        _replayData = JSON.parse(data.data);
+      } else if (
+        typeof data.data === "string" &&
+        data.data.startsWith("{") &&
+        data.data.includes("\n")
+      ) {
+        console.log("[chat] Attempting to parse as NDJSON (yt-dlp)");
+        // probably ndjson, probably from yt-dlp
+        _replayData = data.data
+          .trim()
+          .split("\n")
+          .map((line) => JSON.parse(line))
+          .map((event) => {
+            const actionBase = event.replayChatItemAction.actions[0];
+            const action_type =
+              "addChatItemAction" in actionBase
+                ? "add_chat_item"
+                : "addLiveChatTickerItemAction" in actionBase
+                ? "add_live_chat_ticker_item"
+                : "unknown";
+
+            // Skip handling tickers for now
+            if (action_type !== "add_chat_item") return null;
+
+            const actionItem = actionBase.addChatItemAction.item;
+            const message_type =
+              "liveChatMembershipItemRenderer" in actionItem
+                ? "membership_item"
+                : "liveChatTextMessageRenderer" in actionItem
+                ? "text_message"
+                : "liveChatPaidMessageRenderer" in actionItem
+                ? "paid_message"
+                : "unknown";
+
+            if (message_type === "unknown") return null;
+
+            const messageItem =
+              actionItem.liveChatMembershipItemRenderer ||
+              actionItem.liveChatTextMessageRenderer ||
+              actionItem.liveChatPaidMessageRenderer;
+
+            if (!messageItem) return null;
+
+            const author: ChatMessageAuthor & {
+              name_text_colour?: string;
+            } = {
+              name: messageItem.authorName.simpleText,
+              id: messageItem.authorExternalChannelId,
+              images: messageItem.authorPhoto?.thumbnails.map(
+                (thumb: Partial<ChatMessageImage>) => ({
+                  id: String(thumb.height),
+                  ...thumb,
+                })
+              ),
+              badges: messageItem.authorBadges?.map(
+                ({ liveChatAuthorBadgeRenderer: badge }: any) => ({
+                  title: badge.tooltip,
+                  icons: badge.customThumbnail?.thumbnails,
+                })
+              ),
+              name_text_colour:
+                "#" + messageItem.authorNameTextColor?.toString(16).substr(2),
+            };
+
+            return {
+              time_in_seconds:
+                event.replayChatItemAction.videoOffsetTimeMsec / 1000,
+              action_type,
+              message_type,
+              author,
+              message_id: messageItem.id,
+              timestamp: Number(messageItem.timestampUsec),
+              time_text: messageItem.timestampText.simpleText,
+              message:
+                messageItem.message || messageItem.headerSubtext
+                  ? (messageItem.message || messageItem.headerSubtext).runs
+                      .map((run: any) =>
+                        run.emoji ? run.emoji.shortcuts[0] : run.text
+                      )
+                      .join("")
+                  : "",
+              emotes: messageItem.message?.runs
+                .map((run: any) => run.emoji)
+                .filter(Boolean)
+                .map((e) => ({
+                  id: e.emojiId,
+                  name: e.shortcuts[0],
+                  shortcuts: e.shortcuts,
+                  search_terms: e.searchTerms,
+                  is_custom_emoji: e.isCustomEmoji,
+                  images: e.image?.thumbnails.map(
+                    (thumb: Partial<ChatMessageImage>) => ({
+                      id: String(thumb.height),
+                      ...thumb,
+                    })
+                  ),
+                })),
+              ...(message_type === "paid_message"
+                ? {
+                    money: {
+                      text: messageItem.purchaseAmountText.simpleText,
+                      amount: 0,
+                      currency: "-",
+                      currency_symbol: "-",
+                    },
+                    timestamp_colour:
+                      "#" + messageItem.timestampColor?.toString(16).substr(2),
+                    body_background_colour:
+                      "#" +
+                      messageItem.bodyBackgroundColor?.toString(16).substr(2),
+                    header_text_colour:
+                      "#" + messageItem.headerTextColor?.toString(16).substr(2),
+                    header_background_colour:
+                      "#" +
+                      messageItem.headerBackgroundColor?.toString(16).substr(2),
+                    body_text_colour:
+                      "#" + messageItem.bodyTextColor?.toString(16).substr(2),
+                  }
+                : {}),
+            };
+          })
+          .filter(Boolean);
       }
 
-      setReplayData(data.data);
+      console.log("[chat] found", _replayData.length, "messages");
+      console.log(_replayData);
+      setReplayData(_replayData);
       setIsChatVisible(true);
     } catch (ex) {
+      console.log("[chat] error parsing chat", ex);
       setIsErrored(true);
     }
   };
 
   React.useEffect(() => {
-    if (replayData)
-      setFilteredReplayData(
-        replayData.filter(
-          (message) =>
-            !!message.message &&
-            message.message
-              .toLowerCase()
-              .includes(activeChatFilter.toLowerCase())
-        )
-      );
+    if (!replayData) return;
+    if (!activeChatFilter) return setFilteredReplayData(replayData);
+
+    setFilteredReplayData(
+      replayData.filter(
+        (message) =>
+          !!message.message &&
+          message.message.toLowerCase().includes(activeChatFilter.toLowerCase())
+      )
+    );
   }, [activeChatFilter, replayData]);
 
   /**
@@ -167,14 +299,6 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
           </div>
         </div>
       )}
-      {/*
-      <button
-        type="button"
-        onClick={() => setIsChatVisible((now) => !now)}
-        className="w-full py-2 text-center bg-gray-900 hover:bg-gray-800 focus:ring focus:outline-none rounded transition duration-200"
-      >
-        {isChatVisible ? "Hide chat replay" : "Show chat replay"}
-      </button>*/}
     </div>
   );
 };
