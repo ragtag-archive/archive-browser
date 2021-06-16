@@ -30,7 +30,13 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
     return tokens.map((token) => {
       if (!token.startsWith(":")) return token;
 
-      const images = msg.emotes.find((emote) => emote.name === token)?.images;
+      let images = msg.emotes.find((emote) => emote.name === token)?.images;
+      if (!images)
+        images = msg.emotes.find((emote) =>
+          emote.shortcuts.includes(token)
+        )?.images;
+      if (!images) return token;
+
       const emoteURL =
         images.find((image) => image.id === "source")?.url || images[0]?.url;
 
