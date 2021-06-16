@@ -14,6 +14,7 @@ import { useWindowSize } from "./shared/hooks/useWindowSize";
 import MemoLinkify from "./shared/MemoLinkify";
 import VideoPlayerHead from "./shared/VideoPlayerHead";
 import ClientRender from "./shared/ClientRender";
+import VideoPlayer2 from "./shared/VideoPlayer/VideoPlayer2";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -43,7 +44,7 @@ const WatchPage = (props: WatchPageProps) => {
   }, [isChatVisible]);
 
   React.useEffect(() => {
-    if (!videoInfo) return;
+    if (!videoInfo || window.location.host.startsWith("localhost")) return;
     fetch(
       "/api/pv?channel_id=" +
         videoInfo.channel_id +
@@ -75,7 +76,7 @@ const WatchPage = (props: WatchPageProps) => {
             style={{ paddingBottom: "56.25%" }}
           >
             <div className="absolute inset-0 w-full h-full">
-              <VideoPlayer
+              <VideoPlayer2
                 key={urlVideo}
                 videoId={videoInfo.video_id}
                 srcVideo={urlVideo}
