@@ -2,6 +2,7 @@ import { ChatReplayParser } from ".";
 import { ChatMessage } from "../../database.d";
 
 export default class DefaultChatParser implements ChatReplayParser {
+  name: "DefaultChatParser";
   chatData: string = "";
 
   constructor(chatData: string) {

@@ -6,6 +6,7 @@ import {
 } from "../../database.d";
 
 export default class YtDlpChatParser implements ChatReplayParser {
+  name = "YtDlpChatParser";
   chatData: string = "";
 
   constructor(chatData: string) {
