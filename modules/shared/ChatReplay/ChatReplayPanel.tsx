@@ -9,6 +9,7 @@ import {
 import ChatReplay from "./ChatReplay";
 import { IconChevronDown, IconFilter } from "../icons";
 import { useDebounce } from "../hooks/useDebounce";
+import { parseChatReplay } from "./parser";
 
 export type ChatReplayPanelProps = {
   src: string;
@@ -35,147 +36,14 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
     setIsErrored(false);
     try {
       const data = await axios.get(props.src, {
-        onDownloadProgress: (progressEvent) => {
-          setDownloadProgress(progressEvent.loaded);
-        },
+        onDownloadProgress: ({ loaded }) => setDownloadProgress(loaded),
+        transformResponse: (res) => res,
       });
 
-      let _replayData: ChatMessage[] = data.data;
-
-      // Check chat format
-      if (typeof data.data === "string" && data.data.startsWith("[")) {
-        // JSON array, assume format matches `ChatMessage[]`
-        console.log("[chat] Attempting to parse as JSON");
-        _replayData = JSON.parse(data.data);
-      } else if (
-        typeof data.data === "string" &&
-        data.data.startsWith("{") &&
-        data.data.includes("\n")
-      ) {
-        console.log("[chat] Attempting to parse as NDJSON (yt-dlp)");
-        // probably ndjson, probably from yt-dlp
-        _replayData = data.data
-          .trim()
-          .split("\n")
-          .map((line) => JSON.parse(line))
-          .map((event) => {
-            const actionBase = event.replayChatItemAction.actions[0];
-            const action_type =
-              "addChatItemAction" in actionBase
-                ? "add_chat_item"
-                : "addLiveChatTickerItemAction" in actionBase
-                ? "add_live_chat_ticker_item"
-                : "unknown";
-
-            // Skip handling tickers for now
-            if (action_type !== "add_chat_item") return null;
-
-            const actionItem = actionBase.addChatItemAction.item;
-            const message_type =
-              "liveChatMembershipItemRenderer" in actionItem
-                ? "membership_item"
-                : "liveChatTextMessageRenderer" in actionItem
-                ? "text_message"
-                : "liveChatPaidMessageRenderer" in actionItem
-                ? "paid_message"
-                : "unknown";
-
-            if (message_type === "unknown") return null;
-
-            const messageItem =
-              actionItem.liveChatMembershipItemRenderer ||
-              actionItem.liveChatTextMessageRenderer ||
-              actionItem.liveChatPaidMessageRenderer;
-
-            if (!messageItem) return null;
-
-            const author: ChatMessageAuthor & {
-              name_text_colour?: string;
-            } = {
-              name: messageItem.authorName.simpleText,
-              id: messageItem.authorExternalChannelId,
-              images: messageItem.authorPhoto?.thumbnails.map(
-                (thumb: Partial<ChatMessageImage>) => ({
-                  id: String(thumb.height),
-                  ...thumb,
-                })
-              ),
-              badges: messageItem.authorBadges?.map(
-                ({ liveChatAuthorBadgeRenderer: badge }: any) => ({
-                  title: badge.tooltip,
-                  icons: badge.customThumbnail?.thumbnails,
-                })
-              ),
-              name_text_colour:
-                "#" + messageItem.authorNameTextColor?.toString(16).substr(2),
-            };
-
-            return {
-              time_in_seconds:
-                event.replayChatItemAction.videoOffsetTimeMsec / 1000,
-              action_type,
-              message_type,
-              author,
-              message_id: messageItem.id,
-              timestamp: Number(messageItem.timestampUsec),
-              time_text: messageItem.timestampText.simpleText,
-              message:
-                messageItem.message || messageItem.headerSubtext
-                  ? (messageItem.message || messageItem.headerSubtext).runs
-                      .map((run: any) =>
-                        run.emoji ? run.emoji.shortcuts[0] : run.text
-                      )
-                      .join("")
-                  : "",
-              emotes: messageItem.message?.runs
-                .map((run: any) => run.emoji)
-                .filter(Boolean)
-                .map((e) => ({
-                  id: e.emojiId,
-                  name: e.shortcuts[0],
-                  shortcuts: e.shortcuts,
-                  search_terms: e.searchTerms,
-                  is_custom_emoji: e.isCustomEmoji,
-                  images: e.image?.thumbnails.map(
-                    (thumb: Partial<ChatMessageImage>) => ({
-                      id: String(thumb.height),
-                      ...thumb,
-                    })
-                  ),
-                })),
-              ...(message_type === "paid_message"
-                ? {
-                    money: {
-                      text: messageItem.purchaseAmountText.simpleText,
-                      amount: 0,
-                      currency: "-",
-                      currency_symbol: "-",
-                    },
-                    timestamp_colour:
-                      "#" + messageItem.timestampColor?.toString(16).substr(2),
-                    body_background_colour:
-                      "#" +
-                      messageItem.bodyBackgroundColor?.toString(16).substr(2),
-                    header_text_colour:
-                      "#" + messageItem.headerTextColor?.toString(16).substr(2),
-                    header_background_colour:
-                      "#" +
-                      messageItem.headerBackgroundColor?.toString(16).substr(2),
-                    body_text_colour:
-                      "#" + messageItem.bodyTextColor?.toString(16).substr(2),
-                  }
-                : {}),
-            };
-          })
-          .filter(Boolean);
-      }
-
-      console.log("[chat] found", _replayData.length, "messages");
-      console.log(_replayData);
-      setReplayData(_replayData);
+      setReplayData(parseChatReplay(data.data));
       setIsChatVisible(true);
     } catch (ex) {
-      console.log("[chat] error parsing chat", ex);
+      console.log("[chat] error parsing chat:", ex);
       setIsErrored(true);
     }
   };
