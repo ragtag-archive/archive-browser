@@ -8,20 +8,13 @@ import { Elastic } from "../../modules/shared/database";
 import { getRemoteAddress } from "../../modules/shared/util";
 
 export const apiGetPopularVideos = async (max: number = 8) => {
-  // Create aggreagation
+  // Create aggregation
   const buckets = await Elastic.request({
     method: "post",
     url: "/" + ES_INDEX_PAGE_VIEWS + "/_search",
     data: {
       query: {
         bool: {
-          must_not: [
-            {
-              match: {
-                video_id: "(none)",
-              },
-            },
-          ],
           filter: [
             {
               range: {
@@ -31,51 +24,56 @@ export const apiGetPopularVideos = async (max: number = 8) => {
               },
             },
           ],
+          must_not: [
+            {
+              match: {
+                video_id: "(none)",
+              },
+            },
+          ],
         },
       },
       size: 0,
       aggs: {
-        x: {
-          date_histogram: {
-            field: "timestamp",
-            fixed_interval: "1h",
-            min_doc_count: 1,
+        popular: {
+          terms: {
+            field: "video_id",
+            size: max,
           },
           aggs: {
-            videos: {
-              terms: {
-                field: "video_id",
-                order: {
-                  _count: "desc",
+            score: {
+              sum: {
+                script: {
+                  lang: "painless",
+                  source: `
+                    long duration = 7 * 24 * 3600 * 1000; // 1 week
+                    long start = params['now'] - duration;
+                    long docTs = doc['timestamp'].value.toInstant().toEpochMilli();
+                    return docTs - start;
+                  `,
+                  params: {
+                    now: Date.now(),
+                  },
                 },
-                size: 10,
-                min_doc_count: 3,
               },
             },
           },
         },
       },
     },
-  }).then((res) => res.data.aggregations.x.buckets);
+  }).then((res) =>
+    res.data.aggregations.popular.buckets.map((bucket: any) => ({
+      id: bucket.key,
+      score: bucket.score.value,
+    }))
+  );
 
-  // Calculate video scores
-  const tmin = buckets[0].key;
-  const tmax = buckets[buckets.length - 1].key;
-  const trange = tmax - tmin;
-  const scoremap: { [key: string]: number } = {};
-  for (const { key: timestamp, videos } of buckets) {
-    const tscore = (timestamp - tmin) / trange;
-    for (const { key: id, doc_count: hits } of videos.buckets) {
-      if (!scoremap[id]) scoremap[id] = 0;
-      scoremap[id] += tscore * hits;
-    }
-  }
+  console.log(buckets);
 
   // Sort videos
-  const scoreArray = Object.keys(scoremap)
-    .map((id) => ({ id, score: scoremap[id] }))
-    .sort((a, b) => b.score - a.score);
-  const videoIds = scoreArray.map((x) => x.id);
+  const videoIds = buckets
+    .sort((a: any, b: any) => b.score - a.score)
+    .map((x: any) => x.id);
 
   // Get video documents
   const videos = await Elastic.request({
@@ -91,7 +89,7 @@ export const apiGetPopularVideos = async (max: number = 8) => {
         value: videos.data.docs.length,
       },
       max_score: 0,
-      hits: videos.data.docs.filter((hit) => hit._source).slice(0, max),
+      hits: videos.data.docs.filter((hit: any) => hit._source),
     },
   };
   return result;
