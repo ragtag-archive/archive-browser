@@ -61,14 +61,17 @@ export const apiGetPopularVideos = async (max: number = 8) => {
         },
       },
     },
-  }).then((res) =>
-    res.data.aggregations.popular.buckets.map((bucket: any) => ({
-      id: bucket.key,
-      score: bucket.score.value,
-    }))
-  );
-
-  console.log(buckets);
+  })
+    .then((res) =>
+      res.data.aggregations.popular.buckets.map((bucket: any) => ({
+        id: bucket.key,
+        score: bucket.score.value,
+      }))
+    )
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
 
   // Sort videos
   const videoIds = buckets
@@ -80,16 +83,21 @@ export const apiGetPopularVideos = async (max: number = 8) => {
     method: "get",
     url: "/" + ES_INDEX + "/_mget",
     data: { ids: videoIds },
-  });
+  })
+    .then((res) => res.data.docs.filter((hit: any) => hit._source))
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
 
   const result: Partial<ElasticSearchResult<VideoMetadata>> = {
     hits: {
       total: {
         relation: "eq",
-        value: videos.data.docs.length,
+        value: videos.length,
       },
       max_score: 0,
-      hits: videos.data.docs.filter((hit: any) => hit._source),
+      hits: videos,
     },
   };
   return result;

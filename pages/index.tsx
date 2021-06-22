@@ -36,7 +36,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     );
 
     const sections = [];
-    sections.push({ title: "Trending videos", videos: vPopular });
+    if (vPopular.hits.total.value > 0)
+      sections.push({ title: "Trending videos", videos: vPopular });
     sections.push({ title: "Recently uploaded", videos: vRecentUpload.data });
     sections.push({
       title: "Recently archived",
