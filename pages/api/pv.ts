@@ -125,7 +125,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   await apiRegisterPageview({
     channelId: (req.query.channel_id as string) || "(none)",
-    videoId: (req.query.videoId as string) || "(none)",
+    videoId: (req.query.video_id as string) || "(none)",
     ip,
   });
   res.status(204).end();
