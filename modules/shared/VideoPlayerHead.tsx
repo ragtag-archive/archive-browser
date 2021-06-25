@@ -7,9 +7,11 @@ export type VideoPlayerHeadProps = {
 
 const VideoPlayerHead = (props: VideoPlayerHeadProps) => {
   const { videoInfo } = props;
-  const urlThumb = videoInfo.files.find(
-    (file) => file.name.endsWith(".jpg") || file.name.endsWith(".webp")
-  ).url;
+  const urlThumb =
+    videoInfo.files.find(
+      (file) => file.name.endsWith(".jpg") || file.name.endsWith(".webp")
+    )?.url ||
+    "https://i.ytimg.com/vi/" + videoInfo.video_id + "/maxresdefault.jpg";
   const canonURL = "https://archive.ragtag.moe/watch?v=" + videoInfo.video_id;
 
   return (
