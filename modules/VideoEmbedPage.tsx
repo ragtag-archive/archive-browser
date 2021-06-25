@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import { VideoMetadata } from "./shared/database.d";
-import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
+import VideoPlayer2 from "./shared/VideoPlayer/VideoPlayer2";
 import VideoPlayerHead from "./shared/VideoPlayerHead";
 
 export type VideoEmbedPageProps = {
@@ -37,7 +37,7 @@ const VideoEmbedPage = (props: VideoEmbedPageProps) => {
         <meta name="robots" content="noindex" />
       </Head>
       <div className="absolute inset-0">
-        <VideoPlayer
+        <VideoPlayer2
           showWatermark
           videoId={videoInfo.video_id}
           srcVideo={urlVideo}
