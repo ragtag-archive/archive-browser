@@ -3,7 +3,7 @@ import Head from "next/head";
 import ChatReplayPanel from "./shared/ChatReplay/ChatReplayPanel";
 import { useWindowSize } from "./shared/hooks/useWindowSize";
 import PageBase from "./shared/PageBase";
-import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
+import VideoPlayer2 from "./shared/VideoPlayer/VideoPlayer2";
 import { buttonStyle } from "./shared/VideoActionButtons";
 import { IconCheck } from "./shared/icons";
 
@@ -49,7 +49,7 @@ const CustomPlayerPage = () => {
                 style={{ paddingBottom: "56.25%" }}
               >
                 <div className="absolute inset-0 w-full h-full">
-                  <VideoPlayer
+                  <VideoPlayer2
                     key={urlVideo}
                     videoId="custom"
                     srcVideo={urlVideo}
@@ -103,6 +103,18 @@ const CustomPlayerPage = () => {
             <p className="text-lg text-center">
               You can play locally-saved video files and chat replay JSON
             </p>
+            <p className="text-center">
+              Chat replay compatible with output from{" "}
+              <a
+                className="underline"
+                href="https://github.com/yt-dlp/yt-dlp"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+              >
+                yt-dlp
+              </a>
+              .
+            </p>
           </div>
           <div className="mx-auto max-w-md">
             <form>
@@ -135,7 +147,7 @@ const CustomPlayerPage = () => {
               <label
                 className={[buttonStyle, "relative cursor-pointer"].join(" ")}
               >
-                <span>Select srv3 captions</span>
+                <span>Select captions (srv3)</span>
                 <span className="ml-auto">
                   {urlYtt ? <IconCheck width="1em" height="1em" /> : null}
                 </span>
