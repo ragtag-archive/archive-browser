@@ -1,20 +1,20 @@
 import React from "react";
 import Image from "next/image";
-import Head from "next/head";
 import PageBase from "./shared/PageBase";
 import { VideoMetadata } from "./shared/database.d";
-import VideoPlayer from "./shared/VideoPlayer/VideoPlayer";
 import { formatDate } from "./shared/format";
 import ChatReplayPanel from "./shared/ChatReplay/ChatReplayPanel";
 import VideoCard from "./shared/VideoCard";
 import Link from "next/link";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
-import VideoActionButtons, { buttonStyle } from "./shared/VideoActionButtons";
+import VideoActionButtons from "./shared/VideoActionButtons";
 import { useWindowSize } from "./shared/hooks/useWindowSize";
 import MemoLinkify from "./shared/MemoLinkify";
 import VideoPlayerHead from "./shared/VideoPlayerHead";
 import ClientRender from "./shared/ClientRender";
 import VideoPlayer2 from "./shared/VideoPlayer/VideoPlayer2";
+import ExpandableContainer from "./ExpandableContainer";
+import CommentSection from "./CommentSection";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -59,6 +59,7 @@ const WatchPage = (props: WatchPageProps) => {
   const urlAudio = getFile(videoInfo, ".f" + fmtAudio);
   const urlThumb = getFile(videoInfo, ".webp") || getFile(videoInfo, ".jpg");
   const urlChat = getFile(videoInfo, ".chat.json");
+  const urlInfo = getFile(videoInfo, ".info.json");
 
   return (
     <PageBase>
@@ -173,7 +174,7 @@ const WatchPage = (props: WatchPageProps) => {
             <div className="flex flex-row mt-2">
               <VideoActionButtons full video={videoInfo} />
             </div>
-            <div className="mt-4">
+            <div className="mt-4 pb-4 border-b border-gray-900">
               <div className="inline-block">
                 <Link href={"/channel/" + videoInfo.channel_id}>
                   <a className="mb-4 mb-4 hover:underline flex flex-row">
@@ -199,11 +200,19 @@ const WatchPage = (props: WatchPageProps) => {
                   </a>
                 </Link>
               </div>
-              <div className="whitespace-pre-line break-words text-gray-300">
-                <MemoLinkify linkClassName="text-blue-300 hover:underline focus:outline-none focus:underline">
-                  {videoInfo.description}
-                </MemoLinkify>
-              </div>
+              <ExpandableContainer>
+                <div className="whitespace-pre-line break-words text-gray-300">
+                  <MemoLinkify linkClassName="text-blue-300 hover:underline focus:outline-none focus:underline">
+                    {videoInfo.description}
+                  </MemoLinkify>
+                </div>
+              </ExpandableContainer>
+            </div>
+            <div className="mt-4">
+              <CommentSection
+                videoId={videoInfo.video_id}
+                infoJsonURL={urlInfo}
+              />
             </div>
           </div>
         </div>

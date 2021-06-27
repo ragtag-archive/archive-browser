@@ -1,5 +1,5 @@
-const LoaderRing = () => (
-  <div className="lds-ring mx-auto">
+const LoaderRing = (props: any) => (
+  <div className="lds-ring mx-auto" {...props}>
     <div />
     <div />
     <div />

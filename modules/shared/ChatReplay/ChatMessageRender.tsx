@@ -1,26 +1,16 @@
 import React from "react";
 import { ChatMessage } from "../database.d";
 import { formatSeconds } from "../format";
+import { proxyYT3 as proxyURL } from "../util";
 
 export type ChatMessageRenderProps = {
   message: ChatMessage;
 };
 
-const proxyHost = "archive-yt3-ggpht-proxy.ragtag.moe";
 const regexEmoji = /(:[^:]+:)/g;
 
 const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
   const msg = props.message;
-
-  const proxyURL = (url: string): string => {
-    try {
-      const u = new URL(url);
-      u.hostname = proxyHost;
-      return u.toString();
-    } catch (ex) {
-      return "";
-    }
-  };
 
   const generateMessageContent = (msg: ChatMessage) => {
     if (!msg.emotes) return msg.message;
@@ -32,9 +22,8 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
 
       let images = msg.emotes.find((emote) => emote.name === token)?.images;
       if (!images)
-        images = msg.emotes.find((emote) =>
-          emote.shortcuts.includes(token)
-        )?.images;
+        images = msg.emotes.find((emote) => emote.shortcuts.includes(token))
+          ?.images;
       if (!images) return token;
 
       const emoteURL =
