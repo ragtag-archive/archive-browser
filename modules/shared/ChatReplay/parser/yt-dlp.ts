@@ -22,6 +22,16 @@ export default class YtDlpChatParser implements ChatReplayParser {
     );
   }
 
+  _formatMsec(ms: number): string {
+    const secs = Math.abs(Math.floor(ms / 1000)),
+      ss = secs % 60,
+      mm = Math.floor(secs / 60),
+      hh = Math.floor(secs / 3600);
+    return (hh > 0 ? [hh, mm, ss] : [mm, ss])
+      .map((x) => x.toString().padStart(2, "0"))
+      .join(":");
+  }
+
   parse(): ChatMessage[] {
     return this.chatData
       .split("\n")
@@ -93,7 +103,9 @@ export default class YtDlpChatParser implements ChatReplayParser {
           author,
           message_id: messageItem.id,
           timestamp: Number(messageItem.timestampUsec),
-          time_text: messageItem.timestampText.simpleText,
+          time_text:
+            messageItem.timestampText?.simpleText ||
+            this._formatMsec(event.replayChatItemAction.videoOffsetTimeMsec),
           message:
             messageItem.message || messageItem.headerSubtext
               ? (messageItem.message || messageItem.headerSubtext).runs
