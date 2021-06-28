@@ -12,7 +12,16 @@ const ApiDocsPage = () => {
         <h1>API Documentation</h1>
         <p>
           We provide a publicly accessible API to query the data available in
-          our archive.
+          our archive. The following is a summary of the available endpoints.
+          For more details, check out{" "}
+          <a
+            target="_blank"
+            rel="noreferrer noopener nofollow"
+            href="https://gitlab.com/aonahara/archive-browser"
+          >
+            the source code
+          </a>
+          .
         </p>
         <h2>Searching</h2>
         <h3>Basic Search</h3>

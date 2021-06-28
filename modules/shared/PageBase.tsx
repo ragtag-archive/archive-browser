@@ -75,12 +75,12 @@ const PageBase = (props: PageBaseProps) => {
       </div>
       <div className="mb-6 text-center">
         <a
-          href="https://ko-fi.com/kitsune_cw"
+          href="https://gitlab.com/aonahara/archive-browser"
           className="text-gray-500 hover:underline"
           target="_blank"
           rel="noreferrer noopener nofollow"
         >
-          Buy me a coffee
+          Source code
         </a>
       </div>
     </div>

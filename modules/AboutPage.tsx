@@ -27,9 +27,27 @@ const AboutPage = () => {
         </p>
         <p>
           If you have any questions or concerns, feel free to hop on the{" "}
-          <a href="https://ragtag.link/discord">Aonahara Discord</a> and ping{" "}
-          <code>kitsune#0156</code> in the <code>#tech-and-programming</code>{" "}
-          channel.
+          <a
+            target="_blank"
+            rel="noreferrer noopener nofollow"
+            href="https://ragtag.link/discord"
+          >
+            Aonahara Discord
+          </a>{" "}
+          and ping <code>kitsune#0156</code> in the{" "}
+          <code>#tech-and-programming</code> channel.
+        </p>
+        <p>
+          This project is open source! Forking the project and running your own
+          instance is highly encouraged. Check out the source code{" "}
+          <a
+            target="_blank"
+            rel="noreferrer noopener nofollow"
+            href="https://gitlab.com/aonahara/archive-browser"
+          >
+            here
+          </a>
+          .
         </p>
         <p>Enjoy!</p>
       </div>

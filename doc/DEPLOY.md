@@ -1,5 +1,7 @@
 # Deploy Instructions
 
+The following are instructions to deploy the frontend manually. If you want to get things up and running quickly, a dockerized setup is available at [aonahara/archive-docker](https://gitlab.com/aonahara/archive-docker).
+
 For a minimum deployment, this frontend requres the following to function:
 
 - An Elasticsearch 7.11 database

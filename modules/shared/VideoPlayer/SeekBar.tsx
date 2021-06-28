@@ -1,5 +1,4 @@
 import React from "react";
-import { VIDEO_STORYBOARD_URL } from "../config";
 import { formatSeconds } from "../format";
 
 export type SeekBarProps = {
@@ -13,26 +12,11 @@ export type SeekBarProps = {
 };
 
 const SeekBar = (props: SeekBarProps) => {
-  const { value, max, onChange, videoId } = props;
+  const { value, max, onChange } = props;
   const buffer = props.buffer || 0;
   const [isScrubbing, setIsScrubbing] = React.useState(false);
   const [hoverPercentX, setHoverPercentX] = React.useState(0);
   const [isMouseOver, setIsMouseOver] = React.useState(false);
-  const [hasStoryboard, setHasStoryboard] = React.useState(false);
-
-  // Storyboard positioning
-  const storyboardURL = videoId ? VIDEO_STORYBOARD_URL + "?v=" + videoId : "";
-  const tileX = Math.floor(100 * hoverPercentX) % 10;
-  const tileY = Math.floor((100 * hoverPercentX) / 10);
-
-  React.useEffect(() => {
-    fetch(storyboardURL)
-      .then((res) => {
-        if (res.status < 400) setHasStoryboard(true);
-        else setHasStoryboard(false);
-      })
-      .catch(() => setHasStoryboard(false));
-  }, [storyboardURL]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -85,7 +69,6 @@ const SeekBar = (props: SeekBarProps) => {
           className={[
             "absolute bottom-4 pointer-events-none",
             "text-center rounded overflow-hidden",
-            hasStoryboard ? "w-1/4" : "",
           ].join(" ")}
           style={{
             opacity: isMouseOver ? 1 : 0,
@@ -93,26 +76,6 @@ const SeekBar = (props: SeekBarProps) => {
             transform: "translateX(-50%)",
           }}
         >
-          {hasStoryboard && storyboardURL && (
-            <div
-              className="w-full relative overflow-hidden"
-              style={{
-                paddingBottom: "56.25%",
-              }}
-            >
-              <img
-                src={storyboardURL}
-                style={{
-                  position: "absolute",
-                  minWidth: "1000%",
-                  width: "1000%",
-                  height: "1000%",
-                  left: "-" + tileX * 100 + "%",
-                  top: "-" + tileY * 100 + "%",
-                }}
-              />
-            </div>
-          )}
           <div className="bg-black bg-opacity-75 px-2 py-1 text-center">
             {formatSeconds(hoverPercentX * max)}
           </div>

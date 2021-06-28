@@ -47,9 +47,17 @@ const LandingPage = (props: LandingPageProps) => {
               href="https://www.patreon.com/kitsune_cw"
               target="_blank"
             >
-              Donate
+              Patreon
             </a>
-            .
+            ,{" "}
+            <a
+              className="font-bold underline"
+              rel="noreferrer noopener nofollow"
+              href="https://ko-fi.com/kitsune_cw"
+              target="_blank"
+            >
+              Ko-fi
+            </a>
           </div>
         </div>
 

@@ -63,9 +63,3 @@ export const FILE_JWT_PRIVATE_KEY =
   "-----BEGIN EC PRIVATE KEY-----\n" +
   process.env.FILE_JWT_PRIVATE_KEY +
   "\n-----END EC PRIVATE KEY-----";
-
-/**
- * Extra stuff for the video player
- */
-export const VIDEO_STORYBOARD_URL =
-  "https://youtube-storyboard.ragtag.workers.dev/";
