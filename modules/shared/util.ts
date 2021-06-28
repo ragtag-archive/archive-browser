@@ -19,3 +19,13 @@ export const getRemoteAddress = (req: IncomingMessage): string =>
   (req.headers["cf-connecting-ip"] ||
     req.headers["x-forwarded-for"] ||
     req.socket.remoteAddress) as string;
+
+export const proxyYT3 = (url: string): string => {
+  try {
+    const u = new URL(url);
+    u.hostname = "archive-yt3-ggpht-proxy.ragtag.moe";
+    return u.toString();
+  } catch (ex) {
+    return "";
+  }
+};
