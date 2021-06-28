@@ -6,20 +6,37 @@ type Props = {
 
 const ExpandableContainer = (props: Props) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [showButton, setShowButton] = React.useState(false);
+  const childContainer = React.useRef<HTMLDivElement>(null);
+  const parentContainer = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!childContainer.current || !parentContainer.current) return;
+    if (
+      childContainer.current.clientHeight > parentContainer.current.clientHeight
+    )
+      setShowButton(true);
+  }, [parentContainer, childContainer]);
 
   return (
     <div>
       <div
-        className={["overflow-hidden", isOpen ? "h-auto" : "h-16"].join(" ")}
+        ref={parentContainer}
+        className={["overflow-hidden", isOpen ? "h-auto" : "max-h-12"].join(
+          " "
+        )}
       >
-        {props.children}
+        <div ref={childContainer}>{props.children}</div>
       </div>
-      <div
-        className="font-bold hover:underline cursor-pointer"
-        onClick={() => setIsOpen((now) => !now)}
-      >
-        {isOpen ? "Show less" : "Show more"}
-      </div>
+      {showButton && (
+        <button
+          type="button"
+          className="font-bold hover:underline cursor-pointer text-blue-500"
+          onClick={() => setIsOpen((now) => !now)}
+        >
+          {isOpen ? "Show less" : "Show more"}
+        </button>
+      )}
     </div>
   );
 };

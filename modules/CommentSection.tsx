@@ -6,6 +6,7 @@ import { proxyYT3 } from "./shared/util";
 import { format } from "timeago.js";
 import LoaderRing from "./shared/VideoPlayer/components/LoaderRing";
 import { formatNumber } from "./shared/format";
+import ExpandableContainer from "./ExpandableContainer";
 
 type Comment = {
   id: string;
@@ -28,6 +29,7 @@ type CommentPostProps = {
 
 const CommentPost = (props: CommentPostProps) => {
   const { comment, replies } = props;
+  const [numberVisible, setNumberVisible] = React.useState(2);
 
   return (
     <div key={comment.id} className="flex py-4">
@@ -47,11 +49,22 @@ const CommentPost = (props: CommentPostProps) => {
             {format(comment.timestamp * 1000)}
           </span>
         </div>
-        <div className="whitespace-pre-line">{comment.text}</div>
+        <ExpandableContainer>
+          <div className="whitespace-pre-line">{comment.text}</div>
+        </ExpandableContainer>
         <div>
-          {replies.map((reply) => (
-            <CommentPost comment={reply} replies={[]} />
+          {replies.slice(0, numberVisible).map((reply) => (
+            <CommentPost key={reply.id} comment={reply} replies={[]} />
           ))}
+          {numberVisible < replies.length && (
+            <button
+              type="button"
+              className="font-bold text-blue-500 hover:underline"
+              onClick={() => setNumberVisible((now) => now + 10)}
+            >
+              Show more replies
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -69,6 +82,8 @@ const CommentSection = (props: CommentSectionProps) => {
     () => axios.get(props.infoJsonURL)
   );
 
+  const [numberVisible, setNumberVisible] = React.useState(10);
+
   if (isLoading)
     return (
       <div
@@ -85,18 +100,27 @@ const CommentSection = (props: CommentSectionProps) => {
     return <div className="text-center">Comments not available</div>;
 
   const comments = data.data.comments as Comment[];
+  const rootComments = comments.filter((c) => c.parent === "root");
+
   return (
     <div>
       <div className="font-bold">{formatNumber(comments.length)} comments</div>
-      {comments
-        .filter((c) => c.parent === "root")
-        .map((comment) => (
-          <CommentPost
-            key={comment.id}
-            comment={comment}
-            replies={comments.filter((c) => c.parent === comment.id)}
-          />
-        ))}
+      {rootComments.slice(0, numberVisible).map((comment) => (
+        <CommentPost
+          key={comment.id}
+          comment={comment}
+          replies={comments.filter((c) => c.parent === comment.id)}
+        />
+      ))}
+      {numberVisible < rootComments.length && (
+        <button
+          type="button"
+          className="bg-gray-900 text-white text-center w-full py-2 rounded"
+          onClick={() => setNumberVisible((now) => now + 10)}
+        >
+          Show more
+        </button>
+      )}
     </div>
   );
 };
