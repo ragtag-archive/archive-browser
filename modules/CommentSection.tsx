@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { proxyYT3 } from "./shared/util";
 import { format } from "timeago.js";
 import LoaderRing from "./shared/VideoPlayer/components/LoaderRing";
 import { formatNumber } from "./shared/format";
@@ -35,7 +34,7 @@ const CommentPost = (props: CommentPostProps) => {
     <div key={comment.id} className="flex py-4">
       <div className="rounded-full overflow-hidden w-12 h-12">
         <Image
-          src={proxyYT3(comment.author_thumbnail)}
+          src={comment.author_thumbnail}
           layout="fixed"
           width={48}
           height={48}
