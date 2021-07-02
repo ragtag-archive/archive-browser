@@ -113,6 +113,15 @@ const CustomPlayerPage = () => {
               >
                 yt-dlp
               </a>
+              {" and "}
+              <a
+                className="underline"
+                href="https://pypi.org/project/chat-downloader/"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+              >
+                chat-downloader
+              </a>
               .
             </p>
           </div>
