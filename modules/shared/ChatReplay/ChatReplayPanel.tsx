@@ -1,11 +1,6 @@
 import React from "react";
 import axios from "axios";
-import {
-  ChatMessage,
-  ChatMessageAuthor,
-  ChatMessageEmote,
-  ChatMessageImage,
-} from "../database.d";
+import { ChatMessage } from "../database.d";
 import ChatReplay from "./ChatReplay";
 import { IconChevronDown, IconFilter } from "../icons";
 import { useDebounce } from "../hooks/useDebounce";
@@ -19,8 +14,9 @@ export type ChatReplayPanelProps = {
 
 const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [replayData, setReplayData] = React.useState<ChatMessage[]>(null);
-  const [filteredReplayData, setFilteredReplayData] =
-    React.useState<ChatMessage[]>(null);
+  const [filteredReplayData, setFilteredReplayData] = React.useState<
+    ChatMessage[]
+  >(null);
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
   const [isFilterVisible, setIsFilterVisible] = React.useState(false);
   const [chatFilter, setChatFilter] = React.useState("");

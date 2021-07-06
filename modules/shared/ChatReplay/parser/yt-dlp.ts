@@ -27,9 +27,12 @@ export default class YtDlpChatParser implements ChatReplayParser {
       ss = secs % 60,
       mm = Math.floor(secs / 60),
       hh = Math.floor(secs / 3600);
-    return (hh > 0 ? [hh, mm, ss] : [mm, ss])
-      .map((x) => x.toString().padStart(2, "0"))
-      .join(":");
+    return (
+      (ms < 0 ? "-" : "") +
+      (hh > 0 ? [hh, mm, ss] : [mm, ss])
+        .map((x) => x.toString().padStart(2, "0"))
+        .join(":")
+    );
   }
 
   parse(): ChatMessage[] {
@@ -95,17 +98,20 @@ export default class YtDlpChatParser implements ChatReplayParser {
             "#" + messageItem.authorNameTextColor?.toString(16).substr(2),
         };
 
+        const timeMsec = Number(
+          event.replayChatItemAction.videoOffsetTimeMsec ||
+            event.videoOffsetTimeMsec
+        );
+
         return {
-          time_in_seconds:
-            event.replayChatItemAction.videoOffsetTimeMsec / 1000,
+          time_in_seconds: timeMsec / 1000,
           action_type,
           message_type,
           author,
           message_id: messageItem.id,
           timestamp: Number(messageItem.timestampUsec),
           time_text:
-            messageItem.timestampText?.simpleText ||
-            this._formatMsec(event.replayChatItemAction.videoOffsetTimeMsec),
+            messageItem.timestampText?.simpleText || this._formatMsec(timeMsec),
           message:
             messageItem.message || messageItem.headerSubtext
               ? (messageItem.message || messageItem.headerSubtext).runs
@@ -153,6 +159,7 @@ export default class YtDlpChatParser implements ChatReplayParser {
             : {}),
         };
       })
-      .filter(Boolean) as ChatMessage[];
+      .filter(Boolean)
+      .sort((a, b) => a.time_in_seconds - b.time_in_seconds) as ChatMessage[];
   }
 }

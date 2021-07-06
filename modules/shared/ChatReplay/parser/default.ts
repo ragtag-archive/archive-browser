@@ -14,6 +14,8 @@ export default class DefaultChatParser implements ChatReplayParser {
   }
 
   parse(): ChatMessage[] {
-    return JSON.parse(this.chatData);
+    return (JSON.parse(this.chatData) as ChatMessage[]).sort(
+      (a, b) => a.time_in_seconds - b.time_in_seconds
+    );
   }
 }
