@@ -1,6 +1,6 @@
 module.exports = {
   images: {
-    domains: ["archive-content.ragtag.moe"],
+    domains: [],
   },
   target: "serverless",
 };
