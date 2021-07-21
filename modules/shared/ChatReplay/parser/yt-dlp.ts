@@ -80,7 +80,7 @@ export default class YtDlpChatParser implements ChatReplayParser {
         const author: ChatMessageAuthor & {
           name_text_colour?: string;
         } = {
-          name: messageItem.authorName.simpleText,
+          name: messageItem.authorName?.simpleText || "",
           id: messageItem.authorExternalChannelId,
           images: messageItem.authorPhoto?.thumbnails.map(
             (thumb: Partial<ChatMessageImage>) => ({
