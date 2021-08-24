@@ -115,14 +115,12 @@ export default class YtDlpChatParser implements ChatReplayParser {
           message:
             messageItem.message || messageItem.headerSubtext
               ? (messageItem.message || messageItem.headerSubtext).runs
-                  .map((run: any) =>
-                    run.emoji ? run.emoji.shortcuts[0] : run.text
-                  )
+                  .map((run: any) => run?.emoji?.shortcuts?.[0] ?? run.text)
                   .join("")
               : "",
           emotes: messageItem.message?.runs
             .map((run: any) => run.emoji)
-            .filter(Boolean)
+            .filter((e: any) => Boolean(e?.shortcuts))
             .map((e: any) => ({
               id: e.emojiId,
               name: e.shortcuts[0],
