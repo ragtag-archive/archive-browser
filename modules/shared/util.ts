@@ -23,6 +23,7 @@ export const getRemoteAddress = (req: IncomingMessage): string =>
 export const proxyYT3 = (url: string): string => {
   try {
     const u = new URL(url);
+    if (u.hostname !== "yt3.ggpht.com") return url;
     u.hostname = "archive-yt3-ggpht-proxy.ragtag.moe";
     return u.toString();
   } catch (ex) {
