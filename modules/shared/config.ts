@@ -55,10 +55,10 @@ export const BULK_INSERT_ROLE = process.env.BULK_INSERT_ROLE;
  * URL where files are served
  */
 export const DRIVE_BASE_URL =
-  process.env.DRIVE_BASE_URL || "https://archive-content.ragtag.moe";
+  process.env.DRIVE_BASE_URL || "https://content.archive.ragtag.moe";
 export const ENABLE_SIGN_URLS = process.env.ENABLE_SIGN_URLS
   ? process.env.ENABLE_SIGN_URLS === "true"
-  : true;
+  : false;
 export const FILE_JWT_PRIVATE_KEY =
   "-----BEGIN EC PRIVATE KEY-----\n" +
   process.env.FILE_JWT_PRIVATE_KEY +
