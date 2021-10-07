@@ -1,3 +1,8 @@
 name: archive-browser
 version: v0.0.1
 description: "Web UI for Ragtag Archive"
+home: https://gitlab.com/aonahara/archive-browser
+dependencies:
+- name: common
+  version: 1.7.1
+  repository: https://charts.bitnami.com/bitnami/
