@@ -1,0 +1,7 @@
+.env*
+.next
+.git
+.secrets.yaml
+README.md
+node_modules
+Dockerfile
