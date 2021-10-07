@@ -1,0 +1,24 @@
+replicaCount: 2
+
+pdb:
+  create: true
+  minAvailable: 2
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-issuer-prod
+  hosts:
+  - host: archive.ragtag.moe
+    paths:
+    - /
+  tls:
+  - secretName: archive-ragtag-moe-tls-prod
+    hosts:
+    - archive.ragtag.moe
+
+imagePullSecrets:
+- name: gitlab-registry
+
+extraEnvVarsSecret: archive-browser-env

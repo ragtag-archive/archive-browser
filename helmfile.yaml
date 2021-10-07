@@ -1,0 +1,13 @@
+helmDefaults:
+  createNamespace: false
+  atomic: true
+  wait: true
+
+releases:
+- name: archive-browser
+  chart: ./helmchart
+  version: v0.0.1
+  installed: true
+  values:
+  - values.prod.yaml
+
