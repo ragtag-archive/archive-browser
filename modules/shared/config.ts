@@ -18,12 +18,12 @@ export const ES_BACKEND_URL =
 export const ES_AUTHORIZATION = process.env.ES_AUTHORIZATION || "";
 
 /**
- * Image optimization, defaults to true
+ * Image optimization, defaults to false
  */
 export const ENABLE_IMAGE_OPTIMIZATION = process.env
   .NEXT_PUBLIC_ENABLE_IMAGE_OPTIMIZATION
   ? process.env.NEXT_PUBLIC_ENABLE_IMAGE_OPTIMIZATION === "true"
-  : true;
+  : false;
 
 /**
  * URL for video archival queue, used to insert videos
