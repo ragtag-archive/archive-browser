@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { formatSeconds } from "../format";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { useThrottle } from "../hooks/useThrottle";
@@ -29,6 +28,7 @@ import LoaderRing from "./components/LoaderRing";
 import SeekBar from "./SeekBar";
 import { CaptionsRenderer } from "react-srv3";
 import { useAnimationFrame } from "../hooks/useAnimationFrame";
+import { NextImage } from "../NextImage";
 
 type CaptionsTrack = {
   lang: string;
@@ -507,12 +507,11 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
         // style={{ paddingBottom: "56.25%" }}
       >
         {srcPoster && (
-          <Image
+          <NextImage
             className={bufferProgress > 0 ? "opacity-0" : ""}
             aria-hidden
             src={srcPoster}
             layout="fill"
-            unoptimized
           />
         )}
         <div

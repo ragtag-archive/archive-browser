@@ -1,11 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { VideoMetadata } from "./database.d";
 import { formatDate, formatSeconds } from "./format";
 import { format } from "timeago.js";
 import VideoActionButtons from "./VideoActionButtons";
 import ClientRender from "./ClientRender";
+import { NextImage } from "./NextImage";
 
 export type VideoCardProps = {
   video?: VideoMetadata;
@@ -33,13 +33,12 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
               {!!thumbURL ? (
                 <>
                   <div className="bg-gray-800 animate-pulse absolute inset-0" />
-                  <Image
+                  <NextImage
                     src={thumbURL}
                     width={368}
                     height={207}
                     layout="responsive"
                     alt="Video thumbnail"
-                    unoptimized
                   />
                 </>
               ) : (

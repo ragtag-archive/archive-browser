@@ -1,11 +1,11 @@
 import React from "react";
-import Image from "next/image";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { format } from "timeago.js";
 import LoaderRing from "./shared/VideoPlayer/components/LoaderRing";
 import { formatNumber } from "./shared/format";
 import ExpandableContainer from "./ExpandableContainer";
+import { NextImage } from "./shared/NextImage";
 
 type Comment = {
   id: string;
@@ -33,12 +33,11 @@ const CommentPost = (props: CommentPostProps) => {
   return (
     <div key={comment.id} className="flex py-4">
       <div className="rounded-full overflow-hidden w-12 h-12">
-        <Image
+        <NextImage
           src={comment.author_thumbnail}
           layout="fixed"
           width={48}
           height={48}
-          unoptimized
         />
       </div>
       <div className="ml-4 flex-1">

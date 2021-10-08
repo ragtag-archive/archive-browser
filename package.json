@@ -23,6 +23,7 @@
     "react-linkify": "^1.0.0-alpha",
     "react-query": "^3.13.5",
     "react-srv3": "^1.0.3",
+    "sharp": "^0.29.1",
     "timeago.js": "^4.0.2"
   },
   "devDependencies": {

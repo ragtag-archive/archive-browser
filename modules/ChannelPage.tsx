@@ -1,10 +1,10 @@
 import React from "react";
-import Image from "next/image";
 import Head from "next/head";
 import { ElasticSearchResult, VideoMetadata } from "./shared/database.d";
 import PageBase from "./shared/PageBase";
 import PaginatedResults from "./shared/PaginatedResults";
 import { IconYouTube } from "./shared/icons";
+import { NextImage } from "./shared/NextImage";
 
 export type ChannelPageProps = {
   channelId: string;
@@ -52,13 +52,12 @@ const ChannelPage = (props: ChannelPageProps) => {
       <div>
         <div className="px-4 my-16">
           <div className="w-32 h-32 mx-auto mb-4 rounded-full relative overflow-hidden">
-            <Image
+            <NextImage
               src={profileImage}
               width={128}
               height={128}
               layout="fixed"
               priority
-              unoptimized
             />
           </div>
           <p className="text-lg text-center">All videos from</p>

@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import PageBase from "./shared/PageBase";
 import { VideoMetadata } from "./shared/database.d";
 import { formatDate } from "./shared/format";
@@ -15,6 +14,7 @@ import ClientRender from "./shared/ClientRender";
 import VideoPlayer2 from "./shared/VideoPlayer/VideoPlayer2";
 import ExpandableContainer from "./ExpandableContainer";
 import CommentSection from "./CommentSection";
+import { NextImage } from "./shared/NextImage";
 
 const format = (n: number) => Intl.NumberFormat("en-US").format(n);
 
@@ -179,14 +179,13 @@ const WatchPage = (props: WatchPageProps) => {
                 <Link href={"/channel/" + videoInfo.channel_id}>
                   <a className="mb-4 mb-4 hover:underline flex flex-row">
                     <div className="w-12 h-12 rounded-full overflow-hidden relative">
-                      <Image
+                      <NextImage
                         priority
                         alt="Channel thumbnail"
                         src={props.channelProfileURL}
                         layout="fixed"
                         width={48}
                         height={48}
-                        unoptimized
                       />
                     </div>
                     <div className="ml-4">

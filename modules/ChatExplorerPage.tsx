@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
 import axios from "axios";
@@ -13,6 +12,7 @@ import ServiceUnavailablePage from "./ServiceUnavailablePage";
 import ChatMessageRender from "./shared/ChatReplay/ChatMessageRender";
 import { buttonStyle } from "./shared/VideoActionButtons";
 import { formatNumber } from "./shared/format";
+import { NextImage } from "./shared/NextImage";
 
 type ChatExplorerPageProps = {
   chatURL?: string;
@@ -127,7 +127,7 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
                   className="block relative w-full h-0 mb-4"
                   style={{ paddingBottom: "56.25%" }}
                 >
-                  <Image layout="fill" src={props.thumbnailURL} unoptimized />
+                  <NextImage layout="fill" src={props.thumbnailURL} />
                 </a>
               </Link>
               <h1 className="text-2xl pb-4">{props.title}</h1>

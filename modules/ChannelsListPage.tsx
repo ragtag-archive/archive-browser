@@ -1,10 +1,10 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
 import { AggregatedChannel } from "../pages/api/v1/channels";
 import PageBase from "./shared/PageBase";
 import ServiceUnavailablePage from "./ServiceUnavailablePage";
+import { NextImage } from "./shared/NextImage";
 
 export type ChannelsListPageProps = {
   channels?: AggregatedChannel[];
@@ -28,14 +28,13 @@ const ChannelsListPage = (props: ChannelsListPageProps) => {
             <a className="block border border-gray-800 mb-4 p-6 rounded flex flex-row items-center">
               <div className="w-16 h-16 rounded-full overflow-hidden relative">
                 {channel.image_url && (
-                  <Image
+                  <NextImage
                     alt="Channel thumbnail"
                     src={channel.image_url}
                     layout="fixed"
                     width={64}
                     height={64}
                     priority={idx < 12}
-                    unoptimized
                   />
                 )}
               </div>

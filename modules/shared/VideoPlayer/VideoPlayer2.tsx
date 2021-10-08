@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { formatSeconds } from "../format";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import {
@@ -20,6 +19,7 @@ import LoaderRing from "./components/LoaderRing";
 import SeekBar from "./SeekBar";
 import { CaptionsRenderer } from "react-srv3";
 import MediaSync, { MediaSyncRef, MediaSyncState } from "./MediaSync";
+import { NextImage } from "../NextImage";
 
 type CaptionsTrack = {
   lang: string;
@@ -346,7 +346,7 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
       )}
       <div className="w-full h-full relative overflow-hidden">
         {srcPoster && (
-          <Image
+          <NextImage
             className={
               bufferProgress > 0 && lastMediaState.current?.timeSeconds > 0
                 ? "opacity-0"
@@ -356,7 +356,6 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
             aria-hidden
             src={srcPoster}
             layout="fill"
-            unoptimized
           />
         )}
         <div
