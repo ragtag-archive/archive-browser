@@ -39,9 +39,9 @@ const MediaSync = forwardRef<MediaSyncRef, MediaSyncProps>((props, ref) => {
   const lastTimeUpdate = React.useRef(Date.now());
 
   // Settings
-  // Trigger sync at 30fps
-  // i.e. media is considered out of sync if time difference > 1/30 second
-  const syncThreshold = React.useRef(1 / 30);
+  // Trigger sync at 15fps
+  // i.e. media is considered out of sync if time difference > 1/15 second
+  const syncThreshold = React.useRef(1 / 15);
   // Release sync at 60fps
   // i.e. media is considered in sync if time difference < 1/60 second
   const syncedThreshold = React.useRef(1 / 60);
