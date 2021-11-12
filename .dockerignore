@@ -2,6 +2,8 @@
 .next
 .git
 .secrets.yaml
+.dockerignore
+doc/
+node_modules/
 README.md
-node_modules
 Dockerfile
