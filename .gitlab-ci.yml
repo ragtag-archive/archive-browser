@@ -31,7 +31,7 @@ deploy:
   stage: deploy
   image: "registry.gitlab.com/gitlab-org/cluster-integration/cluster-applications:v1.1.0"
   environment:
-    name: production
+    name: archive-workers
   script:
     - gl-ensure-namespace $KUBE_NAMESPACE
     - kubectl create secret docker-registry gitlab-registry
