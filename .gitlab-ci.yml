@@ -27,19 +27,19 @@ build:
       -t $CI_REGISTRY_IMAGE:latest .
     - docker push $CI_REGISTRY_IMAGE:latest
 
-deploy:
-  stage: deploy
-  image: "registry.gitlab.com/gitlab-org/cluster-integration/cluster-applications:v1.1.0"
-  environment:
-    name: archive-workers
-  script:
-    - gl-ensure-namespace $KUBE_NAMESPACE
-    - kubectl create secret docker-registry gitlab-registry
-      --docker-server="$CI_REGISTRY" --docker-username="$CI_DEPLOY_USER"
-      --docker-password="$CI_DEPLOY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL"
-      -o yaml --dry-run | kubectl apply -f -
-    - kubectl apply -f $ENV_FILE
-    - gl-helmfile -n $KUBE_NAMESPACE --file $CI_PROJECT_DIR/helmfile.yaml apply --suppress-secrets
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
+# deploy:
+#   stage: deploy
+#   image: "registry.gitlab.com/gitlab-org/cluster-integration/cluster-applications:v1.1.0"
+#   environment:
+#     name: archive-workers
+#   script:
+#     - gl-ensure-namespace $KUBE_NAMESPACE
+#     - kubectl create secret docker-registry gitlab-registry
+#       --docker-server="$CI_REGISTRY" --docker-username="$CI_DEPLOY_USER"
+#       --docker-password="$CI_DEPLOY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL"
+#       -o yaml --dry-run | kubectl apply -f -
+#     - kubectl apply -f $ENV_FILE
+#     - gl-helmfile -n $KUBE_NAMESPACE --file $CI_PROJECT_DIR/helmfile.yaml apply --suppress-secrets
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+# 
