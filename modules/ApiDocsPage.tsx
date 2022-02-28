@@ -1,6 +1,6 @@
-import Head from "next/head";
-import { ApiSearchSortFields } from "../pages/api/v1/search";
-import PageBase from "./shared/PageBase";
+import Head from 'next/head';
+import { ApiSearchSortFields } from '../pages/api/v1/search';
+import PageBase from './shared/PageBase';
 
 const ApiDocsPage = () => {
   return (
@@ -13,7 +13,7 @@ const ApiDocsPage = () => {
         <p>
           We provide a publicly accessible API to query the data available in
           our archive. The following is a summary of the available endpoints.
-          For more details, check out{" "}
+          For more details, check out{' '}
           <a
             target="_blank"
             rel="noreferrer noopener nofollow"
@@ -100,93 +100,9 @@ const ApiDocsPage = () => {
             </pre>
           </li>
         </ul>
-        <h2>Live updates</h2>
-        <p>
-          We also provide a simple websocket service for listening to events at
-          the following address:
-        </p>
-        <pre>
-          <code>wss://ws.ragtag.moe</code>
-        </pre>
-        To listen to events, connect to the socket and send the following
-        message:
-        <pre>
-          <code>
-            {JSON.stringify({
-              method: "subscribe",
-              params: ["moe.ragtag.archive:workers", "ping"],
-            })}
-          </code>
-        </pre>
-        The above message subscribes you to two topics. The <code>ping</code>{" "}
-        topic will deliver a message once every <code>5</code> seconds to keep
-        the connection alive. The <code>moe.ragtag.archive:workers</code> topic
-        will deliver events from our workers. You will receive messages in the
-        following format:
-        <pre>
-          <code>
-            {JSON.stringify(
-              {
-                id: -1,
-                result: [
-                  "moe.ragtag.archive:workers",
-                  {
-                    event: "<event type>",
-                    data: "<event data>",
-                    source: "<worker id>",
-                    version: "<worker version>",
-                  },
-                ],
-              },
-              null,
-              2
-            )}
-          </code>
-        </pre>
-        <p>The following event types are available:</p>
-        <table>
-          {Object.entries({
-            work_begin: "worker has accepted a job from the queue",
-            work_end:
-              "worker has cleanly finished a job and will request a new one",
-            work_failed:
-              "something went wrong while doing a job, and the job will be requeued",
-            video_downloading: "worker is downloading the video from YouTube",
-            video_failed:
-              "worker could not download the video, the job is discarded and will not be requeued",
-            video_uploading:
-              "worker has started uploading the video to the site storage",
-            video_uploaded:
-              "all video files have been uploaded but the database has not been updated yet",
-
-            worker_updated:
-              "worker has downloaded a newer version of its software and will run that version on the next job",
-            rate_limit:
-              "worker has detected a HTTP 429 and will rest for one hour",
-          }).map(([k, v]) => (
-            <tr>
-              <td>
-                <code>{k}</code>
-              </td>
-              <td>{v}</td>
-            </tr>
-          ))}
-        </table>
-        <p>Notes</p>
-        <ul>
-          {[
-            "this endpoint is currently unauthenticated, anyone can publish any event",
-            <>
-              when a worker detects a video is already present on the website,
-              it will do nothing and emit <code>work_end</code>
-            </>,
-          ].map((x) => (
-            <li>{x}</li>
-          ))}
-        </ul>
         <h2>Embedding videos</h2>
         <p>
-          Videos from this website can be embedded with the URL{" "}
+          Videos from this website can be embedded with the URL{' '}
           <code>/embed/:videoId</code>. For example,
         </p>
         <pre>
@@ -202,7 +118,7 @@ const ApiDocsPage = () => {
           will create a responsive iframe with a 16:9 aspect ratio like the
           following:
         </p>
-        <div className="relative" style={{ paddingBottom: "56.25%" }}>
+        <div className="relative" style={{ paddingBottom: '56.25%' }}>
           <iframe
             frameBorder="0"
             allow="fullscreen"

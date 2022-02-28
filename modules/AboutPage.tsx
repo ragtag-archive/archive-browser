@@ -1,5 +1,5 @@
-import Head from "next/head";
-import PageBase from "./shared/PageBase";
+import Head from 'next/head';
+import PageBase from './shared/PageBase';
 
 const AboutPage = () => {
   return (
@@ -26,20 +26,38 @@ const AboutPage = () => {
           accepting video files for content that's already gone.
         </p>
         <p>
-          If you have any questions or concerns, feel free to hop on the{" "}
+          If you have any questions or concerns, feel free to hop on the{' '}
           <a
             target="_blank"
             rel="noreferrer noopener nofollow"
             href="https://ragtag.link/discord"
           >
             Aonahara Discord
-          </a>{" "}
-          and ping <code>kitsune#0156</code> in the{" "}
-          <code>#tech-and-programming</code> channel.
+          </a>{' '}
+          and ping <code>kitsune#0156</code> in the{' '}
+          <code>#tech-and-programming</code> channel. You can also contact me on
+          Twitter at{' '}
+          <a
+            target="_blank"
+            rel="noreferrer noopener nofollow"
+            href="https://twitter.com/kitsune_cw"
+          >
+            @kitsune_cw
+          </a>
+          . For legal inquiries, feel free to contact me through the channels
+          above, or send me an email at{' '}
+          <a
+            target="_blank"
+            rel="noreferrer noopener nofollow"
+            href="mailto:kitsune@ragtag.moe"
+          >
+            kitsune@ragtag.moe
+          </a>
+          .
         </p>
         <p>
           This project is open source! Forking the project and running your own
-          instance is highly encouraged. Check out the source code{" "}
+          instance is highly encouraged. Check out the source code{' '}
           <a
             target="_blank"
             rel="noreferrer noopener nofollow"

@@ -1,9 +1,9 @@
-import React from "react";
-import Linkify from "react-linkify";
-import Head from "next/head";
-import Header from "./Header";
-import { apiStatusMessage } from "../../pages/api/v1/status";
-import MemoLinkify from "./MemoLinkify";
+import React from 'react';
+import Linkify from 'react-linkify';
+import Head from 'next/head';
+import Header from './Header';
+import { apiStatusMessage } from '../../pages/api/v1/status';
+import MemoLinkify from './MemoLinkify';
 
 export type PageBaseProps = {
   children?: React.ReactNode;
@@ -12,13 +12,13 @@ export type PageBaseProps = {
 
 const PageBase = (props: PageBaseProps) => {
   const [bannerHide, setBannerHide] = React.useState(true);
-  const [bannerMessage, setBannerMessage] = React.useState("");
+  const [bannerMessage, setBannerMessage] = React.useState('');
 
   const fetchStatusMessage = async () => {
     const { timestamp, message, showBanner } = await apiStatusMessage();
     setBannerMessage(message);
     const lastTs = Number(
-      window.localStorage.getItem("banner-timestamp") || "0"
+      window.localStorage.getItem('banner-timestamp') || '0'
     );
     console.log({ timestamp, lastTs });
     if (timestamp > lastTs && showBanner) setBannerHide(false);
@@ -35,8 +35,8 @@ const PageBase = (props: PageBaseProps) => {
       </Head>
       <div
         className={
-          "bg-blue-600 flex flex-1 flex-col md:flex-row justify-between fixed bottom-0 left-0 right-0 z-50 " +
-          (bannerHide ? "hidden" : "")
+          'bg-blue-600 flex flex-1 flex-col md:flex-row justify-between fixed bottom-0 left-0 right-0 z-50 ' +
+          (bannerHide ? 'hidden' : '')
         }
       >
         <span className="px-6 py-2">
@@ -51,7 +51,7 @@ const PageBase = (props: PageBaseProps) => {
               e.preventDefault();
               setBannerHide(true);
               window.localStorage.setItem(
-                "banner-timestamp",
+                'banner-timestamp',
                 Date.now().toString()
               );
             }}
@@ -64,14 +64,23 @@ const PageBase = (props: PageBaseProps) => {
       <Header />
       <div
         className={[
-          "container mx-auto mt-4 flex-1",
-          props.flex ? "flex flex-col" : "",
-        ].join(" ")}
+          'container mx-auto mt-4 flex-1',
+          props.flex ? 'flex flex-col' : '',
+        ].join(' ')}
       >
         {props.children}
       </div>
       <div className="mt-6 text-gray-500 text-center">
-        Made with 🍝 by kitsune.
+        Made with 🍝 by{' '}
+        <a
+          href="https://twitter.com/kitsune_cw"
+          className="hover:underline"
+          target="_blank"
+          rel="noreferrer noopener nofollow"
+        >
+          kitsune
+        </a>
+        .
       </div>
       <div className="mb-6 text-center">
         <a
