@@ -1,17 +1,16 @@
-import { GetServerSideProps } from "next";
-import ChannelPage, { ChannelPageProps } from "../../modules/ChannelPage";
-import { DRIVE_BASE_URL } from "../../modules/shared/config";
+import { GetStaticPaths, GetStaticProps } from 'next';
+import ChannelPage, { ChannelPageProps } from '../../modules/ChannelPage';
+import { DRIVE_BASE_URL } from '../../modules/shared/config';
 import {
   ElasticSearchResult,
   VideoMetadata,
-} from "../../modules/shared/database.d";
-import { signFileURLs, signURL } from "../../modules/shared/fileAuth";
-import { getRemoteAddress } from "../../modules/shared/util";
-import { apiSearch } from "../api/v1/search";
+} from '../../modules/shared/database.d';
+import { signFileURLs, signURL } from '../../modules/shared/fileAuth';
+import { apiSearch } from '../api/v1/search';
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getStaticProps: GetStaticProps = async (ctx) => {
   const channelId = ctx.params.channelId as string;
-  const page = Number(ctx.query.page as string) || 1;
+  const page = Number(ctx.params.page as string) || 1;
   const size = 24;
   const from = (page - 1) * size;
   const results = (
@@ -19,25 +18,24 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       channel_id: channelId,
       from,
       size,
-      sort: "upload_date",
-      sort_order: "desc",
+      sort: 'upload_date',
+      sort_order: 'desc',
     })
   ).data as ElasticSearchResult<VideoMetadata>;
 
   if (results.hits.total.value === 0) return { notFound: true };
 
-  const ip = getRemoteAddress(ctx.req);
   const channel = results.hits.hits[0]._source;
   results.hits.hits.forEach((hit) =>
-    signFileURLs(hit._source.drive_base, hit._source.files, ip)
+    signFileURLs(hit._source.drive_base, hit._source.files, '')
   );
 
   const props: ChannelPageProps = {
     channelId,
     channelName: channel.channel_name,
     channelImageURL: signURL(
-      DRIVE_BASE_URL + "/" + channel.channel_id + "/profile.jpg",
-      ip
+      DRIVE_BASE_URL + '/' + channel.channel_id + '/profile.jpg',
+      ''
     ),
 
     results,
@@ -46,7 +44,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     size,
   };
 
-  return { props };
+  return { props, revalidate: 60 };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
 };
 
 export default ChannelPage;
