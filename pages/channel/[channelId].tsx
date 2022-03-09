@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetServerSideProps, GetStaticPaths } from 'next';
 import ChannelPage, { ChannelPageProps } from '../../modules/ChannelPage';
 import { DRIVE_BASE_URL } from '../../modules/shared/config';
 import {
@@ -8,9 +8,9 @@ import {
 import { signFileURLs, signURL } from '../../modules/shared/fileAuth';
 import { apiSearch } from '../api/v1/search';
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const channelId = ctx.params.channelId as string;
-  const page = Number(ctx.params.page as string) || 1;
+  const page = Number(ctx.query.page as string) || 1;
   const size = 24;
   const from = (page - 1) * size;
   const results = (
@@ -44,14 +44,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     size,
   };
 
-  return { props, revalidate: 60 };
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  };
+  return { props };
 };
 
 export default ChannelPage;

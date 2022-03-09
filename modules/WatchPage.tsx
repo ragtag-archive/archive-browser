@@ -15,10 +15,6 @@ import VideoPlayer2 from './shared/VideoPlayer/VideoPlayer2';
 import ExpandableContainer from './ExpandableContainer';
 import CommentSection from './CommentSection';
 import { NextImage } from './shared/NextImage';
-import {
-  ENABLE_RAID_MODE,
-  RAID_MODE_ALLOW_VIDEO_PLAYBACK,
-} from './shared/config';
 
 const format = (n: number) => Intl.NumberFormat('en-US').format(n);
 
