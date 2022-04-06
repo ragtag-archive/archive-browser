@@ -7,8 +7,10 @@ Frontend for [Ragtag Archive](https://archive.ragtag.moe).
 Ragtag Archive (the backend and this repository) is feature-frozen. The codebase
 has become unmaintainable due to it starting out as a quick-and-dirty solution.
 
-The whole codebase will be rewritten in a new project,
-[Archive Next](https://gitlab.com/aonahara/archive-next).
+~~The whole codebase will be rewritten in a new project,
+[Archive Next](https://gitlab.com/aonahara/archive-next).~~ If there's any
+interest in helping me to rewrite Ragtag Archive, join the
+[HoloArchivists discord](https://discord.gg/y53h4pHB3n).
 
 ## Deploy
 
