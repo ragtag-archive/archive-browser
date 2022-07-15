@@ -26,17 +26,15 @@ const AboutPage = () => {
           accepting video files for content that's already gone.
         </p>
         <p>
-          If you have any questions or concerns, feel free to hop on the{' '}
+          If you have any questions or concerns, feel free to hop on{' '}
           <a
             target="_blank"
             rel="noreferrer noopener nofollow"
-            href="https://ragtag.link/discord"
+            href="https://ragtag.link/archive-discord"
           >
-            Aonahara Discord
-          </a>{' '}
-          and ping <code>kitsune#0156</code> in the{' '}
-          <code>#tech-and-programming</code> channel. You can also contact me on
-          Twitter at{' '}
+            our Discord server
+          </a>
+          . You can also contact me on Twitter at{' '}
           <a
             target="_blank"
             rel="noreferrer noopener nofollow"
