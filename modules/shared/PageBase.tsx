@@ -84,7 +84,7 @@ const PageBase = (props: PageBaseProps) => {
       </div>
       <div className="mb-6 text-center">
         <a
-          href="https://gitlab.com/aonahara/archive-browser"
+          href="https://github.com/ragtag-archive/archive-browser"
           className="text-gray-500 hover:underline"
           target="_blank"
           rel="noreferrer noopener nofollow"

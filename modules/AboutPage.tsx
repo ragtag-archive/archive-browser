@@ -59,7 +59,7 @@ const AboutPage = () => {
           <a
             target="_blank"
             rel="noreferrer noopener nofollow"
-            href="https://gitlab.com/aonahara/archive-browser"
+            href="https://github.com/ragtag-archive/archive-browser"
           >
             here
           </a>
