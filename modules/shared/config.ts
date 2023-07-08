@@ -84,3 +84,8 @@ export const FILE_JWT_PRIVATE_KEY =
   '-----BEGIN EC PRIVATE KEY-----\n' +
   process.env.FILE_JWT_PRIVATE_KEY +
   '\n-----END EC PRIVATE KEY-----';
+
+/**
+ * Authorization for private API endpoints
+ */
+export const PRIVATE_API_AUTHORIZATION = process.env.PRIVATE_API_AUTHORIZATION;
