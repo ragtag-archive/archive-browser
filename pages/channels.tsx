@@ -1,10 +1,10 @@
-import { GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import ChannelsListPage from '../modules/ChannelsListPage';
 import { DRIVE_BASE_URL } from '../modules/shared/config';
 import { signURL } from '../modules/shared/fileAuth';
 import { apiListChannels } from './api/v1/channels';
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const channels = await apiListChannels();
     channels.forEach(
@@ -14,7 +14,7 @@ export const getStaticProps: GetStaticProps = async () => {
           ''
         ))
     );
-    return { props: { channels }, revalidate: 60 };
+    return { props: { channels } };
   } catch (ex) {
     console.error(ex);
   }

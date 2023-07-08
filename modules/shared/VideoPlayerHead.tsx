@@ -1,5 +1,5 @@
-import Head from "next/head";
-import { VideoMetadata } from "./database.d";
+import Head from 'next/head';
+import { VideoMetadata } from './database.d';
 
 export type VideoPlayerHeadProps = {
   videoInfo: VideoMetadata;
@@ -9,10 +9,10 @@ const VideoPlayerHead = (props: VideoPlayerHeadProps) => {
   const { videoInfo } = props;
   const urlThumb =
     videoInfo.files.find(
-      (file) => file.name.endsWith(".jpg") || file.name.endsWith(".webp")
+      (file) => file.name.endsWith('.jpg') || file.name.endsWith('.webp')
     )?.url ||
-    "https://i.ytimg.com/vi/" + videoInfo.video_id + "/maxresdefault.jpg";
-  const canonURL = "https://archive.ragtag.moe/watch?v=" + videoInfo.video_id;
+    'https://i.ytimg.com/vi/' + videoInfo.video_id + '/maxresdefault.jpg';
+  const canonURL = 'https://archive.ragtag.moe/watch?v=' + videoInfo.video_id;
 
   return (
     <Head>

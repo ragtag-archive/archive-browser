@@ -1,11 +1,11 @@
-import React from "react";
-import PageBase from "./shared/PageBase";
-import { ElasticSearchResult, VideoMetadata } from "./shared/database.d";
-import VideoCard from "./shared/VideoCard";
-import { StorageStatistics } from "../pages/api/v1/search";
-import { formatBytes, formatNumber } from "./shared/format";
-import DefaultHead from "./shared/DefaultHead";
-import ServiceUnavailablePage from "./ServiceUnavailablePage";
+import React from 'react';
+import PageBase from './shared/PageBase';
+import { ElasticSearchResult, VideoMetadata } from './shared/database.d';
+import VideoCard from './shared/VideoCard';
+import { StorageStatistics } from '../pages/api/v1/search';
+import { formatBytes, formatNumber } from './shared/format';
+import DefaultHead from './shared/DefaultHead';
+import ServiceUnavailablePage from './ServiceUnavailablePage';
 
 type VideoSection = {
   title: string;
@@ -40,7 +40,7 @@ const LandingPage = (props: LandingPageProps) => {
 
         <div className="px-4 text-center mt-4">
           <div className="bg-blue-600 inline-block px-4 py-2 rounded">
-            If you find this website useful, please help keep us up and running.{" "}
+            If you find this website useful, please help keep us up and running.{' '}
             <a
               className="font-bold underline"
               rel="noreferrer noopener nofollow"
@@ -49,7 +49,7 @@ const LandingPage = (props: LandingPageProps) => {
             >
               Patreon
             </a>
-            ,{" "}
+            ,{' '}
             <a
               className="font-bold underline"
               rel="noreferrer noopener nofollow"

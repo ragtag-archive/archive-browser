@@ -1,7 +1,7 @@
-import React from "react";
-import { formatSeconds } from "../format";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { useThrottle } from "../hooks/useThrottle";
+import React from 'react';
+import { formatSeconds } from '../format';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useThrottle } from '../hooks/useThrottle';
 import {
   IconCamera,
   IconClosedCaptioningRegular,
@@ -12,23 +12,13 @@ import {
   IconPlay,
   IconVolume,
   IconVolumeMute,
-} from "../icons";
-import {
-  K_AMPLITUDE_EVENT_VIDEO_CAPTIONS_CYCLE,
-  K_AMPLITUDE_EVENT_VIDEO_MUTE_TOGGLE,
-  K_AMPLITUDE_EVENT_VIDEO_PAUSE,
-  K_AMPLITUDE_EVENT_VIDEO_PLAY,
-  K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR,
-  K_AMPLITUDE_EVENT_VIDEO_READY_STATE,
-  K_AMPLITUDE_EVENT_VIDEO_SEEK,
-} from "../libs/amplitude/constants";
-import { useAmplitude } from "../libs/amplitude/useAmplitude";
-import { checkAutoplay } from "../util";
-import LoaderRing from "./components/LoaderRing";
-import SeekBar from "./SeekBar";
-import { CaptionsRenderer } from "react-srv3";
-import { useAnimationFrame } from "../hooks/useAnimationFrame";
-import { NextImage } from "../NextImage";
+} from '../icons';
+import { checkAutoplay } from '../util';
+import LoaderRing from './components/LoaderRing';
+import SeekBar from './SeekBar';
+import { CaptionsRenderer } from 'react-srv3';
+import { useAnimationFrame } from '../hooks/useAnimationFrame';
+import { NextImage } from '../NextImage';
 
 type CaptionsTrack = {
   lang: string;
@@ -48,11 +38,10 @@ export type VideoPlayerProps = {
 
 const VideoPlayer = (props: VideoPlayerProps) => {
   const { srcVideo, srcAudio, srcPoster, videoId, showWatermark } = props;
-  const { logEvent } = useAmplitude();
   const captions = props.captions || [];
   const hasCaptions = captions.length > 0;
   const enCaptionIndex = captions.findIndex(
-    (cap) => cap.lang === "en" || cap.lang.startsWith("en-")
+    (cap) => cap.lang === 'en' || cap.lang.startsWith('en-')
   );
 
   const refSelf = React.useRef<HTMLDivElement>(null);
@@ -67,12 +56,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [videoTime, setVideoTime] = React.useState(0);
   const [bufferProgress, setBufferProgress] = React.useState(0);
-  const [audioVolume, setAudioVolume] = useLocalStorage("player:volume", 1);
+  const [audioVolume, setAudioVolume] = useLocalStorage('player:volume', 1);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [lastActive, setLastActive] = React.useState(Date.now());
   const [activeCaption, setActiveCaption] = React.useState(enCaptionIndex);
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
-  const [videoErrorMessage, setVideoErrorMessage] = React.useState("");
+  const [videoErrorMessage, setVideoErrorMessage] = React.useState('');
   const [srv3CaptionXMLs, setSrv3CaptionXMLs] = React.useState([]);
 
   const [isContextVisible, setIsContextVisible] = React.useState(false);
@@ -86,7 +75,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const threshStartSync = React.useRef(0.25);
   const threshTimeReset = 2;
-  const syncDebug = React.useRef("");
+  const syncDebug = React.useRef('');
   const lastAnimationFrame = React.useRef(Date.now());
 
   useAnimationFrame(() => {
@@ -121,32 +110,32 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     setIsPlaying((_isPlaying) => {
       // Check sync
       const timeDiff = Math.abs(a.currentTime - v.currentTime);
-      syncDebug.current = "";
+      syncDebug.current = '';
       if (_isPlaying) {
         if (timeDiff > threshStartSync.current) {
           if (timeDiff > threshTimeReset) {
-            syncDebug.current = "jumping";
+            syncDebug.current = 'jumping';
             v.currentTime = a.currentTime;
             a.play();
             v.play();
           } else {
             if (a.currentTime > v.currentTime) {
-              syncDebug.current = "a>v";
+              syncDebug.current = 'a>v';
               a.pause();
               v.play();
             } else if (v.currentTime > a.currentTime) {
-              syncDebug.current = "a<v";
+              syncDebug.current = 'a<v';
               v.pause();
               a.play();
             }
           }
         } else {
-          syncDebug.current = "synced";
+          syncDebug.current = 'synced';
           if (a.paused) a.play();
           if (v.paused) v.play();
         }
       } else {
-        syncDebug.current = "paused";
+        syncDebug.current = 'paused';
         if (!a.paused) a.pause();
         if (!v.paused) v.pause();
       }
@@ -156,12 +145,10 @@ const VideoPlayer = (props: VideoPlayerProps) => {
 
   const handleCaptionsButton = () => {
     setActiveCaption((now) => ((now + 2) % (captions.length + 1)) - 1);
-    logEvent(K_AMPLITUDE_EVENT_VIDEO_CAPTIONS_CYCLE, getPlayerState());
   };
 
   const handleMuteUnmute = () => {
     setAudioVolume((now) => (now === 0 ? 0.5 : 0));
-    logEvent(K_AMPLITUDE_EVENT_VIDEO_MUTE_TOGGLE, getPlayerState());
   };
 
   const pingActivity = () => {
@@ -180,7 +167,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       audioVolume,
       isFullscreen,
       hasCaptions,
-      activeCaption: captions?.[activeCaption]?.lang || "",
+      activeCaption: captions?.[activeCaption]?.lang || '',
     };
   };
 
@@ -214,12 +201,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       });
 
   const handlePlayPause = () => {
-    if (isPlaying) {
-      logEvent(K_AMPLITUDE_EVENT_VIDEO_PAUSE, getPlayerState());
-    } else {
-      logEvent(K_AMPLITUDE_EVENT_VIDEO_PLAY, getPlayerState());
-    }
-
     if (!refVideo.current || !refAudio.current) return;
     pingActivity();
 
@@ -242,19 +223,19 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       e.nativeEvent.path?.[0]?.error ||
       // @ts-ignore
       e.nativeEvent.originalTarget?.error ||
-      new Error("Unknown error");
+      new Error('Unknown error');
 
     setIsPlaying(false);
     setIsVideoErrored(true);
     refIsVideoErrored.current = true;
-    console.error("Error playing video: ", error.message);
+    console.error('Error playing video: ', error.message);
     console.error(e);
 
     // Try to find out the error
     fetch(srcVideo)
       .then((res) => res.text())
       .then((text) => {
-        if (text.startsWith("{")) {
+        if (text.startsWith('{')) {
           const json = JSON.parse(text);
           setVideoErrorMessage(
             String(
@@ -264,11 +245,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         } else setVideoErrorMessage(text);
       })
       .catch((e) => console.error(e));
-
-    logEvent(K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR, {
-      ...getPlayerState(),
-      error: error.message,
-    });
   };
 
   const nudgeTime = (delta: number) => {
@@ -287,24 +263,24 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     if (!refVideo.current) return;
 
     // Create canvas
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = refVideo.current.videoWidth;
     canvas.height = refVideo.current.videoHeight;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
 
     // Draw video frame to canvas
     ctx.drawImage(refVideo.current, 0, 0, canvas.width, canvas.height);
 
     // Generate URI and download
-    const uri = canvas.toDataURL("image/png");
-    const a = document.createElement("a");
+    const uri = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
     a.href = uri;
     a.download =
-      "Screenshot " +
+      'Screenshot ' +
       videoId +
-      " " +
+      ' ' +
       Math.floor(refVideo.current.currentTime * 1000) +
-      "ms.png";
+      'ms.png';
     a.click();
 
     // Clean up
@@ -315,25 +291,25 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     let handled = true;
 
-    if (e.key === " " || e.key === "k") {
+    if (e.key === ' ' || e.key === 'k') {
       handlePlayPause();
-    } else if (e.key === "ArrowRight") {
+    } else if (e.key === 'ArrowRight') {
       nudgeTime(5);
-    } else if (e.key === "ArrowLeft") {
+    } else if (e.key === 'ArrowLeft') {
       nudgeTime(-5);
-    } else if (e.key === "l") {
+    } else if (e.key === 'l') {
       nudgeTime(10);
-    } else if (e.key === "j") {
+    } else if (e.key === 'j') {
       nudgeTime(-10);
-    } else if (e.key === "ArrowDown") {
+    } else if (e.key === 'ArrowDown') {
       setAudioVolume((now) => Math.max(now - 0.1, 0));
-    } else if (e.key === "ArrowUp") {
+    } else if (e.key === 'ArrowUp') {
       setAudioVolume((now) => Math.min(now + 0.1, 1));
-    } else if (e.key === "m") {
+    } else if (e.key === 'm') {
       handleMuteUnmute();
-    } else if (e.key === "f") {
+    } else if (e.key === 'f') {
       handleFullscreen();
-    } else if (e.key === "c") {
+    } else if (e.key === 'c') {
       handleCaptionsButton();
     } else handled = false;
 
@@ -359,7 +335,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       document.exitFullscreen();
       setIsFullscreen(false);
     }
-    logEvent(K_AMPLITUDE_EVENT_VIDEO_CAPTIONS_CYCLE, getPlayerState());
   };
 
   const handleSeek = (val: number) => {
@@ -375,7 +350,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
       refAudio.current.currentTime = val;
       setAudioReady(false);
     }
-    logEvent(K_AMPLITUDE_EVENT_VIDEO_SEEK, getPlayerState());
   };
 
   const syncDebounce = 1000;
@@ -385,10 +359,6 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   React.useEffect(() => {
     updateBufferLength();
   }, [playbackProgress]);
-
-  React.useEffect(() => {
-    logEvent(K_AMPLITUDE_EVENT_VIDEO_READY_STATE, getPlayerState());
-  }, [videoReady, audioReady]);
 
   React.useEffect(() => {
     if (!refAudio.current) return;
@@ -429,13 +399,13 @@ const VideoPlayer = (props: VideoPlayerProps) => {
   return (
     <div
       className={[
-        "video-player bg-black",
-        "focus:outline-none",
-        "w-full h-full",
-        isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "",
-      ].join(" ")}
+        'video-player bg-black',
+        'focus:outline-none',
+        'w-full h-full',
+        isFullscreen ? 'absolute inset-0 flex flex-col justify-center' : '',
+      ].join(' ')}
       style={{
-        cursor: controlsVisible ? "auto" : "none",
+        cursor: controlsVisible ? 'auto' : 'none',
       }}
       ref={refSelf}
       onMouseLeave={() => setLastActive(0)}
@@ -462,12 +432,12 @@ const VideoPlayer = (props: VideoPlayerProps) => {
             </a>
           </div>
           {`Debug info
-state: ${isPlaying ? "playing" : "paused"}
+state: ${isPlaying ? 'playing' : 'paused'}
 audio: ${
-            refAudio.current?.paused ? "paused" : "playing"
+            refAudio.current?.paused ? 'paused' : 'playing'
           } ${refAudio.current?.currentTime.toFixed(3)}s
 video: ${
-            refVideo.current?.paused ? "paused" : "playing"
+            refVideo.current?.paused ? 'paused' : 'playing'
           } ${refVideo.current?.currentTime.toFixed(3)}s
 delta: ${(
             (refAudio.current?.currentTime - refVideo.current?.currentTime) *
@@ -489,8 +459,8 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
             data-context-menu
             className="bg-black bg-opacity-50 rounded-lg absolute z-50 overflow-hidden"
             style={{
-              left: contextX + "px",
-              top: contextY + "px",
+              left: contextX + 'px',
+              top: contextY + 'px',
             }}
           >
             <div
@@ -508,7 +478,8 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
       >
         {srcPoster && (
           <NextImage
-            className={bufferProgress > 0 ? "opacity-0" : ""}
+            alt=""
+            className={bufferProgress > 0 ? 'opacity-0' : ''}
             aria-hidden
             src={srcPoster}
             layout="fill"
@@ -516,11 +487,11 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
         )}
         <div
           className={[
-            "absolute inset-0 pointer-events-none z-20 flex flex-col justify-center bg-black",
-            "transition duration-200",
-            isVideoErrored ? "bg-opacity-75" : "bg-opacity-25",
-            isLoading || isVideoErrored ? "opacity-100" : "opacity-0",
-          ].join(" ")}
+            'absolute inset-0 pointer-events-none z-20 flex flex-col justify-center bg-black',
+            'transition duration-200',
+            isVideoErrored ? 'bg-opacity-75' : 'bg-opacity-25',
+            isLoading || isVideoErrored ? 'opacity-100' : 'opacity-0',
+          ].join(' ')}
         >
           {isVideoErrored ? (
             <div className="text-center">
@@ -535,7 +506,7 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
           className="absolute inset-x-0 bottom-0 z-30 px-6 pt-2 transition duration-200"
           style={{
             background:
-              "linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%)",
+              'linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%)',
             opacity: controlsVisible ? 1 : 0,
           }}
         >
@@ -543,7 +514,7 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
             <div className="text-sm">
               <a
                 target="_blank"
-                href={"https://archive.ragtag.moe/watch?v=" + videoId}
+                href={'https://archive.ragtag.moe/watch?v=' + videoId}
               >
                 Hosted on <span className="font-bold">Ragtag Archive</span>
               </a>
@@ -643,7 +614,7 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
                     />
                   )}
                   <span className="leading-none">
-                    {captions?.[activeCaption]?.lang || "off"}
+                    {captions?.[activeCaption]?.lang || 'off'}
                   </span>
                 </button>
               )}
@@ -673,8 +644,8 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
         {activeCaption > -1 && srv3CaptionXMLs[activeCaption] && (
           <div
             className={
-              "w-full h-full absolute z-10 pointer-events-none " +
-              (controlsVisible ? "controls-visible" : "")
+              'w-full h-full absolute z-10 pointer-events-none ' +
+              (controlsVisible ? 'controls-visible' : '')
             }
           >
             <CaptionsRenderer
@@ -708,8 +679,8 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
           onError={handleMediaError}
           playsInline
           muted
-          onPlay={() => console.log("video play")}
-          onPause={() => console.log("video pause")}
+          onPlay={() => console.log('video play')}
+          onPause={() => console.log('video pause')}
         />
         <audio
           preload="auto"
@@ -729,8 +700,8 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
             setPlaybackProgress(refAudio.current.currentTime);
             props.onPlaybackProgress?.(refAudio.current.currentTime);
           }}
-          onPlay={() => console.log("audio play")}
-          onPause={() => console.log("audio pause")}
+          onPlay={() => console.log('audio play')}
+          onPause={() => console.log('audio pause')}
         />
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 type Props = {
   children: React.ReactNode;
@@ -22,8 +22,8 @@ const ExpandableContainer = (props: Props) => {
     <div>
       <div
         ref={parentContainer}
-        className={["overflow-hidden", isOpen ? "h-auto" : "max-h-12"].join(
-          " "
+        className={['overflow-hidden', isOpen ? 'h-auto' : 'max-h-12'].join(
+          ' '
         )}
       >
         <div ref={childContainer}>{props.children}</div>
@@ -34,7 +34,7 @@ const ExpandableContainer = (props: Props) => {
           className="font-bold hover:underline cursor-pointer text-blue-500"
           onClick={() => setIsOpen((now) => !now)}
         >
-          {isOpen ? "Show less" : "Show more"}
+          {isOpen ? 'Show less' : 'Show more'}
         </button>
       )}
     </div>

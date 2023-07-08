@@ -1,11 +1,11 @@
-import React from "react";
-import axios from "axios";
-import { useQuery } from "react-query";
-import { format } from "timeago.js";
-import LoaderRing from "./shared/VideoPlayer/components/LoaderRing";
-import { formatNumber } from "./shared/format";
-import ExpandableContainer from "./ExpandableContainer";
-import { NextImage } from "./shared/NextImage";
+import React from 'react';
+import axios from 'axios';
+import { useQuery } from 'react-query';
+import { format } from 'timeago.js';
+import LoaderRing from './shared/VideoPlayer/components/LoaderRing';
+import { formatNumber } from './shared/format';
+import ExpandableContainer from './ExpandableContainer';
+import { NextImage } from './shared/NextImage';
 
 type Comment = {
   id: string;
@@ -35,6 +35,7 @@ const CommentPost = (props: CommentPostProps) => {
       <div className="rounded-full overflow-hidden w-12 h-12">
         <NextImage
           src={comment.author_thumbnail}
+          alt=""
           layout="fixed"
           width={48}
           height={48}
@@ -76,7 +77,7 @@ type CommentSectionProps = {
 
 const CommentSection = (props: CommentSectionProps) => {
   const { isLoading, isError, data } = useQuery(
-    ["infojson", props.videoId],
+    ['infojson', props.videoId],
     () => axios.get(props.infoJsonURL)
   );
 
@@ -85,7 +86,7 @@ const CommentSection = (props: CommentSectionProps) => {
   if (isLoading)
     return (
       <div
-        style={{ transform: "scale(0.5)" }}
+        style={{ transform: 'scale(0.5)' }}
         className="flex w-full items-center justify-center"
       >
         <LoaderRing />
@@ -94,11 +95,11 @@ const CommentSection = (props: CommentSectionProps) => {
 
   if (isError) return <div className="text-center">Error loading comments</div>;
 
-  if (!("comments" in data.data))
+  if (!('comments' in data.data))
     return <div className="text-center">Comments not available</div>;
 
   const comments = data.data.comments as Comment[];
-  const rootComments = comments.filter((c) => c.parent === "root");
+  const rootComments = comments.filter((c) => c.parent === 'root');
 
   return (
     <div>

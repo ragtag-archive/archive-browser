@@ -1,9 +1,9 @@
-import React from "react";
-import Linkify from "react-linkify";
-import Head from "next/head";
-import { apiStatusMessage, WorkerStatus } from "../pages/api/v1/status";
-import { format } from "timeago.js";
-import PageBase from "./shared/PageBase";
+import React from 'react';
+import Linkify from 'react-linkify';
+import Head from 'next/head';
+import { apiStatusMessage, WorkerStatus } from '../pages/api/v1/status';
+import { format } from 'timeago.js';
+import PageBase from './shared/PageBase';
 
 type StatusCardProps = {
   title: string;
@@ -22,10 +22,10 @@ const StatusCard = (props: StatusCardProps) => {
         <div
           className={
             props.ok === null
-              ? ""
+              ? ''
               : props.ok
-              ? "text-green-500"
-              : "text-red-500"
+              ? 'text-green-500'
+              : 'text-red-500'
           }
         >
           {props.statusText}
@@ -34,9 +34,9 @@ const StatusCard = (props: StatusCardProps) => {
       {props.videoId && (
         <div className="text-gray-500 flex flex-row justify-between">
           <span>
-            Last worked on{" "}
+            Last worked on{' '}
             <a
-              href={"https://youtu.be/" + props.videoId}
+              href={'https://youtu.be/' + props.videoId}
               target="_blank"
               rel="noreferrer noopener nofollow"
               className="text-gray-400"
@@ -52,30 +52,30 @@ const StatusCard = (props: StatusCardProps) => {
 };
 
 const K_EVENT_TEXT = {
-  work_begin: "Archiving video",
-  work_end: "Video successfully archived",
-  work_failed: "Archival failed",
-  video_downloading: "Downloading video",
-  video_failed: "Error downloading video",
-  video_downloaded: "Video downloaded",
-  video_uploading: "Uploading video",
-  video_uploaded: "Video uploaded",
+  work_begin: 'Archiving video',
+  work_end: 'Video successfully archived',
+  work_failed: 'Archival failed',
+  video_downloading: 'Downloading video',
+  video_failed: 'Error downloading video',
+  video_downloaded: 'Video downloaded',
+  video_uploading: 'Uploading video',
+  video_uploaded: 'Video uploaded',
 
-  worker_updated: "Worker updated itself",
-  rate_limit: "Rate limited, will retry in an hour",
+  worker_updated: 'Worker updated itself',
+  rate_limit: 'Rate limited, will retry in an hour',
 };
 
 const StatusPage = () => {
   const [time, setTime] = React.useState(Date.now());
-  const [statusMessage, setStatusMessage] = React.useState("");
-  const [refreshMessage, setRefreshMessage] = React.useState("Loading...");
+  const [statusMessage, setStatusMessage] = React.useState('');
+  const [refreshMessage, setRefreshMessage] = React.useState('Loading...');
   const [status, setStatus] = React.useState<StatusCardProps[]>([
-    { title: "Loading...", ok: null, statusText: "" },
+    { title: 'Loading...', ok: null, statusText: '' },
   ]);
 
   const fetchStatus = async () => {
     const stat: StatusCardProps[] = [
-      { title: "Website", ok: true, statusText: "Online" },
+      { title: 'Website', ok: true, statusText: 'Online' },
     ];
 
     // Grab status message
@@ -83,22 +83,22 @@ const StatusPage = () => {
     setStatusMessage(message);
 
     // Database status
-    const fileURL = await fetch("/api/v1/search")
+    const fileURL = await fetch('/api/v1/search')
       .then((res) => res.json())
       .then((res) => {
         if (res && res.timed_out === false && res.hits.hits.length > 0) {
-          stat.push({ title: "Database", ok: true, statusText: "Online" });
+          stat.push({ title: 'Database', ok: true, statusText: 'Online' });
           return (
-            "/" +
+            '/' +
             res.hits.hits[0]._id +
-            "/" +
+            '/' +
             res.hits.hits[0]._source.files?.[0]?.name
           );
         }
       })
       .catch(() => {
-        stat.push({ title: "Database", ok: false, statusText: "Error" });
-        return "/_/benchmark/ok.json";
+        stat.push({ title: 'Database', ok: false, statusText: 'Error' });
+        return '/_/benchmark/ok.json';
       });
 
     /*
@@ -123,22 +123,22 @@ const StatusPage = () => {
     */
 
     // Worker status
-    await fetch("/api/v1/status")
+    await fetch('/api/v1/status')
       .then((res) => res.json())
       .then((res: WorkerStatus[]) => {
-        const active = res.filter((s) => s.event !== "rate_limit").length;
+        const active = res.filter((s) => s.event !== 'rate_limit').length;
         stat.push({
-          title: "Workers",
+          title: 'Workers',
           ok: null,
           statusText: `${active}/${res.length} active`,
         });
 
         res.forEach((s) =>
           stat.push({
-            title: "Worker " + s.source,
-            ok: ["rate_limit", "work_failed", "video_failed"].includes(s.event)
+            title: 'Worker ' + s.source,
+            ok: ['rate_limit', 'work_failed', 'video_failed'].includes(s.event)
               ? false
-              : ["video_uploaded", "video_downloaded", "work_end"].includes(
+              : ['video_uploaded', 'video_downloaded', 'work_end'].includes(
                   s.event
                 )
               ? true
@@ -150,7 +150,7 @@ const StatusPage = () => {
         );
       })
       .catch(() =>
-        stat.push({ title: "Workers", ok: false, statusText: "Error" })
+        stat.push({ title: 'Workers', ok: false, statusText: 'Error' })
       );
 
     setStatus(stat);
@@ -159,12 +159,12 @@ const StatusPage = () => {
   React.useEffect(() => {
     if (Math.floor(time / 1000) % 10 === 0) {
       fetchStatus();
-      setRefreshMessage("Reloading...");
+      setRefreshMessage('Reloading...');
       return;
     }
 
     const timeLeft = 10 - (Math.floor(time / 1000) % 10);
-    setRefreshMessage("Reloading in " + timeLeft);
+    setRefreshMessage('Reloading in ' + timeLeft);
   }, [time]);
 
   React.useEffect(() => {

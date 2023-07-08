@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 /**
  * React hook to request animation frame

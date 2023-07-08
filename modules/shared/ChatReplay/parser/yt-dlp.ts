@@ -1,13 +1,13 @@
-import { ChatReplayParser } from ".";
+import { ChatReplayParser } from '.';
 import {
   ChatMessage,
   ChatMessageAuthor,
   ChatMessageImage,
-} from "../../database.d";
+} from '../../database.d';
 
 export default class YtDlpChatParser implements ChatReplayParser {
-  name = "YtDlpChatParser";
-  chatData: string = "";
+  name = 'YtDlpChatParser';
+  chatData: string = '';
 
   constructor(chatData: string) {
     this.chatData = chatData.trim();
@@ -15,10 +15,10 @@ export default class YtDlpChatParser implements ChatReplayParser {
 
   canParse(): boolean {
     return (
-      this.chatData.startsWith("{") &&
-      this.chatData.endsWith("}") &&
-      this.chatData.includes("\n") &&
-      this.chatData.includes("clickTrackingParams")
+      this.chatData.startsWith('{') &&
+      this.chatData.endsWith('}') &&
+      this.chatData.includes('\n') &&
+      this.chatData.includes('clickTrackingParams')
     );
   }
 
@@ -28,16 +28,16 @@ export default class YtDlpChatParser implements ChatReplayParser {
       mm = Math.floor(secs / 60),
       hh = Math.floor(secs / 3600);
     return (
-      (ms < 0 ? "-" : "") +
+      (ms < 0 ? '-' : '') +
       (hh > 0 ? [hh, mm, ss] : [mm, ss])
-        .map((x) => x.toString().padStart(2, "0"))
-        .join(":")
+        .map((x) => x.toString().padStart(2, '0'))
+        .join(':')
     );
   }
 
   parse(): ChatMessage[] {
     return this.chatData
-      .split("\n")
+      .split('\n')
       .map((line) => {
         try {
           return JSON.parse(line);
@@ -50,26 +50,26 @@ export default class YtDlpChatParser implements ChatReplayParser {
         try {
           const actionBase = event.replayChatItemAction.actions[0];
           const action_type =
-            "addChatItemAction" in actionBase
-              ? "add_chat_item"
-              : "addLiveChatTickerItemAction" in actionBase
-              ? "add_live_chat_ticker_item"
-              : "unknown";
+            'addChatItemAction' in actionBase
+              ? 'add_chat_item'
+              : 'addLiveChatTickerItemAction' in actionBase
+              ? 'add_live_chat_ticker_item'
+              : 'unknown';
 
           // Skip handling tickers for now
-          if (action_type !== "add_chat_item") return null;
+          if (action_type !== 'add_chat_item') return null;
 
           const actionItem = actionBase.addChatItemAction.item;
           const message_type =
-            "liveChatMembershipItemRenderer" in actionItem
-              ? "membership_item"
-              : "liveChatTextMessageRenderer" in actionItem
-              ? "text_message"
-              : "liveChatPaidMessageRenderer" in actionItem
-              ? "paid_message"
-              : "unknown";
+            'liveChatMembershipItemRenderer' in actionItem
+              ? 'membership_item'
+              : 'liveChatTextMessageRenderer' in actionItem
+              ? 'text_message'
+              : 'liveChatPaidMessageRenderer' in actionItem
+              ? 'paid_message'
+              : 'unknown';
 
-          if (message_type === "unknown") return null;
+          if (message_type === 'unknown') return null;
 
           const messageItem =
             actionItem.liveChatMembershipItemRenderer ||
@@ -81,7 +81,7 @@ export default class YtDlpChatParser implements ChatReplayParser {
           const author: ChatMessageAuthor & {
             name_text_colour?: string;
           } = {
-            name: messageItem.authorName?.simpleText || "",
+            name: messageItem.authorName?.simpleText || '',
             id: messageItem.authorExternalChannelId,
             images: messageItem.authorPhoto?.thumbnails.map(
               (thumb: Partial<ChatMessageImage>) => ({
@@ -96,7 +96,7 @@ export default class YtDlpChatParser implements ChatReplayParser {
               })
             ),
             name_text_colour:
-              "#" + messageItem.authorNameTextColor?.toString(16).substr(2),
+              '#' + messageItem.authorNameTextColor?.toString(16).substr(2),
           };
 
           const timeMsec = Number(
@@ -118,8 +118,8 @@ export default class YtDlpChatParser implements ChatReplayParser {
               messageItem.message || messageItem.headerSubtext
                 ? (messageItem.message || messageItem.headerSubtext).runs
                     .map((run: any) => run?.emoji?.shortcuts?.[0] ?? run.text)
-                    .join("")
-                : "",
+                    .join('')
+                : '',
             emotes: messageItem.message?.runs
               .map((run: any) => run.emoji)
               .filter((e: any) => Boolean(e?.shortcuts))
@@ -136,26 +136,26 @@ export default class YtDlpChatParser implements ChatReplayParser {
                   })
                 ),
               })),
-            ...(message_type === "paid_message"
+            ...(message_type === 'paid_message'
               ? {
                   money: {
                     text: messageItem.purchaseAmountText.simpleText,
                     amount: 0,
-                    currency: "-",
-                    currency_symbol: "-",
+                    currency: '-',
+                    currency_symbol: '-',
                   },
                   timestamp_colour:
-                    "#" + messageItem.timestampColor?.toString(16).substr(2),
+                    '#' + messageItem.timestampColor?.toString(16).substr(2),
                   body_background_colour:
-                    "#" +
+                    '#' +
                     messageItem.bodyBackgroundColor?.toString(16).substr(2),
                   header_text_colour:
-                    "#" + messageItem.headerTextColor?.toString(16).substr(2),
+                    '#' + messageItem.headerTextColor?.toString(16).substr(2),
                   header_background_colour:
-                    "#" +
+                    '#' +
                     messageItem.headerBackgroundColor?.toString(16).substr(2),
                   body_text_colour:
-                    "#" + messageItem.bodyTextColor?.toString(16).substr(2),
+                    '#' + messageItem.bodyTextColor?.toString(16).substr(2),
                 }
               : {}),
           };

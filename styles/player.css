@@ -69,7 +69,7 @@
   padding: 12px 0;
 }
 .slider::after {
-  content: " ";
+  content: ' ';
   position: absolute;
   width: 100%;
   height: 3px;
@@ -130,8 +130,8 @@
 .react-srv3-caption-window {
   transition: margin-bottom 0.2s;
 }
-.controls-visible .react-srv3-caption-window[data-ap="6"],
-.controls-visible .react-srv3-caption-window[data-ap="7"],
-.controls-visible .react-srv3-caption-window[data-ap="8"] {
+.controls-visible .react-srv3-caption-window[data-ap='6'],
+.controls-visible .react-srv3-caption-window[data-ap='7'],
+.controls-visible .react-srv3-caption-window[data-ap='8'] {
   margin-bottom: 72px;
 }

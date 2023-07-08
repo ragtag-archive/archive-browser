@@ -1,4 +1,4 @@
-import { GetStaticProps } from 'next';
+import { GetServerSideProps } from 'next';
 import LandingPage from '../modules/LandingPage';
 import { signFileURLs } from '../modules/shared/fileAuth';
 import { apiGetPopularVideos } from './api/pv';
@@ -47,14 +47,13 @@ const getPageProps = async (ip?: string) => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const { stats, sections } = await getPageProps(null);
   return {
     props: {
       stats,
       videos: sections,
     },
-    revalidate: 60,
   };
 };
 

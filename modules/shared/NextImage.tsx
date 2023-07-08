@@ -1,5 +1,5 @@
-import Image from "next/image";
-import { ENABLE_IMAGE_OPTIMIZATION } from "./config";
+import Image from 'next/image';
+import { ENABLE_IMAGE_OPTIMIZATION } from './config';
 
 type NextImageProps = React.ComponentPropsWithoutRef<typeof Image>;
 

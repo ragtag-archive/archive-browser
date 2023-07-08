@@ -1,6 +1,6 @@
-import React from "react";
-import Head from "next/head";
-import PageBase from "../modules/shared/PageBase";
+import React from 'react';
+import Head from 'next/head';
+import PageBase from '../modules/shared/PageBase';
 
 const NotFoundPage = () => {
   return (

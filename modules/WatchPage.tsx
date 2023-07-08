@@ -203,27 +203,28 @@ const WatchPage = (props: WatchPageProps) => {
             </div>
             <div className="mt-4 pb-4 border-b border-gray-900">
               <div className="inline-block">
-                <Link href={'/channel/' + videoInfo.channel_id}>
-                  <a className="mb-4 mb-4 hover:underline flex flex-row">
-                    <div className="w-12 h-12 rounded-full overflow-hidden relative">
-                      <NextImage
-                        priority
-                        alt="Channel thumbnail"
-                        src={props.channelProfileURL}
-                        layout="fixed"
-                        width={48}
-                        height={48}
-                      />
-                    </div>
-                    <div className="ml-4">
-                      <p className="font-bold text-lg leading-tight">
-                        {videoInfo.channel_name}
-                      </p>
-                      <span className="text-gray-400 leading-tight">
-                        {props.channelVideoCount} videos
-                      </span>
-                    </div>
-                  </a>
+                <Link
+                  href={'/channel/' + videoInfo.channel_id}
+                  className="mb-4 mb-4 hover:underline flex flex-row"
+                >
+                  <div className="w-12 h-12 rounded-full overflow-hidden relative">
+                    <NextImage
+                      priority
+                      alt="Channel thumbnail"
+                      src={props.channelProfileURL}
+                      layout="fixed"
+                      width={48}
+                      height={48}
+                    />
+                  </div>
+                  <div className="ml-4">
+                    <p className="font-bold text-lg leading-tight">
+                      {videoInfo.channel_name}
+                    </p>
+                    <span className="text-gray-400 leading-tight">
+                      {props.channelVideoCount} videos
+                    </span>
+                  </div>
                 </Link>
               </div>
               <ExpandableContainer>

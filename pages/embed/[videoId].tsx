@@ -1,10 +1,10 @@
-import { GetServerSideProps } from "next";
-import { signFileURLs } from "../../modules/shared/fileAuth";
-import { getRemoteAddress } from "../../modules/shared/util";
+import { GetServerSideProps } from 'next';
+import { signFileURLs } from '../../modules/shared/fileAuth';
+import { getRemoteAddress } from '../../modules/shared/util';
 import VideoEmbedPage, {
   VideoEmbedPageProps,
-} from "../../modules/VideoEmbedPage";
-import { apiSearch } from "../api/v1/search";
+} from '../../modules/VideoEmbedPage';
+import { apiSearch } from '../api/v1/search';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const v = (ctx.params.videoId as string).trim();

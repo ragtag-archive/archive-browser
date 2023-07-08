@@ -10,15 +10,15 @@ ingress:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: letsencrypt-issuer-prod
   hosts:
-  - host: archive.ragtag.moe
-    paths:
-    - /
+    - host: archive.ragtag.moe
+      paths:
+        - /
   tls:
-  - secretName: archive-ragtag-moe-tls-prod
-    hosts:
-    - archive.ragtag.moe
+    - secretName: archive-ragtag-moe-tls-prod
+      hosts:
+        - archive.ragtag.moe
 
 imagePullSecrets:
-- name: gitlab-registry
+  - name: gitlab-registry
 
 extraEnvVarsSecret: archive-browser-env

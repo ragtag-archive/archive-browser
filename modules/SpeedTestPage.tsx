@@ -1,23 +1,19 @@
-import React from "react";
-import Head from "next/head";
-import axios from "axios";
-import { DRIVE_BASE_URL } from "./shared/config";
-import PageBase from "./shared/PageBase";
-import { formatBytes } from "./shared/format";
-import { useAmplitude } from "./shared/libs/amplitude/useAmplitude";
-import { K_AMPLITUDE_EVENT_SPEED_TEST } from "./shared/libs/amplitude/constants";
-import { useThrottle } from "./shared/hooks/useThrottle";
+import React from 'react';
+import Head from 'next/head';
+import axios from 'axios';
+import { DRIVE_BASE_URL } from './shared/config';
+import PageBase from './shared/PageBase';
+import { formatBytes } from './shared/format';
+import { useThrottle } from './shared/hooks/useThrottle';
 
 const SpeedTestPage = () => {
-  const testFile = DRIVE_BASE_URL + "/_/benchmark/100M.bin";
+  const testFile = DRIVE_BASE_URL + '/_/benchmark/100M.bin';
   const testFileSize = 104857600;
-
-  const { logEvent } = useAmplitude();
 
   const [isTestRunning, setIsTestRunning] = React.useState(false);
   const [downloaded, setDownloaded] = React.useState(0);
-  const [speed, setSpeed] = React.useState("");
-  const [unit, setUnit] = React.useState("");
+  const [speed, setSpeed] = React.useState('');
+  const [unit, setUnit] = React.useState('');
 
   const startTime = React.useRef(0);
 
@@ -25,10 +21,10 @@ const SpeedTestPage = () => {
     if (startTime.current === 0) return (startTime.current = Date.now());
     const { loaded } = progressEvent;
     const bytesPerSecond = loaded / ((Date.now() - startTime.current) / 1000);
-    const [_speed, _unit] = formatBytes(bytesPerSecond).split(" ");
+    const [_speed, _unit] = formatBytes(bytesPerSecond).split(' ');
 
     setSpeed(Number(_speed).toFixed(2));
-    setUnit(_unit + "ps");
+    setUnit(_unit + 'ps');
     setDownloaded(loaded);
   };
 
@@ -36,10 +32,6 @@ const SpeedTestPage = () => {
   React.useEffect(() => {
     try {
       if (isNaN(throttledSpeed)) return;
-      logEvent(K_AMPLITUDE_EVENT_SPEED_TEST, {
-        speed: Number(throttledSpeed),
-        unit,
-      });
     } catch (ex) {
       console.error(ex);
     }
@@ -47,8 +39,8 @@ const SpeedTestPage = () => {
 
   const beginTest = () => {
     setIsTestRunning(true);
-    setSpeed("Starting...");
-    setUnit("");
+    setSpeed('Starting...');
+    setUnit('');
     setDownloaded(0);
     startTime.current = 0;
     axios
@@ -56,8 +48,8 @@ const SpeedTestPage = () => {
         onDownloadProgress,
       })
       .catch((e) => {
-        setUnit("");
-        setSpeed(e.message || "Error");
+        setUnit('');
+        setSpeed(e.message || 'Error');
       })
       .finally(() => setIsTestRunning(false));
   };

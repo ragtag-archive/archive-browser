@@ -1,18 +1,18 @@
-import React from "react";
-import Link from "next/link";
-import Head from "next/head";
-import axios from "axios";
-import PageBase from "./shared/PageBase";
+import React from 'react';
+import Link from 'next/link';
+import Head from 'next/head';
+import axios from 'axios';
+import PageBase from './shared/PageBase';
 import {
   ChatMessage,
   ChatMessageType,
   ChatMessageTypes,
-} from "./shared/database.d";
-import ServiceUnavailablePage from "./ServiceUnavailablePage";
-import ChatMessageRender from "./shared/ChatReplay/ChatMessageRender";
-import { buttonStyle } from "./shared/VideoActionButtons";
-import { formatNumber } from "./shared/format";
-import { NextImage } from "./shared/NextImage";
+} from './shared/database.d';
+import ServiceUnavailablePage from './ServiceUnavailablePage';
+import ChatMessageRender from './shared/ChatReplay/ChatMessageRender';
+import { buttonStyle } from './shared/VideoActionButtons';
+import { formatNumber } from './shared/format';
+import { NextImage } from './shared/NextImage';
 
 type ChatExplorerPageProps = {
   chatURL?: string;
@@ -24,7 +24,7 @@ type ChatExplorerPageProps = {
 const inputStyle = `
   w-full rounded px-4 py-1
   bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring
-  transition duration-100`.replace(/\s+/g, " ");
+  transition duration-100`.replace(/\s+/g, ' ');
 
 const ChatExplorerPage = (props: ChatExplorerPageProps) => {
   if (!props.v || !props.chatURL) return <ServiceUnavailablePage />;
@@ -54,8 +54,8 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
       const message = replayData[i];
       if (messageTypes.includes(message.message_type)) {
         matching.push(message);
-        if (message.message_type === "paid_message") {
-          if (typeof earnings[message.money.currency] !== "number")
+        if (message.message_type === 'paid_message') {
+          if (typeof earnings[message.money.currency] !== 'number')
             earnings[message.money.currency] = 0;
           earnings[message.money.currency] += message.money.amount;
         }
@@ -122,13 +122,16 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
         <div className="flex flex-1 self-center w-full max-w-screen-lg">
           <div className="flex flex-col flex-1 relative">
             <div className="absolute w-full h-full overflow-y-scroll px-2">
-              <Link href={"/watch?v=" + props.v}>
-                <a
-                  className="block relative w-full h-0 mb-4"
-                  style={{ paddingBottom: "56.25%" }}
-                >
-                  <NextImage layout="fill" src={props.thumbnailURL} />
-                </a>
+              <Link
+                href={'/watch?v=' + props.v}
+                className="block relative w-full h-0 mb-4"
+                style={{ paddingBottom: '56.25%' }}
+              >
+                <NextImage
+                  layout="fill"
+                  src={props.thumbnailURL}
+                  alt="Thumbnail"
+                />
               </Link>
               <h1 className="text-2xl pb-4">{props.title}</h1>
               <div>
@@ -183,33 +186,33 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
                 </div>
                 <div className="flex flex-col">
                   <div>Message type</div>
-                  {([
-                    ["text_message", "Text message"],
-                    ["paid_message", "Superchat"],
-                    ["membership_item", "Membership"],
-                  ] as Array<[ChatMessageType, string]>).map(
-                    ([messageType, label]) => (
-                      <label key={messageType}>
-                        <input
-                          type="checkbox"
-                          checked={messageTypes.includes(messageType)}
-                          onChange={() => toggleMessageType(messageType)}
-                        />{" "}
-                        {label}
-                      </label>
-                    )
-                  )}
+                  {(
+                    [
+                      ['text_message', 'Text message'],
+                      ['paid_message', 'Superchat'],
+                      ['membership_item', 'Membership'],
+                    ] as Array<[ChatMessageType, string]>
+                  ).map(([messageType, label]) => (
+                    <label key={messageType}>
+                      <input
+                        type="checkbox"
+                        checked={messageTypes.includes(messageType)}
+                        onChange={() => toggleMessageType(messageType)}
+                      />{' '}
+                      {label}
+                    </label>
+                  ))}
                 </div>
                 <div className="flex items-center">
                   <button
                     type="button"
-                    className={[buttonStyle, "mt-2"].join(" ")}
+                    className={[buttonStyle, 'mt-2'].join(' ')}
                     onClick={applyFilters}
                   >
                     Apply filters
                   </button>
                   <div className="flex-1 pl-4">
-                    Showing {startIndex} to {startIndex + pageSize} of{" "}
+                    Showing {startIndex} to {startIndex + pageSize} of{' '}
                     {filteredMessages.length} matching messages.
                   </div>
                 </div>

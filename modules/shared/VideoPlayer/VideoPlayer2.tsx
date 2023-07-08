@@ -1,6 +1,6 @@
-import React from "react";
-import { formatSeconds } from "../format";
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import React from 'react';
+import { formatSeconds } from '../format';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 import {
   IconCamera,
   IconClosedCaptioningRegular,
@@ -11,15 +11,13 @@ import {
   IconPlay,
   IconVolume,
   IconVolumeMute,
-} from "../icons";
-import { K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR } from "../libs/amplitude/constants";
-import { useAmplitude } from "../libs/amplitude/useAmplitude";
-import { checkAutoplay } from "../util";
-import LoaderRing from "./components/LoaderRing";
-import SeekBar from "./SeekBar";
-import { CaptionsRenderer } from "react-srv3";
-import MediaSync, { MediaSyncRef, MediaSyncState } from "./MediaSync";
-import { NextImage } from "../NextImage";
+} from '../icons';
+import { checkAutoplay } from '../util';
+import LoaderRing from './components/LoaderRing';
+import SeekBar from './SeekBar';
+import { CaptionsRenderer } from 'react-srv3';
+import MediaSync, { MediaSyncRef, MediaSyncState } from './MediaSync';
+import { NextImage } from '../NextImage';
 
 type CaptionsTrack = {
   lang: string;
@@ -39,11 +37,10 @@ export type VideoPlayerProps = {
 
 const VideoPlayer2 = (props: VideoPlayerProps) => {
   const { srcVideo, srcAudio, srcPoster, videoId, showWatermark } = props;
-  const { logEvent } = useAmplitude();
   const captions = props.captions || [];
   const hasCaptions = captions.length > 0;
   const enCaptionIndex = captions.findIndex(
-    (cap) => cap.lang === "en" || cap.lang.startsWith("en-")
+    (cap) => cap.lang === 'en' || cap.lang.startsWith('en-')
   );
 
   const refSelf = React.useRef<HTMLDivElement>(null);
@@ -56,10 +53,10 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
   const [bufferProgress, setBufferProgress] = React.useState(0);
   const [lastActive, setLastActive] = React.useState(Date.now());
   const [isVideoErrored, setIsVideoErrored] = React.useState(false);
-  const [videoErrorMessage, setVideoErrorMessage] = React.useState("");
+  const [videoErrorMessage, setVideoErrorMessage] = React.useState('');
   const [srv3CaptionXMLs, setSrv3CaptionXMLs] = React.useState([]);
 
-  const [audioVolume, setAudioVolume] = useLocalStorage("player:volume", 1);
+  const [audioVolume, setAudioVolume] = useLocalStorage('player:volume', 1);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [activeCaption, setActiveCaption] = React.useState(enCaptionIndex);
 
@@ -117,18 +114,18 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
       e.nativeEvent.path?.[0]?.error ||
       // @ts-ignore
       e.nativeEvent.originalTarget?.error ||
-      new Error("Unknown error");
+      new Error('Unknown error');
 
     refMedia.current.pause();
     setIsVideoErrored(true);
-    console.error("Error playing video: ", error.message);
+    console.error('Error playing video: ', error.message);
     console.error(e);
 
     // Try to find out the error
     fetch(srcVideo)
       .then((res) => res.text())
       .then((text) => {
-        if (text.startsWith("{")) {
+        if (text.startsWith('{')) {
           const json = JSON.parse(text);
           setVideoErrorMessage(
             String(
@@ -138,18 +135,6 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
         } else setVideoErrorMessage(text);
       })
       .catch((e) => console.error(e));
-
-    logEvent(K_AMPLITUDE_EVENT_VIDEO_PLAYBACK_ERROR, {
-      videoId,
-      srcVideo,
-      srcAudio,
-      mediaState: lastMediaState.current,
-      audioVolume,
-      isFullscreen,
-      hasCaptions,
-      activeCaption: captions?.[activeCaption]?.lang || "",
-      error: error.message,
-    });
   };
 
   const nudgeTime = (delta: number) => {
@@ -168,24 +153,24 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
     if (!refVideo.current) return;
 
     // Create canvas
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = refVideo.current.videoWidth;
     canvas.height = refVideo.current.videoHeight;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
 
     // Draw video frame to canvas
     ctx.drawImage(refVideo.current, 0, 0, canvas.width, canvas.height);
 
     // Generate URI and download
-    const uri = canvas.toDataURL("image/png");
-    const a = document.createElement("a");
+    const uri = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
     a.href = uri;
     a.download =
-      "Screenshot " +
+      'Screenshot ' +
       videoId +
-      " " +
+      ' ' +
       Math.floor(refVideo.current.currentTime * 1000) +
-      "ms.png";
+      'ms.png';
     a.click();
 
     // Clean up
@@ -198,25 +183,25 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
 
     if (e.ctrlKey || e.altKey || e.shiftKey) return false;
 
-    if (e.key === " " || e.key === "k") {
+    if (e.key === ' ' || e.key === 'k') {
       handlePlayPause();
-    } else if (e.key === "ArrowRight") {
+    } else if (e.key === 'ArrowRight') {
       nudgeTime(5);
-    } else if (e.key === "ArrowLeft") {
+    } else if (e.key === 'ArrowLeft') {
       nudgeTime(-5);
-    } else if (e.key === "l") {
+    } else if (e.key === 'l') {
       nudgeTime(10);
-    } else if (e.key === "j") {
+    } else if (e.key === 'j') {
       nudgeTime(-10);
-    } else if (e.key === "ArrowDown") {
+    } else if (e.key === 'ArrowDown') {
       setAudioVolume((now) => Math.max(now - 0.1, 0));
-    } else if (e.key === "ArrowUp") {
+    } else if (e.key === 'ArrowUp') {
       setAudioVolume((now) => Math.min(now + 0.1, 1));
-    } else if (e.key === "m") {
+    } else if (e.key === 'm') {
       handleMuteUnmute();
-    } else if (e.key === "f") {
+    } else if (e.key === 'f') {
       handleFullscreen();
-    } else if (e.key === "c") {
+    } else if (e.key === 'c') {
       handleCaptionsButton();
     } else handled = false;
 
@@ -279,13 +264,13 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
   return (
     <div
       className={[
-        "video-player bg-black",
-        "focus:outline-none",
-        "w-full h-full",
-        isFullscreen ? "absolute inset-0 flex flex-col justify-center" : "",
-      ].join(" ")}
+        'video-player bg-black',
+        'focus:outline-none',
+        'w-full h-full',
+        isFullscreen ? 'absolute inset-0 flex flex-col justify-center' : '',
+      ].join(' ')}
       style={{
-        cursor: controlsVisible ? "auto" : "none",
+        cursor: controlsVisible ? 'auto' : 'none',
       }}
       ref={refSelf}
       onMouseLeave={() => setLastActive(0)}
@@ -328,8 +313,8 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
             data-context-menu
             className="bg-black bg-opacity-50 rounded-lg absolute z-50 overflow-hidden"
             style={{
-              left: contextX + "px",
-              top: contextY + "px",
+              left: contextX + 'px',
+              top: contextY + 'px',
             }}
           >
             <div
@@ -349,24 +334,25 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
           <NextImage
             className={
               bufferProgress > 0 && lastMediaState.current?.timeSeconds > 0
-                ? "opacity-0"
-                : "z-10"
+                ? 'opacity-0'
+                : 'z-10'
             }
             onClick={handlePlayPause}
             aria-hidden
             src={srcPoster}
             layout="fill"
+            alt=""
           />
         )}
         <div
           className={[
-            "absolute inset-0 pointer-events-none z-20 flex flex-col justify-center bg-black",
-            "transition duration-200",
-            isVideoErrored ? "bg-opacity-75" : "bg-opacity-25",
+            'absolute inset-0 pointer-events-none z-20 flex flex-col justify-center bg-black',
+            'transition duration-200',
+            isVideoErrored ? 'bg-opacity-75' : 'bg-opacity-25',
             lastMediaState.current?.isStalled || isVideoErrored
-              ? "opacity-100"
-              : "opacity-0",
-          ].join(" ")}
+              ? 'opacity-100'
+              : 'opacity-0',
+          ].join(' ')}
         >
           {isVideoErrored ? (
             <div className="text-center">
@@ -381,7 +367,7 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
           className="absolute inset-x-0 bottom-0 z-30 px-6 pt-2 transition duration-200"
           style={{
             background:
-              "linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%)",
+              'linear-gradient(0deg, rgba(0,0,0,0.7) 0%, transparent 100%)',
             opacity: controlsVisible ? 1 : 0,
           }}
         >
@@ -389,7 +375,7 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
             <div className="text-sm">
               <a
                 target="_blank"
-                href={"https://archive.ragtag.moe/watch?v=" + videoId}
+                href={'https://archive.ragtag.moe/watch?v=' + videoId}
               >
                 Hosted on <span className="font-bold">Ragtag Archive</span>
               </a>
@@ -464,7 +450,7 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
               </div>
 
               <p className="ml-4">
-                {formatSeconds(lastMediaState.current?.timeSeconds || 0)} /{" "}
+                {formatSeconds(lastMediaState.current?.timeSeconds || 0)} /{' '}
                 {formatSeconds(lastMediaState.current?.duration || 0)}
               </p>
             </div>
@@ -490,7 +476,7 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
                     />
                   )}
                   <span className="leading-none">
-                    {captions?.[activeCaption]?.lang || "off"}
+                    {captions?.[activeCaption]?.lang || 'off'}
                   </span>
                 </button>
               )}
@@ -520,8 +506,8 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
         {activeCaption > -1 && srv3CaptionXMLs[activeCaption] && (
           <div
             className={
-              "w-full h-full absolute z-10 pointer-events-none " +
-              (controlsVisible ? "controls-visible" : "")
+              'w-full h-full absolute z-10 pointer-events-none ' +
+              (controlsVisible ? 'controls-visible' : '')
             }
           >
             <CaptionsRenderer

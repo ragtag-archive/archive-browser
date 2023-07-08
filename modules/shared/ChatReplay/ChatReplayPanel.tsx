@@ -1,10 +1,10 @@
-import React from "react";
-import axios from "axios";
-import { ChatMessage } from "../database.d";
-import ChatReplay from "./ChatReplay";
-import { IconChevronDown, IconFilter } from "../icons";
-import { useDebounce } from "../hooks/useDebounce";
-import { parseChatReplay } from "./parser";
+import React from 'react';
+import axios from 'axios';
+import { ChatMessage } from '../database.d';
+import ChatReplay from './ChatReplay';
+import { IconChevronDown, IconFilter } from '../icons';
+import { useDebounce } from '../hooks/useDebounce';
+import { parseChatReplay } from './parser';
 
 export type ChatReplayPanelProps = {
   src: string;
@@ -14,12 +14,11 @@ export type ChatReplayPanelProps = {
 
 const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [replayData, setReplayData] = React.useState<ChatMessage[]>(null);
-  const [filteredReplayData, setFilteredReplayData] = React.useState<
-    ChatMessage[]
-  >(null);
+  const [filteredReplayData, setFilteredReplayData] =
+    React.useState<ChatMessage[]>(null);
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
   const [isFilterVisible, setIsFilterVisible] = React.useState(false);
-  const [chatFilter, setChatFilter] = React.useState("");
+  const [chatFilter, setChatFilter] = React.useState('');
   const [isChatVisible, setIsChatVisible] = React.useState(false);
   const [isErrored, setIsErrored] = React.useState(false);
   const refChatScrollDiv = React.useRef<HTMLDivElement>(null);
@@ -39,7 +38,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
       setReplayData(parseChatReplay(data.data));
       setIsChatVisible(true);
     } catch (ex) {
-      console.log("[chat] error parsing chat:", ex);
+      console.log('[chat] error parsing chat:', ex);
       setIsErrored(true);
     }
   };
@@ -68,7 +67,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
     if (refChatScrollDiv.current)
       refChatScrollDiv.current.scrollTo({
         top: refChatScrollDiv.current.scrollHeight,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
   }, [props.currentTimeSeconds]);
 
@@ -120,7 +119,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
               <IconChevronDown
                 width="1em"
                 height="1em"
-                style={{ transform: isChatVisible ? "rotate(180deg)" : "" }}
+                style={{ transform: isChatVisible ? 'rotate(180deg)' : '' }}
               />
             </button>
           </div>
@@ -147,12 +146,12 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
         <div className="relative flex-1">
           <div
             className={[
-              "px-2 border border-gray-800 rounded",
-              "overflow-y-scroll absolute inset-0",
-              "transition-all duration-200",
-            ].join(" ")}
+              'px-2 border border-gray-800 rounded',
+              'overflow-y-scroll absolute inset-0',
+              'transition-all duration-200',
+            ].join(' ')}
             style={{
-              overscrollBehavior: "contain",
+              overscrollBehavior: 'contain',
             }}
             ref={refChatScrollDiv}
           >

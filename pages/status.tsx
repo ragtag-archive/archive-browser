@@ -1,3 +1,3 @@
-import StatusPage from "../modules/StatusPage";
+import StatusPage from '../modules/StatusPage';
 
-export default StatusPage
+export default StatusPage;

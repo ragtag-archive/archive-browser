@@ -1,10 +1,10 @@
-import React from "react";
-import Head from "next/head";
-import { ElasticSearchResult, VideoMetadata } from "./shared/database.d";
-import PageBase from "./shared/PageBase";
-import PaginatedResults from "./shared/PaginatedResults";
-import { IconYouTube } from "./shared/icons";
-import { NextImage } from "./shared/NextImage";
+import React from 'react';
+import Head from 'next/head';
+import { ElasticSearchResult, VideoMetadata } from './shared/database.d';
+import PageBase from './shared/PageBase';
+import PaginatedResults from './shared/PaginatedResults';
+import { IconYouTube } from './shared/icons';
+import { NextImage } from './shared/NextImage';
 
 export type ChannelPageProps = {
   channelId: string;
@@ -19,12 +19,12 @@ export type ChannelPageProps = {
 
 const ChannelPage = (props: ChannelPageProps) => {
   const { channelId, channelName, channelImageURL, ...rest } = props;
-  const description = "Browse archived videos from " + channelName;
+  const description = 'Browse archived videos from ' + channelName;
   const profileImage = channelImageURL;
 
   React.useEffect(() => {
     if (!channelId) return;
-    fetch("/api/pv?channel_id=" + channelId);
+    fetch('/api/pv?channel_id=' + channelId);
   }, [channelId]);
 
   return (
@@ -37,7 +37,7 @@ const ChannelPage = (props: ChannelPageProps) => {
         <meta property="og:description" content={description} />
         <meta
           property="og:url"
-          content={"https://archive.ragtag.moe/channel/" + channelId}
+          content={'https://archive.ragtag.moe/channel/' + channelId}
         />
         <meta property="og:image" content={profileImage} />
         <meta property="twitter:card" content="summary" />
@@ -45,7 +45,7 @@ const ChannelPage = (props: ChannelPageProps) => {
         <meta property="twitter:description" content={description} />
         <meta
           property="twitter:url"
-          content={"https://archive.ragtag.moe/channel/" + channelId}
+          content={'https://archive.ragtag.moe/channel/' + channelId}
         />
         <meta property="twitter:image" content={profileImage} />
       </Head>
@@ -56,6 +56,7 @@ const ChannelPage = (props: ChannelPageProps) => {
               src={profileImage}
               width={128}
               height={128}
+              alt="Profile photo"
               layout="fixed"
               priority
             />
@@ -64,7 +65,7 @@ const ChannelPage = (props: ChannelPageProps) => {
           <h1 className="text-3xl text-center">{channelName}</h1>
           <div className="flex mt-2 justify-center">
             <a
-              href={"https://youtube.com/channel/" + channelId}
+              href={'https://youtube.com/channel/' + channelId}
               target="_blank"
               rel="noreferrer noopener"
               className="

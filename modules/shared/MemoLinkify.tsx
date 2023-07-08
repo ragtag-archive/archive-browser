@@ -1,9 +1,9 @@
-import React from "react";
-import Linkify from "react-linkify";
+import React from 'react';
+import Linkify from 'react-linkify';
 
 export type MemoLinkifyProps = {
   children?: React.ReactNode;
-  linkClassName?: string
+  linkClassName?: string;
 };
 
 const MemoLinkify = React.memo((props: MemoLinkifyProps) => {

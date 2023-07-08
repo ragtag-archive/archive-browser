@@ -1,6 +1,6 @@
-import React from "react";
-import { ChatMessage } from "../database.d";
-import ChatMessageRender from "./ChatMessageRender";
+import React from 'react';
+import { ChatMessage } from '../database.d';
+import ChatMessageRender from './ChatMessageRender';
 
 export type ChatReplayProps = {
   replayData: ChatMessage[];
@@ -32,6 +32,8 @@ const ChatReplay = (props: ChatReplayProps) => {
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
 
   React.useEffect(() => {
+    if (replayData === null) return;
+
     /**
      * Find the current replayData index where
      * time_in_seconds <= currentTimeSeconds

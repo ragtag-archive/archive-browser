@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { apiListChannels } from "../v1/channels";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { apiListChannels } from '../v1/channels';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const host = req.headers.host || "archive.ragtag.moe";
+  const host = req.headers.host || 'archive.ragtag.moe';
   const channels = await apiListChannels();
 
   const sitemap = [
@@ -10,19 +10,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     ...channels.map((channel) =>
       [
-        "<sitemap><loc>",
-        "https://",
+        '<sitemap><loc>',
+        'https://',
         host,
-        "/api/sitemap/channel/",
+        '/api/sitemap/channel/',
         channel.channel_id,
-        ".xml",
-        "</loc></sitemap>",
-      ].join("")
+        '.xml',
+        '</loc></sitemap>',
+      ].join('')
     ),
-    "</sitemapindex>",
-  ].join("\n");
+    '</sitemapindex>',
+  ].join('\n');
 
-  res.setHeader("Content-Type", "text/xml");
+  res.setHeader('Content-Type', 'text/xml');
   res.write(sitemap);
   res.end();
 };

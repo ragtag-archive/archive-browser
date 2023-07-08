@@ -55,7 +55,7 @@ export type ElasticSearchResult<T> = {
   hits: {
     total: {
       value: number;
-      relation: "eq" | "gt" | "lt";
+      relation: 'eq' | 'gt' | 'lt';
     };
     max_score: number;
     hits: Array<ElasticSearchDocument<T>>;
@@ -84,7 +84,7 @@ type ChatMessageEmote = {
 
 type ChatMessageBase = {
   time_in_seconds: number;
-  action_type: "add_chat_item" | "add_live_chat_ticker_item" | string;
+  action_type: 'add_chat_item' | 'add_live_chat_ticker_item' | string;
   message_id: string;
   timestamp: number;
   time_text: string;
@@ -119,22 +119,22 @@ type ChatMessageMoney = {
 };
 
 type ChatViewerEngagementMessage = ChatMessageBase & {
-  icon: "YOUTUBE_ROUND";
-  message_type: "viewer_engagement_message";
+  icon: 'YOUTUBE_ROUND';
+  message_type: 'viewer_engagement_message';
 };
 
 type ChatTextMessage = ChatMessageBase & {
-  message_type: "text_message";
+  message_type: 'text_message';
   author: ChatMessageAuthor;
 };
 
 type ChatMembershipItem = ChatMessageBase & {
-  message_type: "membership_item";
+  message_type: 'membership_item';
   author: ChatMessageAuthor;
 };
 
 type ChatPaidMessage = ChatMessageBase & {
-  message_type: "paid_message";
+  message_type: 'paid_message';
   author: ChatMessageAuthor & {
     name_text_colour?: string;
   };
@@ -153,12 +153,12 @@ export type ChatMessage =
   | ChatPaidMessage;
 
 export const ChatMessageTypes = [
-  "paid_message",
-  "membership_item",
-  "text_message",
-  "viewer_engagement_message",
+  'paid_message',
+  'membership_item',
+  'text_message',
+  'viewer_engagement_message',
 ] as const;
-export type ChatMessageType = typeof ChatMessageTypes[number];
+export type ChatMessageType = (typeof ChatMessageTypes)[number];
 
 /**
  * Search logs

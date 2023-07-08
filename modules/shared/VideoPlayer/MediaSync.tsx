@@ -1,5 +1,5 @@
-import React, { forwardRef, Ref, useImperativeHandle } from "react";
-import { useAnimationFrame } from "../hooks/useAnimationFrame";
+import React, { forwardRef, Ref, useImperativeHandle } from 'react';
+import { useAnimationFrame } from '../hooks/useAnimationFrame';
 
 export type MediaSyncState = {
   duration: number;
@@ -34,7 +34,7 @@ const MediaSync = forwardRef<MediaSyncRef, MediaSyncProps>((props, ref) => {
   // Playback state
   const isPlaying = React.useRef(false);
   const syncStates = React.useRef(Array(childCount).fill(false));
-  const lastVisibilityState = React.useRef<"visible" | "hidden">("visible");
+  const lastVisibilityState = React.useRef<'visible' | 'hidden'>('visible');
   const lastTime = React.useRef(0);
   const lastTimeUpdate = React.useRef(Date.now());
 
@@ -52,10 +52,10 @@ const MediaSync = forwardRef<MediaSyncRef, MediaSyncProps>((props, ref) => {
   const stallThreshold = React.useRef(1000);
 
   // Media event handlers
-  const handlePlayState = (event: "play" | "pause", index: number) => {
+  const handlePlayState = (event: 'play' | 'pause', index: number) => {
     // Ignore event if no state change
     // e.g. isPlaying is true, and event is play
-    if (isPlaying.current === (event === "play")) return;
+    if (isPlaying.current === (event === 'play')) return;
 
     // Ignore event if media is syncing
     if (syncStates.current[index]) return;
@@ -72,11 +72,11 @@ const MediaSync = forwardRef<MediaSyncRef, MediaSyncProps>((props, ref) => {
       return;
 
     // Otherwise, update playback state
-    isPlaying.current = event === "play";
-    console.log("[MediaSync]", event, "from", index);
+    isPlaying.current = event === 'play';
+    console.log('[MediaSync]', event, 'from', index);
 
     // Also notify parent
-    if (event === "play") props.onPlay?.();
+    if (event === 'play') props.onPlay?.();
     else props.onPause?.();
   };
 
@@ -109,7 +109,7 @@ const MediaSync = forwardRef<MediaSyncRef, MediaSyncProps>((props, ref) => {
     // Except when the last visibility state is 'hidden', in which case
     // take the latest time (usually comes from the audio)
     const actualTime =
-      lastVisibilityState.current === "visible"
+      lastVisibilityState.current === 'visible'
         ? Math.min(...timestamps)
         : Math.max(...timestamps);
 
@@ -182,8 +182,8 @@ const MediaSync = forwardRef<MediaSyncRef, MediaSyncProps>((props, ref) => {
           }
           return React.cloneElement(child, {
             ref: childRefs[idx],
-            onPlay: () => handlePlayState("play", idx),
-            onPause: () => handlePlayState("pause", idx),
+            onPlay: () => handlePlayState('play', idx),
+            onPause: () => handlePlayState('pause', idx),
           });
         }
       )}

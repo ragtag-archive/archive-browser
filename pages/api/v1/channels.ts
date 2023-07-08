@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { apiSearchRaw } from "./search";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { apiSearchRaw } from './search';
 
 export type AggregatedChannel = {
   channel_name: string;
@@ -13,8 +13,8 @@ export const apiListChannels = async (): Promise<AggregatedChannel[]> =>
     await apiSearchRaw({
       aggs: {
         channels: {
-          terms: { field: "channel_id", size: 1000 },
-          aggs: { hits: { top_hits: { _source: ["channel_name"], size: 1 } } },
+          terms: { field: 'channel_id', size: 1000 },
+          aggs: { hits: { top_hits: { _source: ['channel_name'], size: 1 } } },
         },
       },
       size: 0,

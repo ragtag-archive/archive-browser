@@ -1,7 +1,7 @@
-import React from "react";
-import { ChatMessage } from "../database.d";
-import { formatSeconds } from "../format";
-import { proxyYT3 as proxyURL } from "../util";
+import React from 'react';
+import { ChatMessage } from '../database.d';
+import { formatSeconds } from '../format';
+import { proxyYT3 as proxyURL } from '../util';
 
 export type ChatMessageRenderProps = {
   message: ChatMessage;
@@ -18,16 +18,17 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
     // Process emotes
     const tokens = msg.message.split(regexEmoji);
     return tokens.map((token) => {
-      if (!token.startsWith(":")) return token;
+      if (!token.startsWith(':')) return token;
 
       let images = msg.emotes.find((emote) => emote.name === token)?.images;
       if (!images)
-        images = msg.emotes.find((emote) => emote.shortcuts.includes(token))
-          ?.images;
+        images = msg.emotes.find((emote) =>
+          emote.shortcuts.includes(token)
+        )?.images;
       if (!images) return token;
 
       const emoteURL =
-        images.find((image) => image.id === "source")?.url || images[0]?.url;
+        images.find((image) => image.id === 'source')?.url || images[0]?.url;
 
       if (!emoteURL) return token;
       return (
@@ -42,7 +43,7 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
   };
 
   switch (msg.message_type) {
-    case "paid_message":
+    case 'paid_message':
       return (
         <div
           key={msg.message_id}
@@ -83,7 +84,7 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
           <div className="px-4 py-2">{generateMessageContent(msg)}</div>
         </div>
       );
-    case "membership_item":
+    case 'membership_item':
       return (
         <div
           key={msg.message_id}
@@ -108,34 +109,34 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
           {generateMessageContent(msg)}
         </div>
       );
-    case "text_message":
+    case 'text_message':
       const authorType =
         msg.author.badges?.map(({ title }) =>
-          title === "Owner"
-            ? "owner"
-            : title === "Moderator"
-            ? "moderator"
-            : title.toLowerCase().includes("member")
-            ? "member"
-            : ""
+          title === 'Owner'
+            ? 'owner'
+            : title === 'Moderator'
+            ? 'moderator'
+            : title.toLowerCase().includes('member')
+            ? 'member'
+            : ''
         ) || [];
       return (
         <div key={msg.message_id} className="px-2 mb-2">
           <div className="text-gray-400 text-xs flex justify-between">
             <span
               className={[
-                "mr-2",
-                authorType.includes("owner")
-                  ? "bg-blue-600 text-white font-bold px-2 rounded"
-                  : authorType.includes("moderator")
-                  ? "text-blue-600 font-bold"
-                  : authorType.includes("member")
-                  ? "text-green-500"
-                  : "",
-              ].join(" ")}
+                'mr-2',
+                authorType.includes('owner')
+                  ? 'bg-blue-600 text-white font-bold px-2 rounded'
+                  : authorType.includes('moderator')
+                  ? 'text-blue-600 font-bold'
+                  : authorType.includes('member')
+                  ? 'text-green-500'
+                  : '',
+              ].join(' ')}
             >
               {msg.author.name}
-              {authorType.includes("moderator") && (
+              {authorType.includes('moderator') && (
                 <svg
                   viewBox="0 0 16 16"
                   className="text-blue-600 w-4 h-4 inline-block ml-2"

@@ -1,8 +1,8 @@
-import { GetServerSideProps } from "next";
-import ChatExplorerPage from "../../modules/ChatExplorerPage";
-import { signFileURLs } from "../../modules/shared/fileAuth";
-import { getRemoteAddress } from "../../modules/shared/util";
-import { apiSearch } from "../api/v1/search";
+import { GetServerSideProps } from 'next';
+import ChatExplorerPage from '../../modules/ChatExplorerPage';
+import { signFileURLs } from '../../modules/shared/fileAuth';
+import { getRemoteAddress } from '../../modules/shared/util';
+import { apiSearch } from '../api/v1/search';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -17,9 +17,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     signFileURLs(video.drive_base, video.files, ip);
 
     const chatFile = video.files.find((file) =>
-      file.name.endsWith(".chat.json")
+      file.name.endsWith('.chat.json')
     );
-    const thumbFile = video.files.find((file) => file.name.endsWith(".webp"));
+    const thumbFile = video.files.find((file) => file.name.endsWith('.webp'));
 
     if (!chatFile) return { notFound: true };
 

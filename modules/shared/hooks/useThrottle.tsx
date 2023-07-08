@@ -1,7 +1,7 @@
 /**
  * https://github.com/bhaskarGyan/use-throttle/blob/master/src/index.js
  */
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
 export const useThrottle = (value, limit) => {
   const [throttledValue, setThrottledValue] = useState(value);

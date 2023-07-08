@@ -1,11 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { ES_INDEX, ES_INDEX_SEARCH_LOG } from "../../../modules/shared/config";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { ES_INDEX, ES_INDEX_SEARCH_LOG } from '../../../modules/shared/config';
 import {
   ElasticSearchLog,
   ElasticSearchResult,
   VideoMetadata,
-} from "../../../modules/shared/database.d";
-import { Elastic } from "../../../modules/shared/database";
+} from '../../../modules/shared/database.d';
+import { Elastic } from '../../../modules/shared/database';
 
 export type StorageStatistics = {
   videos: number;
@@ -22,27 +22,27 @@ export const apiStorageStatistics = async (): Promise<StorageStatistics> => {
     aggregations: {
       size: {
         nested: {
-          path: "files",
+          path: 'files',
         },
         aggregations: {
           sum_size: {
             sum: {
-              field: "files.size",
+              field: 'files.size',
             },
           },
         },
       },
       total_duration: {
         sum: {
-          field: "duration",
+          field: 'duration',
         },
       },
     },
   });
 
   const countRes = await Elastic.request({
-    method: "get",
-    url: "/" + ES_INDEX + "/_count",
+    method: 'get',
+    url: '/' + ES_INDEX + '/_count',
   });
 
   return {
@@ -60,7 +60,7 @@ export const apiRelatedVideos = async (
     await apiSearchRaw({
       query: {
         more_like_this: {
-          fields: ["title", "description", "channel_name"],
+          fields: ['title', 'description', 'channel_name'],
           like: [
             {
               _index: ES_INDEX,
@@ -87,26 +87,26 @@ export const apiRelatedVideos = async (
 };
 
 export const ApiSearchSortFields = [
-  "archived_timestamp",
-  "upload_date",
-  "duration",
-  "view_count",
-  "like_count",
-  "dislike_count",
+  'archived_timestamp',
+  'upload_date',
+  'duration',
+  'view_count',
+  'like_count',
+  'dislike_count',
 ] as const;
-type SortField = typeof ApiSearchSortFields[number];
+type SortField = (typeof ApiSearchSortFields)[number];
 
 export const apiSearch = async (query: {
   q?: string;
   v?: string;
   channel_id?: string;
   sort?: SortField;
-  sort_order?: "asc" | "desc";
+  sort_order?: 'asc' | 'desc';
   from?: number;
   size?: number;
 }) => {
-  const q = query.q || "";
-  const v = query.v || "";
+  const q = query.q || '';
+  const v = query.v || '';
   const channel_id = query.channel_id;
   const from = query.from || 0;
   const size = query.size || 10;
@@ -128,8 +128,8 @@ export const apiSearch = async (query: {
         match: {
           title: {
             query: q,
-            operator: "OR",
-            fuzziness: "AUTO",
+            operator: 'OR',
+            fuzziness: 'AUTO',
             boost: 10,
           },
         },
@@ -138,8 +138,8 @@ export const apiSearch = async (query: {
         match: {
           description: {
             query: q,
-            operator: "OR",
-            fuzziness: "AUTO",
+            operator: 'OR',
+            fuzziness: 'AUTO',
           },
         },
       },
@@ -147,8 +147,8 @@ export const apiSearch = async (query: {
         match: {
           channel_name: {
             query: q,
-            operator: "OR",
-            fuzziness: "AUTO",
+            operator: 'OR',
+            fuzziness: 'AUTO',
             boost: 5,
           },
         },
@@ -169,28 +169,28 @@ export const apiSearch = async (query: {
   if (query.sort) {
     const sort = [
       {
-        [query.sort]: query.sort_order || "asc",
+        [query.sort]: query.sort_order || 'asc',
       },
     ];
 
-    if (query.sort === "upload_date") {
+    if (query.sort === 'upload_date') {
       sort.push({
-        "timestamps.publishedAt": query.sort_order || "asc",
+        'timestamps.publishedAt': query.sort_order || 'asc',
       });
     }
 
-    requestData["sort"] = sort;
+    requestData['sort'] = sort;
   }
 
   // Log the search
   if (q) {
     const searchLog: ElasticSearchLog = {
-      query: q.trim().replace(/\s+/g, " "),
+      query: q.trim().replace(/\s+/g, ' '),
       timestamp: new Date().toISOString(),
     };
     await Elastic.request({
-      method: "post",
-      url: "/" + ES_INDEX_SEARCH_LOG + "/_doc",
+      method: 'post',
+      url: '/' + ES_INDEX_SEARCH_LOG + '/_doc',
       data: searchLog,
     });
   }
@@ -203,8 +203,8 @@ export const apiSearchCompletion = async (term: string): Promise<string[]> => {
   if (term.length > 0) query = { match: { query: term } };
   else query = { match_all: {} };
   const aggs = await Elastic.request({
-    method: "post",
-    url: "/" + ES_INDEX_SEARCH_LOG + "/_search",
+    method: 'post',
+    url: '/' + ES_INDEX_SEARCH_LOG + '/_search',
     data: {
       query: {
         bool: {
@@ -212,7 +212,7 @@ export const apiSearchCompletion = async (term: string): Promise<string[]> => {
           filter: [
             {
               range: {
-                timestamp: { gte: "now-7d" },
+                timestamp: { gte: 'now-7d' },
               },
             },
           ],
@@ -222,7 +222,7 @@ export const apiSearchCompletion = async (term: string): Promise<string[]> => {
       aggs: {
         top: {
           terms: {
-            field: "query.keyword",
+            field: 'query.keyword',
             size: 10,
           },
         },
@@ -234,8 +234,8 @@ export const apiSearchCompletion = async (term: string): Promise<string[]> => {
 
 export const apiSearchRaw = <T = any>(dsl: any) =>
   Elastic.request<T>({
-    method: "get",
-    url: "/" + ES_INDEX + "/_search",
+    method: 'get',
+    url: '/' + ES_INDEX + '/_search',
     data: dsl,
   });
 

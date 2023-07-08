@@ -1,3 +1,3 @@
-import ApiDocsPage from "../modules/ApiDocsPage";
+import ApiDocsPage from '../modules/ApiDocsPage';
 
 export default ApiDocsPage;

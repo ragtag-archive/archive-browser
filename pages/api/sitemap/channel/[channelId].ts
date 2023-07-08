@@ -1,12 +1,12 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { signFileURLs } from "../../../../modules/shared/fileAuth";
-import { getRemoteAddress } from "../../../../modules/shared/util";
-import { apiSearch } from "../../v1/search";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { signFileURLs } from '../../../../modules/shared/fileAuth';
+import { getRemoteAddress } from '../../../../modules/shared/util';
+import { apiSearch } from '../../v1/search';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const channel_id = (req.query.channelId as string).substr(0, 24);
 
-  const host = req.headers.host || "archive.ragtag.moe";
+  const host = req.headers.host || 'archive.ragtag.moe';
   const ip = getRemoteAddress(req);
   const videos = await apiSearch({ channel_id, size: 10000 }).then(
     (res) => res.data.hits.hits
@@ -22,12 +22,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">',
     ...videos.map((video) => {
       const thumbnail_url = video._source.files.find(
-        (file) => file.name.endsWith(".webp") || file.name.endsWith(".jpg")
+        (file) => file.name.endsWith('.webp') || file.name.endsWith('.jpg')
       )?.url;
       return [
-        "<url>",
+        '<url>',
         `<loc>https://${host}/watch?v=${video._id}</loc>`,
-        "<video:video>",
+        '<video:video>',
         `<video:thumbnail_loc>${thumbnail_url}</video:thumbnail_loc>`,
         `<video:title><![CDATA[${video._source.title}]]></video:title>`,
         `<video:description><![CDATA[${video._source.description}]]></video:description>`,
@@ -37,14 +37,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           video._source.timestamps?.publishedAt || video._source.upload_date
         }</video:publication_date>`,
         `<video:uploader info="https://${host}/channel/${channel_id}">${video._source.channel_name}</video:uploader>`,
-        "</video:video>",
-        "</url>",
-      ].join("\n");
+        '</video:video>',
+        '</url>',
+      ].join('\n');
     }),
-    "</urlset>",
-  ].join("\n");
+    '</urlset>',
+  ].join('\n');
 
-  res.setHeader("Content-Type", "text/xml");
+  res.setHeader('Content-Type', 'text/xml');
   res.write(sitemap);
   res.end();
 };

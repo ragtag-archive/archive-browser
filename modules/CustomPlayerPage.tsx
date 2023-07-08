@@ -1,19 +1,19 @@
-import React from "react";
-import Head from "next/head";
-import ChatReplayPanel from "./shared/ChatReplay/ChatReplayPanel";
-import { useWindowSize } from "./shared/hooks/useWindowSize";
-import PageBase from "./shared/PageBase";
-import VideoPlayer2 from "./shared/VideoPlayer/VideoPlayer2";
-import { buttonStyle } from "./shared/VideoActionButtons";
-import { IconCheck } from "./shared/icons";
+import React from 'react';
+import Head from 'next/head';
+import ChatReplayPanel from './shared/ChatReplay/ChatReplayPanel';
+import { useWindowSize } from './shared/hooks/useWindowSize';
+import PageBase from './shared/PageBase';
+import VideoPlayer2 from './shared/VideoPlayer/VideoPlayer2';
+import { buttonStyle } from './shared/VideoActionButtons';
+import { IconCheck } from './shared/icons';
 
 const CustomPlayerPage = () => {
   const [isChatVisible, setIsChatVisible] = React.useState(false);
   const { innerWidth, innerHeight } = useWindowSize();
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
-  const [urlVideo, setUrlVideo] = React.useState("");
-  const [urlChat, setUrlChat] = React.useState("");
-  const [urlYtt, setUrlYtt] = React.useState("");
+  const [urlVideo, setUrlVideo] = React.useState('');
+  const [urlChat, setUrlChat] = React.useState('');
+  const [urlYtt, setUrlYtt] = React.useState('');
   const [showPlayer, setShowPlayer] = React.useState(false);
 
   const handleFile = (
@@ -22,7 +22,7 @@ const CustomPlayerPage = () => {
   ) => {
     const file = e.target.files?.[0];
     if (!file) {
-      console.error("No file selected");
+      console.error('No file selected');
       return false;
     }
     const url = URL.createObjectURL(file).toString();
@@ -38,15 +38,15 @@ const CustomPlayerPage = () => {
       {showPlayer ? (
         <div>
           <div
-            className={["flex lg:flex-row flex-col lg:h-auto"].join(" ")}
+            className={['flex lg:flex-row flex-col lg:h-auto'].join(' ')}
             style={{
-              height: isChatVisible && innerWidth < 640 ? innerHeight : "auto",
+              height: isChatVisible && innerWidth < 640 ? innerHeight : 'auto',
             }}
           >
             <div className="w-full lg:w-3/4">
               <div
                 className="relative bg-gray-400 w-full h-0"
-                style={{ paddingBottom: "56.25%" }}
+                style={{ paddingBottom: '56.25%' }}
               >
                 <div className="absolute inset-0 w-full h-full">
                   <VideoPlayer2
@@ -58,7 +58,7 @@ const CustomPlayerPage = () => {
                       urlYtt
                         ? [
                             {
-                              lang: "en",
+                              lang: 'en',
                               src: urlYtt,
                             },
                           ]
@@ -71,9 +71,9 @@ const CustomPlayerPage = () => {
             </div>
             <div
               className={[
-                "w-full lg:w-1/4 lg:pl-4",
-                isChatVisible ? "flex-1" : "",
-              ].join(" ")}
+                'w-full lg:w-1/4 lg:pl-4',
+                isChatVisible ? 'flex-1' : '',
+              ].join(' ')}
             >
               {!urlChat ? (
                 <div className="border border-gray-800 rounded p-4 text-center">
@@ -90,7 +90,7 @@ const CustomPlayerPage = () => {
           </div>
           <button
             type="button"
-            className={[buttonStyle, "mt-4"].join(" ")}
+            className={[buttonStyle, 'mt-4'].join(' ')}
             onClick={() => setShowPlayer(false)}
           >
             Go back
@@ -104,7 +104,7 @@ const CustomPlayerPage = () => {
               You can play locally-saved video files and chat replay JSON
             </p>
             <p className="text-center">
-              Chat replay compatible with output from{" "}
+              Chat replay compatible with output from{' '}
               <a
                 className="underline"
                 href="https://github.com/yt-dlp/yt-dlp"
@@ -113,7 +113,7 @@ const CustomPlayerPage = () => {
               >
                 yt-dlp
               </a>
-              {" and "}
+              {' and '}
               <a
                 className="underline"
                 href="https://pypi.org/project/chat-downloader/"
@@ -128,7 +128,7 @@ const CustomPlayerPage = () => {
           <div className="mx-auto max-w-md">
             <form>
               <label
-                className={[buttonStyle, "relative cursor-pointer"].join(" ")}
+                className={[buttonStyle, 'relative cursor-pointer'].join(' ')}
               >
                 <span>Select video</span>
                 <span className="ml-auto">
@@ -141,7 +141,7 @@ const CustomPlayerPage = () => {
                 />
               </label>
               <label
-                className={[buttonStyle, "relative cursor-pointer"].join(" ")}
+                className={[buttonStyle, 'relative cursor-pointer'].join(' ')}
               >
                 <span>Select chat json</span>
                 <span className="ml-auto">
@@ -154,7 +154,7 @@ const CustomPlayerPage = () => {
                 />
               </label>
               <label
-                className={[buttonStyle, "relative cursor-pointer"].join(" ")}
+                className={[buttonStyle, 'relative cursor-pointer'].join(' ')}
               >
                 <span>Select captions (srv3)</span>
                 <span className="ml-auto">
@@ -169,7 +169,7 @@ const CustomPlayerPage = () => {
 
               <button
                 type="button"
-                className={[buttonStyle, "mt-8 ml-auto"].join(" ")}
+                className={[buttonStyle, 'mt-8 ml-auto'].join(' ')}
                 onClick={() => setShowPlayer(true)}
               >
                 Launch player

@@ -1,8 +1,8 @@
-import { GetServerSideProps } from "next";
-import SearchPage, { SearchPageProps } from "../modules/SearchPage";
-import { signFileURLs } from "../modules/shared/fileAuth";
-import { getRemoteAddress } from "../modules/shared/util";
-import { apiSearch } from "./api/v1/search";
+import { GetServerSideProps } from 'next';
+import SearchPage, { SearchPageProps } from '../modules/SearchPage';
+import { signFileURLs } from '../modules/shared/fileAuth';
+import { getRemoteAddress } from '../modules/shared/util';
+import { apiSearch } from './api/v1/search';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   for (let tries = 0; tries < 5; tries++) {

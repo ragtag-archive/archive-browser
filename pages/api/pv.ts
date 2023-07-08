@@ -1,17 +1,17 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { ES_INDEX, ES_INDEX_PAGE_VIEWS } from "../../modules/shared/config";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { ES_INDEX, ES_INDEX_PAGE_VIEWS } from '../../modules/shared/config';
 import {
   ElasticSearchResult,
   VideoMetadata,
-} from "../../modules/shared/database.d";
-import { Elastic } from "../../modules/shared/database";
-import { getRemoteAddress } from "../../modules/shared/util";
+} from '../../modules/shared/database.d';
+import { Elastic } from '../../modules/shared/database';
+import { getRemoteAddress } from '../../modules/shared/util';
 
 export const apiGetPopularVideos = async (max: number = 8) => {
   // Create aggregation
   const buckets = await Elastic.request({
-    method: "post",
-    url: "/" + ES_INDEX_PAGE_VIEWS + "/_search",
+    method: 'post',
+    url: '/' + ES_INDEX_PAGE_VIEWS + '/_search',
     data: {
       query: {
         bool: {
@@ -19,7 +19,7 @@ export const apiGetPopularVideos = async (max: number = 8) => {
             {
               range: {
                 timestamp: {
-                  gte: "now-7d",
+                  gte: 'now-7d',
                 },
               },
             },
@@ -27,7 +27,7 @@ export const apiGetPopularVideos = async (max: number = 8) => {
           must_not: [
             {
               match: {
-                video_id: "(none)",
+                video_id: '(none)',
               },
             },
           ],
@@ -37,14 +37,14 @@ export const apiGetPopularVideos = async (max: number = 8) => {
       aggs: {
         popular: {
           terms: {
-            field: "video_id",
+            field: 'video_id',
             size: max,
           },
           aggs: {
             score: {
               sum: {
                 script: {
-                  lang: "painless",
+                  lang: 'painless',
                   source: `
                     long duration = 7 * 24 * 3600 * 1000; // 1 week
                     long start = params['now'] - duration;
@@ -80,8 +80,8 @@ export const apiGetPopularVideos = async (max: number = 8) => {
 
   // Get video documents
   const videos = await Elastic.request({
-    method: "get",
-    url: "/" + ES_INDEX + "/_mget",
+    method: 'get',
+    url: '/' + ES_INDEX + '/_mget',
     data: { ids: videoIds },
   })
     .then((res) => res.data.docs.filter((hit: any) => hit._source))
@@ -93,7 +93,7 @@ export const apiGetPopularVideos = async (max: number = 8) => {
   const result: Partial<ElasticSearchResult<VideoMetadata>> = {
     hits: {
       total: {
-        relation: "eq",
+        relation: 'eq',
         value: videos.length,
       },
       max_score: 0,
@@ -109,8 +109,8 @@ export const apiRegisterPageview = async (params: {
   ip: string;
 }) =>
   Elastic.request({
-    method: "post",
-    url: "/" + ES_INDEX_PAGE_VIEWS + "/_doc",
+    method: 'post',
+    url: '/' + ES_INDEX_PAGE_VIEWS + '/_doc',
     data: {
       timestamp: new Date().toISOString(),
       channel_id: params.channelId,
@@ -121,11 +121,11 @@ export const apiRegisterPageview = async (params: {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const ip = getRemoteAddress(req);
-  if (ip === "127.0.0.1" || ip === "::1") return res.status(204).end();
+  if (ip === '127.0.0.1' || ip === '::1') return res.status(204).end();
 
   await apiRegisterPageview({
-    channelId: (req.query.channel_id as string) || "(none)",
-    videoId: (req.query.video_id as string) || "(none)",
+    channelId: (req.query.channel_id as string) || '(none)',
+    videoId: (req.query.video_id as string) || '(none)',
     ip,
   });
   res.status(204).end();

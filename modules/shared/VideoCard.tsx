@@ -1,11 +1,11 @@
-import React from "react";
-import Link from "next/link";
-import { VideoMetadata } from "./database.d";
-import { formatDate, formatSeconds } from "./format";
-import { format } from "timeago.js";
-import VideoActionButtons from "./VideoActionButtons";
-import ClientRender from "./ClientRender";
-import { NextImage } from "./NextImage";
+import React from 'react';
+import Link from 'next/link';
+import { VideoMetadata } from './database.d';
+import { formatDate, formatSeconds } from './format';
+import { format } from 'timeago.js';
+import VideoActionButtons from './VideoActionButtons';
+import ClientRender from './ClientRender';
+import { NextImage } from './NextImage';
 
 export type VideoCardProps = {
   video?: VideoMetadata;
@@ -14,25 +14,25 @@ export type VideoCardProps = {
 
 const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
   const thumbURL = video?.files?.find(
-    (file) => file.name.endsWith(".webp") || file.name.endsWith(".jpg")
+    (file) => file.name.endsWith('.webp') || file.name.endsWith('.jpg')
   )?.url;
 
   return (
     <div
-      className={["flex", small ? "flex-col" : "flex-col md:flex-row"].join(
-        " "
+      className={['flex', small ? 'flex-col' : 'flex-col md:flex-row'].join(
+        ' '
       )}
     >
-      <div className={small ? "w-full" : "md:w-1/4 w-full py-2"}>
-        <Link href={video ? "/watch?v=" + video?.video_id : ""}>
-          <a tabIndex={-1}>
-            <div
-              className="w-full h-0 relative"
-              style={{ paddingBottom: "56.25%" }}
-            >
-              {!!thumbURL ? (
-                <>
-                  <div className="bg-gray-800 animate-pulse absolute inset-0" />
+      <div className={small ? 'w-full' : 'md:w-1/4 w-full py-2'}>
+        <Link href={video ? '/watch?v=' + video?.video_id : ''} tabIndex={-1}>
+          <div
+            className="w-full h-0 relative"
+            style={{ paddingBottom: '56.25%' }}
+          >
+            {!!thumbURL ? (
+              <>
+                <div className="bg-gray-800 animate-pulse absolute inset-0" />
+                <div className="absolute inset-0">
                   <NextImage
                     src={thumbURL}
                     width={368}
@@ -40,73 +40,70 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
                     layout="responsive"
                     alt="Video thumbnail"
                   />
-                </>
-              ) : (
-                <img
-                  src={
-                    "https://i.ytimg.com/vi_webp/" +
-                    video?.video_id +
-                    "/maxresdefault.webp"
-                  }
-                  className="absolute w-full h-full"
-                />
-              )}
-              <div className="absolute right-0 bottom-0 bg-black text-white px-2 bg-opacity-75 rounded m-2">
-                {formatSeconds(video?.duration || 0)}
-              </div>
+                </div>
+              </>
+            ) : (
+              <img
+                src={
+                  'https://i.ytimg.com/vi_webp/' +
+                  video?.video_id +
+                  '/maxresdefault.webp'
+                }
+                className="absolute w-full h-full"
+              />
+            )}
+            <div className="absolute right-0 bottom-0 bg-black text-white px-2 bg-opacity-75 rounded m-2">
+              {formatSeconds(video?.duration || 0)}
             </div>
-          </a>
+          </div>
         </Link>
       </div>
-      <div className={small ? "py-2 md:px-0 px-4" : "flex-1 px-4 py-2"}>
+      <div className={small ? 'py-2 md:px-0 px-4' : 'flex-1 px-4 py-2'}>
         {!!video ? (
           <>
-            <Link href={video ? "/watch?v=" + video?.video_id : ""}>
-              <a>
-                <h2 className={["font-bold", small ? "" : "text-xl"].join(" ")}>
-                  {video.title}
-                </h2>
-              </a>
+            <Link href={video ? '/watch?v=' + video?.video_id : ''}>
+              <h2 className={['font-bold', small ? '' : 'text-xl'].join(' ')}>
+                {video.title}
+              </h2>
             </Link>
-            <Link href={"/channel/" + video.channel_id}>
-              <a
-                className={[
-                  "text-gray-400 hover:text-white hover:underline inline-block",
-                  "transition duration-200",
-                  small && "text-sm",
-                ].join(" ")}
-              >
-                {video.channel_name}
-              </a>
+            <Link
+              href={'/channel/' + video.channel_id}
+              className={[
+                'text-gray-400 hover:text-white hover:underline inline-block',
+                'transition duration-200',
+                small && 'text-sm',
+              ].join(' ')}
+            >
+              {video.channel_name}
             </Link>
             <ClientRender enableSSR>
-              <p className={["text-gray-400", small && "text-sm"].join(" ")}>
-                {Intl.NumberFormat("en-US").format(video.view_count)} views
-                &middot;{" "}
+              <p className={['text-gray-400', small && 'text-sm'].join(' ')}>
+                {Intl.NumberFormat('en-US').format(video.view_count)} views
+                &middot;{' '}
                 <span
                   title={
                     video.timestamps?.publishedAt
                       ? new Date(video.timestamps?.publishedAt).toLocaleString()
-                      : "(exact timestamp unknown)"
+                      : '(exact timestamp unknown)'
                   }
                 >
-                  Uploaded{" "}
+                  Uploaded{' '}
                   {formatDate(
                     new Date(video.timestamps?.publishedAt || video.upload_date)
                   )}
-                </span>{" "}
-                &middot;{" "}
+                </span>{' '}
+                &middot;{' '}
                 <span
                   title={new Date(
                     video.archived_timestamp +
-                      (video.archived_timestamp.endsWith("Z") ? "" : "Z")
+                      (video.archived_timestamp.endsWith('Z') ? '' : 'Z')
                   ).toLocaleString()}
                 >
-                  Archived{" "}
+                  Archived{' '}
                   {format(
                     video.archived_timestamp +
-                      (video.archived_timestamp.endsWith("Z") ? "" : "Z"),
-                    "en_US"
+                      (video.archived_timestamp.endsWith('Z') ? '' : 'Z'),
+                    'en_US'
                   )}
                 </span>
               </p>

@@ -1,9 +1,9 @@
-import React from "react";
-import Head from "next/head";
-import PageBase from "./shared/PageBase";
-import { ElasticSearchResult, VideoMetadata } from "./shared/database.d";
-import PaginatedResults from "./shared/PaginatedResults";
-import ServiceUnavailablePage from "./ServiceUnavailablePage";
+import React from 'react';
+import Head from 'next/head';
+import PageBase from './shared/PageBase';
+import { ElasticSearchResult, VideoMetadata } from './shared/database.d';
+import PaginatedResults from './shared/PaginatedResults';
+import ServiceUnavailablePage from './ServiceUnavailablePage';
 
 export type SearchPageProps = {
   q: string;

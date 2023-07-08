@@ -1,3 +1,3 @@
-import SpeedTestPage from "../modules/SpeedTestPage";
+import SpeedTestPage from '../modules/SpeedTestPage';
 
-export default SpeedTestPage
+export default SpeedTestPage;

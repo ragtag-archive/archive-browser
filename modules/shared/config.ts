@@ -57,13 +57,6 @@ export const WORKER_STATUS_ENDPOINT =
   'https://ragtag-archive-webhook.ragtag.workers.dev';
 
 /**
- * HCaptcha configuration for Request page
- */
-export const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY;
-export const NEXT_PUBLIC_HCAPTCHA_SITE_KEY =
-  process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY;
-
-/**
  * JWT public key for bulk request page
  */
 export const JWT_PUBLIC_KEY =

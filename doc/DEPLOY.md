@@ -1,6 +1,8 @@
 # Deploy Instructions
 
-The following are instructions to deploy the frontend manually. If you want to get things up and running quickly, a dockerized setup is available at [aonahara/archive-docker](https://gitlab.com/aonahara/archive-docker).
+The following are instructions to deploy the frontend manually. If you want to
+get things up and running quickly, a dockerized setup is available at
+[aonahara/archive-docker](https://gitlab.com/aonahara/archive-docker).
 
 For a minimum deployment, this frontend requres the following to function:
 
@@ -17,7 +19,10 @@ Set up an Elasticsearch 7.11 database. You can quickly deploy it using Docker:
 $ docker run -p 9200:9200 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.11.2
 ```
 
-Note, the above command creates a **temporary** database for testing. All data **will be gone** after a reboot. For more information, including how to deploy the database persistently, refer to the [official documentation](https://www.elastic.co/guide/en/elasticsearch/reference/7.11/docker.html).
+Note, the above command creates a **temporary** database for testing. All data
+**will be gone** after a reboot. For more information, including how to deploy
+the database persistently, refer to the
+[official documentation](https://www.elastic.co/guide/en/elasticsearch/reference/7.11/docker.html).
 
 Once the database is up, you should be able to query it like so:
 
@@ -29,21 +34,21 @@ Which should yield an output similar to this:
 
 ```json
 {
-  "name" : "my-instance",
-  "cluster_name" : "my-cluster",
-  "cluster_uuid" : "...",
-  "version" : {
-    "number" : "7.11.2",
-    "build_flavor" : "default",
-    "build_type" : "docker",
-    "build_hash" : "...",
-    "build_date" : "...",
-    "build_snapshot" : false,
-    "lucene_version" : "8.7.0",
-    "minimum_wire_compatibility_version" : "6.8.0",
-    "minimum_index_compatibility_version" : "6.0.0-beta1"
+  "name": "my-instance",
+  "cluster_name": "my-cluster",
+  "cluster_uuid": "...",
+  "version": {
+    "number": "7.11.2",
+    "build_flavor": "default",
+    "build_type": "docker",
+    "build_hash": "...",
+    "build_date": "...",
+    "build_snapshot": false,
+    "lucene_version": "8.7.0",
+    "minimum_wire_compatibility_version": "6.8.0",
+    "minimum_index_compatibility_version": "6.0.0-beta1"
   },
-  "tagline" : "You Know, for Search"
+  "tagline": "You Know, for Search"
 }
 ```
 
@@ -51,7 +56,9 @@ If you see that output, the database is ready.
 
 ### Create indices and mappings
 
-You should  see JSON files in the `doc/indices` folder of this repository. Those files contain the mappings and settings necessary to create the indices. To create the indices, run the `create_indices` script:
+You should see JSON files in the `doc/indices` folder of this repository. Those
+files contain the mappings and settings necessary to create the indices. To
+create the indices, run the `create_indices` script:
 
 ```bash
 node ./create_indices.js http://localhost:9200
@@ -61,7 +68,8 @@ The database is now ready.
 
 ### Prepare the file server
 
-The frontend expects a file server which serves data with the following structure:
+The frontend expects a file server which serves data with the following
+structure:
 
 ```
 /
@@ -75,21 +83,35 @@ The frontend expects a file server which serves data with the following structur
     profile.jpg
 ```
 
-For instance, if your files are served from `https://archive-content.ragtag.moe/`, the frontend will attempt to fetch channel profile images from `https://archive-content.ragtag.moe/UCRMpIxnySp7Fy5SbZ8dBv2w/profile.jpg`. Video thumbnails will be fetched from `https://archive-content.ragtag.moe/tE-J5q8OCF0/tE-J5q8OCF0.webp`, and so on.
+For instance, if your files are served from
+`https://archive-content.ragtag.moe/`, the frontend will attempt to fetch
+channel profile images from
+`https://archive-content.ragtag.moe/UCRMpIxnySp7Fy5SbZ8dBv2w/profile.jpg`. Video
+thumbnails will be fetched from
+`https://archive-content.ragtag.moe/tE-J5q8OCF0/tE-J5q8OCF0.webp`, and so on.
 
-Videos on the `/watch?v=` page are streamed, so make sure your file server accepts the `Range` header to allow for seeking. You should also make sure to include appropriate CORS headers if you decide to host the files under a different domain name.
+Videos on the `/watch?v=` page are streamed, so make sure your file server
+accepts the `Range` header to allow for seeking. You should also make sure to
+include appropriate CORS headers if you decide to host the files under a
+different domain name.
 
-You can use a webserver such as `nginx` for this purpose. But for testing, let's use a temporary server using the `http-server` package from npm. Run the following command in the folder which contains the files as described above.
+You can use a webserver such as `nginx` for this purpose. But for testing, let's
+use a temporary server using the `http-server` package from npm. Run the
+following command in the folder which contains the files as described above.
 
 ```
 $ npx http-server -p 8080 --cors
 ```
 
-The above command will create a basic HTTP file server, which will serve files from the current folder.
+The above command will create a basic HTTP file server, which will serve files
+from the current folder.
 
 ### Updating the configuration
 
-Open up the file `./modules/shared/config.ts`. You should see various options, its descriptions, and sometimes its default value. To override the options, you can set environment variables using a file called `.env.local`. Create the file `.env.local` in this project directory and fill it in with the following values:
+Open up the file `./modules/shared/config.ts`. You should see various options,
+its descriptions, and sometimes its default value. To override the options, you
+can set environment variables using a file called `.env.local`. Create the file
+`.env.local` in this project directory and fill it in with the following values:
 
 ```
 ES_INDEX=youtube-archive
@@ -101,7 +123,8 @@ ENABLE_SIGN_URLS=false
 
 ### Insert some data
 
-For the website to be useful, you should have some data in your Elasticsearch database. Create the file `data.json` with the following content:
+For the website to be useful, you should have some data in your Elasticsearch
+database. Create the file `data.json` with the following content:
 
 ```json
 {
@@ -155,8 +178,14 @@ Then perform the insert:
 $ curl -XPUT -H 'Content-Type: application/json' -d '@data.json' http://localhost:9200/youtube-archive/_doc/Y1So82y91Yw
 ```
 
-Be sure to also grab all the files and put them in the folder where you did the `npx http-server` thing. You can get the files from [here](https://archive.ragtag.moe/watch?v=Y1So82y91Yw). Click the three dots besides the Download button to get the various files.
+Be sure to also grab all the files and put them in the folder where you did the
+`npx http-server` thing. You can get the files from
+[here](https://archive.ragtag.moe/watch?v=Y1So82y91Yw). Click the three dots
+besides the Download button to get the various files.
 
 ## Run it!
 
-Once everything is prepared, run `yarn` to install all the dependencies. When done, run `yarn dev` to start a dev server. If successful, you should be able to open `http://localhost:3000` in your browser and see the video you just inserted.
+Once everything is prepared, run `yarn` to install all the dependencies. When
+done, run `yarn dev` to start a dev server. If successful, you should be able to
+open `http://localhost:3000` in your browser and see the video you just
+inserted.

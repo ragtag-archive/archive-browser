@@ -1,9 +1,9 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { ElasticSearchResult, VideoMetadata } from "./database.d";
-import Link from "next/link";
-import VideoCard from "./VideoCard";
-import { formatNumber } from "./format";
+import React from 'react';
+import { useRouter } from 'next/router';
+import { ElasticSearchResult, VideoMetadata } from './database.d';
+import Link from 'next/link';
+import VideoCard from './VideoCard';
+import { formatNumber } from './format';
 
 export type PaginatedResultsProps = {
   results: ElasticSearchResult<VideoMetadata>;
@@ -27,8 +27,8 @@ const PaginatedResults = (props: PaginatedResultsProps) => {
     <>
       <p className="md:px-0 px-4">
         Showing results {from + 1}-
-        {Math.min(results.hits.total.value, from + size)} of{" "}
-        {results.hits.total.relation === "eq" ? "" : "around "}
+        {Math.min(results.hits.total.value, from + size)} of{' '}
+        {results.hits.total.relation === 'eq' ? '' : 'around '}
         {formatNumber(results.hits.total.value)}
       </p>
       <div>
@@ -36,8 +36,8 @@ const PaginatedResults = (props: PaginatedResultsProps) => {
           <div
             className={
               grid
-                ? "w-full sm:w-1/2 md:w-1/3 lg:w-1/4 sm:px-2 py-4 inline-block"
-                : ""
+                ? 'w-full sm:w-1/2 md:w-1/3 lg:w-1/4 sm:px-2 py-4 inline-block'
+                : ''
             }
             key={video.video_id}
           >
@@ -55,18 +55,15 @@ const PaginatedResults = (props: PaginatedResultsProps) => {
                 page: page - 1,
               },
             }}
+            className="
+              bg-gray-800
+              hover:bg-gray-700
+              focus:bg-gray-900 focus:outline-none
+              px-4 py-2 rounded
+              transition duration-200
+            "
           >
-            <a
-              className="
-                bg-gray-800
-                hover:bg-gray-700
-                focus:bg-gray-900 focus:outline-none
-                px-4 py-2 rounded
-                transition duration-200
-              "
-            >
-              Previous
-            </a>
+            Previous
           </Link>
         )}
         <div className="mx-4 inline-block">
@@ -81,18 +78,15 @@ const PaginatedResults = (props: PaginatedResultsProps) => {
                 page: page + 1,
               },
             }}
+            className="
+              bg-gray-800
+              hover:bg-gray-700
+              focus:bg-gray-900 focus:outline-none
+              px-4 py-2 rounded
+              transition duration-200
+            "
           >
-            <a
-              className="
-                bg-gray-800
-                hover:bg-gray-700
-                focus:bg-gray-900 focus:outline-none
-                px-4 py-2 rounded
-                transition duration-200
-              "
-            >
-              Next
-            </a>
+            Next
           </Link>
         )}
       </div>

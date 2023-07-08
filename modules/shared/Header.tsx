@@ -1,26 +1,25 @@
-import React from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import Sidebar from "./Sidebar";
-import { IconBars } from "./icons";
-import { useQuery } from "react-query";
+import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import Sidebar from './Sidebar';
+import { IconBars } from './icons';
+import { useQuery } from 'react-query';
 
 const Header = React.memo(() => {
   const router = useRouter();
-  const initialQuery = (router.query.q as string) || "";
+  const initialQuery = (router.query.q as string) || '';
   const [search, setSearch] = React.useState(initialQuery);
   const [completionKey, setCompletionKey] = React.useState(initialQuery);
-  const [completionSelectedIndex, setCompletionSelectedIndex] = React.useState(
-    -1
-  );
+  const [completionSelectedIndex, setCompletionSelectedIndex] =
+    React.useState(-1);
   const [isCompletionVisible, setIsCompletionVisible] = React.useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [lastAutocomplete, setLastAutocomplete] = React.useState([]);
   const { isLoading, data: autocomplete } = useQuery(
-    ["search", completionKey],
+    ['search', completionKey],
     () =>
       fetch(
-        "/api/v1/search?completion=1&q=" + encodeURIComponent(completionKey)
+        '/api/v1/search?completion=1&q=' + encodeURIComponent(completionKey)
       ).then((res) => res.json())
   );
 
@@ -34,10 +33,10 @@ const Header = React.memo(() => {
   }, [isLoading, autocomplete, completionSelectedIndex]);
 
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
       setCompletionSelectedIndex((now) => {
-        let newIdx = e.key === "ArrowDown" ? now + 1 : now - 1;
+        let newIdx = e.key === 'ArrowDown' ? now + 1 : now - 1;
         newIdx = Math.min(Math.max(-1, newIdx), lastAutocomplete.length - 1);
         setSearch(lastAutocomplete[newIdx] || completionKey);
         return newIdx;
@@ -56,24 +55,24 @@ const Header = React.memo(() => {
     try {
       const url = new URL(search);
       if (
-        ["www.youtube.com", "youtube.com", "m.youtube.com"].includes(
+        ['www.youtube.com', 'youtube.com', 'm.youtube.com'].includes(
           url.hostname
         )
       ) {
-        if (url.pathname.includes("/channel/")) {
+        if (url.pathname.includes('/channel/')) {
           router.push(url.pathname);
           return;
-        } else if (url.pathname === "/watch" && url.searchParams.has("v")) {
-          router.push("/watch?v=" + url.searchParams.get("v"));
+        } else if (url.pathname === '/watch' && url.searchParams.has('v')) {
+          router.push('/watch?v=' + url.searchParams.get('v'));
           return;
         }
-      } else if (url.hostname === "youtu.be") {
-        router.push("/watch?v=" + url.pathname.substr(1));
+      } else if (url.hostname === 'youtu.be') {
+        router.push('/watch?v=' + url.pathname.substr(1));
         return;
       }
     } catch (e) {}
 
-    router.push("/search?q=" + encodeURIComponent(search));
+    router.push('/search?q=' + encodeURIComponent(search));
     return;
   };
 
@@ -91,8 +90,8 @@ const Header = React.memo(() => {
               >
                 <IconBars className="w-6 h-6" />
               </button>
-              <Link href="/">
-                <a className="py-1">Ragtag Archive</a>
+              <Link href="/" className="py-1">
+                Ragtag Archive
               </Link>
             </div>
           </div>
@@ -126,18 +125,15 @@ const Header = React.memo(() => {
                     {lastAutocomplete.map((result, idx) => (
                       <Link
                         key={result}
-                        href={"/search?q=" + encodeURIComponent(result)}
+                        href={'/search?q=' + encodeURIComponent(result)}
+                        className={
+                          'block py-1 px-4 hover:bg-gray-700' +
+                          (idx === completionSelectedIndex
+                            ? ' bg-gray-700'
+                            : '')
+                        }
                       >
-                        <a
-                          className={
-                            "block py-1 px-4 hover:bg-gray-700" +
-                            (idx === completionSelectedIndex
-                              ? " bg-gray-700"
-                              : "")
-                          }
-                        >
-                          {result}
-                        </a>
+                        {result}
                       </Link>
                     ))}
                   </div>

@@ -1,8 +1,8 @@
-import React from "react";
-import Head from "next/head";
+import React from 'react';
+import Head from 'next/head';
 
-const K_SITE_NAME = "Ragtag Archive";
-const K_SITE_DESCRIPTION = "Preserving culture, one stream at a time";
+const K_SITE_NAME = 'Ragtag Archive';
+const K_SITE_DESCRIPTION = 'Preserving culture, one stream at a time';
 
 type DefaultHeadProps = {
   title?: string;
@@ -11,7 +11,7 @@ type DefaultHeadProps = {
 const DefaultHead = (props: DefaultHeadProps) => (
   <Head>
     <title>
-      {props.title ? props.title + " - " : ""}
+      {props.title ? props.title + ' - ' : ''}
       {K_SITE_NAME}
     </title>
     <meta name="title" content={K_SITE_NAME} />

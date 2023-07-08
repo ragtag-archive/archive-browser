@@ -1,5 +1,5 @@
-import React from "react";
-import { formatSeconds } from "../format";
+import React from 'react';
+import { formatSeconds } from '../format';
 
 export type SeekBarProps = {
   value: number;
@@ -48,32 +48,32 @@ const SeekBar = (props: SeekBarProps) => {
             <div
               className="absolute bg-white opacity-50 h-full"
               style={{
-                width: 100 * (buffer / max) + "%",
+                width: 100 * (buffer / max) + '%',
               }}
             />
             <div
               className="absolute bg-white opacity-50 h-full"
               style={{
-                width: 100 * (isMouseOver ? hoverPercentX : 0) + "%",
+                width: 100 * (isMouseOver ? hoverPercentX : 0) + '%',
               }}
             />
             <div
               className="absolute bg-blue-500 h-full"
               style={{
-                width: (100 * value) / max + "%",
+                width: (100 * value) / max + '%',
               }}
             />
           </div>
         </div>
         <div
           className={[
-            "absolute bottom-4 pointer-events-none",
-            "text-center rounded overflow-hidden",
-          ].join(" ")}
+            'absolute bottom-4 pointer-events-none',
+            'text-center rounded overflow-hidden',
+          ].join(' ')}
           style={{
             opacity: isMouseOver ? 1 : 0,
-            left: Math.min(90, Math.max(10, hoverPercentX * 100)) + "%",
-            transform: "translateX(-50%)",
+            left: Math.min(90, Math.max(10, hoverPercentX * 100)) + '%',
+            transform: 'translateX(-50%)',
           }}
         >
           <div className="bg-black bg-opacity-75 px-2 py-1 text-center">
