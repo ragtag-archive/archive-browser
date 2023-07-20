@@ -39,17 +39,22 @@ export const signFileURLs = (
   driveBaseFolder: string,
   files: VideoFile[],
   ip: string
-) =>
+) => {
+  // Construct upstream tag, default to `gd:` if not specified
+  const upstreamTag = driveBaseFolder.includes(':')
+    ? driveBaseFolder
+    : 'gd:' + driveBaseFolder;
+
   files.forEach((file, idx) => {
-    files[idx].url = signURL(
-      file.url ||
-        DRIVE_BASE_URL +
-          '/gd:' +
-          driveBaseFolder +
-          '/' +
-          file.name.split('.')[0] +
-          '/' +
-          file.name,
-      ip
-    );
+    // Create the URL if not specified
+    const fullUrl = [
+      DRIVE_BASE_URL,
+      upstreamTag,
+      file.name.split('.')[0],
+      file.name,
+    ].join('/');
+
+    // Set the URL
+    files[idx].url = signURL(file.url || fullUrl, ip);
   });
+};
