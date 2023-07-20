@@ -57,8 +57,12 @@ const WatchPage = (props: WatchPageProps) => {
 
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [fmtVideo, fmtAudio] = videoInfo.format_id.split('+');
-  const urlVideo = getFile(videoInfo, '.f' + fmtVideo);
-  const urlAudio = getFile(videoInfo, '.f' + fmtAudio);
+  const urlVideo =
+    getFile(videoInfo, '.f' + fmtVideo) ??
+    getFile(videoInfo, '.webm') ??
+    getFile(videoInfo, '.mp4') ??
+    getFile(videoInfo, '.mkv');
+  const urlAudio = getFile(videoInfo, '.f' + fmtAudio) ?? urlVideo;
   const urlThumb = getFile(videoInfo, '.webp') || getFile(videoInfo, '.jpg');
   const urlChat = getFile(videoInfo, '.chat.json');
   const urlInfo = getFile(videoInfo, '.info.json');
