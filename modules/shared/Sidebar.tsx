@@ -27,7 +27,7 @@ const Sidebar = React.memo((props: SidebarProps) => {
       <div
         className={[
           'fixed z-40',
-          'left-0 top-0 bottom-0',
+          'top-0 bottom-0',
           'pt-16 md:w-72 w-3/4 bg-gray-900',
           'transition-all duration-200',
           isOpen ? 'left-0' : 'md:-left-72 -left-full',
