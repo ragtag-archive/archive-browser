@@ -29,7 +29,10 @@ const VideoActionButtons = React.memo(
   ({ video, full }: VideoActionButtonsProps) => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-    const mkv = getFile(video, '.mkv');
+    const mkv =
+      getFile(video, '.mkv') ??
+      getFile(video, '.mp4') ??
+      getFile(video, '.webm');
     const mkvURL = mkv?.url;
     const mkvSize = mkv?.size || -1;
 
