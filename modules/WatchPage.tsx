@@ -15,6 +15,7 @@ import VideoPlayer2 from './shared/VideoPlayer/VideoPlayer2';
 import ExpandableContainer from './ExpandableContainer';
 import CommentSection from './CommentSection';
 import { NextImage } from './shared/NextImage';
+import { parseTimestamp } from './shared/util';
 
 const format = (n: number) => Intl.NumberFormat('en-US').format(n);
 
@@ -175,24 +176,12 @@ const WatchPage = (props: WatchPageProps) => {
                   </span>{' '}
                   &middot;{' '}
                   <span
-                    title={new Date(
-                      videoInfo.archived_timestamp +
-                        (videoInfo.archived_timestamp.endsWith('Z') ||
-                        videoInfo.archived_timestamp.includes('+')
-                          ? ''
-                          : 'Z')
+                    title={parseTimestamp(
+                      videoInfo.archived_timestamp
                     ).toLocaleString()}
                   >
                     Archived{' '}
-                    {formatDate(
-                      new Date(
-                        videoInfo.archived_timestamp +
-                          (videoInfo.archived_timestamp.endsWith('Z') ||
-                          videoInfo.archived_timestamp.includes('+')
-                            ? ''
-                            : 'Z')
-                      )
-                    )}
+                    {formatDate(parseTimestamp(videoInfo.archived_timestamp))}
                   </span>
                 </p>
               </ClientRender>

@@ -6,6 +6,7 @@ import { format } from 'timeago.js';
 import VideoActionButtons from './VideoActionButtons';
 import ClientRender from './ClientRender';
 import { NextImage } from './NextImage';
+import { parseTimestamp } from './util';
 
 export type VideoCardProps = {
   video?: VideoMetadata;
@@ -94,17 +95,12 @@ const VideoCard = React.memo(({ video, small }: VideoCardProps) => {
                 </span>{' '}
                 &middot;{' '}
                 <span
-                  title={new Date(
-                    video.archived_timestamp +
-                      (video.archived_timestamp.endsWith('Z') ? '' : 'Z')
+                  title={parseTimestamp(
+                    video.archived_timestamp
                   ).toLocaleString()}
                 >
                   Archived{' '}
-                  {format(
-                    video.archived_timestamp +
-                      (video.archived_timestamp.endsWith('Z') ? '' : 'Z'),
-                    'en_US'
-                  )}
+                  {format(parseTimestamp(video.archived_timestamp), 'en_US')}
                 </span>
               </p>
             </ClientRender>

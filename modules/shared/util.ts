@@ -30,3 +30,8 @@ export const proxyYT3 = (url: string): string => {
     return '';
   }
 };
+
+export const parseTimestamp = (timestamp: string): Date =>
+  new Date(
+    timestamp + (timestamp.endsWith('Z') || timestamp.includes('+') ? '' : 'Z')
+  );
