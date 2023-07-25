@@ -16,8 +16,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const ip = getRemoteAddress(ctx.req);
     signFileURLs(video.drive_base, video.files, ip);
 
-    const chatFile = video.files.find((file) =>
-      file.name.endsWith('.chat.json')
+    const chatFile = video.files.find(
+      (file) =>
+        file.name.endsWith('.chat.json') ||
+        file.name.endsWith('.live_chat.json')
     );
     const thumbFile = video.files.find((file) => file.name.endsWith('.webp'));
 

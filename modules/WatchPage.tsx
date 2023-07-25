@@ -65,7 +65,8 @@ const WatchPage = (props: WatchPageProps) => {
     getFile(videoInfo, '.mkv');
   const urlAudio = getFile(videoInfo, '.f' + fmtAudio) ?? urlVideo;
   const urlThumb = getFile(videoInfo, '.webp') || getFile(videoInfo, '.jpg');
-  const urlChat = getFile(videoInfo, '.chat.json');
+  const urlChat =
+    getFile(videoInfo, '.chat.json') || getFile(videoInfo, '.live_chat.json');
   const urlInfo = getFile(videoInfo, '.info.json');
 
   return (

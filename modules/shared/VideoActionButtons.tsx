@@ -56,7 +56,7 @@ const VideoActionButtons = React.memo(
           ? 'Captions (vtt, ' + name.split('.')[1] + ')'
           : name.endsWith('.ytt')
           ? 'Captions (srv3, ' + name.split('.')[1] + ')'
-          : name.endsWith('.chat.json')
+          : name.endsWith('.chat.json') || name.endsWith('.live_chat.json')
           ? 'Chat logs (json)'
           : name.endsWith('.info.json')
           ? 'Metadata (json)'

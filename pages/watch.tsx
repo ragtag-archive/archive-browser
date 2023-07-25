@@ -77,7 +77,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
           ...videoInfo,
           files,
         },
-        hasChat: !!files.find((file) => file.name === v + '.chat.json'),
+        hasChat: !!files.find(
+          (file) =>
+            file.name === v + '.chat.json' ||
+            file.name === v + '.live_chat.json'
+        ),
         relatedVideos: related.hits.hits
           .map((hit) => hit._source)
           .filter((video) => video.video_id !== v),
