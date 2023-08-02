@@ -6,10 +6,10 @@ const metadataFileEntrySchema = Joi.object({
 });
 
 const metadataTimestampsSchema = Joi.object({
-  actualStartTime: Joi.string().optional(),
-  publishedAt: Joi.string().optional(),
-  scheduledStartTime: Joi.string().optional(),
-  actualEndTime: Joi.string().optional(),
+  actualStartTime: Joi.string().optional().allow(null),
+  publishedAt: Joi.string().optional().allow(null),
+  scheduledStartTime: Joi.string().optional().allow(null),
+  actualEndTime: Joi.string().optional().allow(null),
 });
 
 export const metadataSchema = Joi.object({
@@ -30,5 +30,5 @@ export const metadataSchema = Joi.object({
   files: Joi.array().items(metadataFileEntrySchema).required(),
   drive_base: Joi.string().required(),
   archived_timestamp: Joi.string().required(),
-  timestamps: metadataTimestampsSchema.optional(),
+  timestamps: metadataTimestampsSchema.optional().allow(null),
 });
