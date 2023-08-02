@@ -18,7 +18,7 @@ export const metadataSchema = Joi.object({
   channel_id: Joi.string().required(),
   upload_date: Joi.string().required(),
   title: Joi.string().required(),
-  description: Joi.string().required(),
+  description: Joi.string().allow('').required(),
   duration: Joi.number().required(),
   width: Joi.number().required(),
   height: Joi.number().required(),
