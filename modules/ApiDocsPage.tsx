@@ -1,12 +1,13 @@
 import Head from 'next/head';
 import { ApiSearchSortFields } from '../pages/api/v1/search';
 import PageBase from './shared/PageBase';
+import { SITE_NAME, SITE_URL } from './shared/config';
 
 const ApiDocsPage = () => {
   return (
     <PageBase>
       <Head>
-        <title>API - Ragtag Archive</title>
+        <title>API - {SITE_NAME}</title>
       </Head>
       <div className="prose prose-lg prose-dark px-6 py-12">
         <h1>API Documentation</h1>
@@ -95,7 +96,7 @@ const ApiDocsPage = () => {
             </p>
             <pre>
               <code>
-                {`curl https://archive.ragtag.moe/api/v1/search?q=haachama&sort=duration&sort_order=desc`}
+                {`curl ${SITE_URL}api/v1/search?q=haachama&sort=duration&sort_order=desc`}
               </code>
             </pre>
           </li>
@@ -110,7 +111,7 @@ const ApiDocsPage = () => {
   <iframe
     frameborder="0"
     allow="fullscreen"
-    src="https://archive.ragtag.moe/embed/vHMV44Uza4g"
+    src="${SITE_URL}embed/vHMV44Uza4g"
     style="position:absolute;width:100%;height:100%" />
 </div>`}</code>
         </pre>

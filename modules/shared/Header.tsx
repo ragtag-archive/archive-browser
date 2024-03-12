@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Sidebar from './Sidebar';
 import { IconBars } from './icons';
 import { useQuery } from 'react-query';
+import { SITE_NAME } from './config';
 
 const Header = React.memo(() => {
   const router = useRouter();
@@ -91,7 +92,7 @@ const Header = React.memo(() => {
                 <IconBars className="w-6 h-6" />
               </button>
               <Link href="/" className="py-1">
-                Ragtag Archive
+                {SITE_NAME}
               </Link>
             </div>
           </div>

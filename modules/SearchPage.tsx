@@ -4,6 +4,7 @@ import PageBase from './shared/PageBase';
 import { ElasticSearchResult, VideoMetadata } from './shared/database.d';
 import PaginatedResults from './shared/PaginatedResults';
 import ServiceUnavailablePage from './ServiceUnavailablePage';
+import { SITE_NAME } from './shared/config';
 
 export type SearchPageProps = {
   q: string;
@@ -21,7 +22,9 @@ const SearchPage = (props: SearchPageProps) => {
   return (
     <PageBase>
       <Head>
-        <title>{q} - Ragtag Archive</title>
+        <title>
+          {q} - {SITE_NAME}
+        </title>
       </Head>
       <div>
         {props.results.hits.total.value === 0 ? (

@@ -1,11 +1,12 @@
 import Head from 'next/head';
 import PageBase from './shared/PageBase';
+import { SITE_NAME } from './shared/config';
 
 const AboutPage = () => {
   return (
     <PageBase>
       <Head>
-        <title>About - Ragtag Archive</title>
+        <title>About - {SITE_NAME}</title>
       </Head>
       <div className="prose prose-lg prose-dark px-6 py-12">
         <h1>Welcome to the archives</h1>

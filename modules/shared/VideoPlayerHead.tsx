@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { VideoMetadata } from './database.d';
+import { SITE_NAME, SITE_URL } from './config';
 
 export type VideoPlayerHeadProps = {
   videoInfo: VideoMetadata;
@@ -12,17 +13,19 @@ const VideoPlayerHead = (props: VideoPlayerHeadProps) => {
       (file) => file.name.endsWith('.jpg') || file.name.endsWith('.webp')
     )?.url ||
     'https://i.ytimg.com/vi/' + videoInfo.video_id + '/maxresdefault.jpg';
-  const canonURL = 'https://archive.ragtag.moe/watch?v=' + videoInfo.video_id;
+  const canonURL = SITE_URL + 'watch?v=' + videoInfo.video_id;
 
   return (
     <Head>
-      <title>{videoInfo.title} - Ragtag Archive</title>
+      <title>
+        {videoInfo.title} - {SITE_NAME}
+      </title>
       <meta name="title" content={videoInfo.title} />
       <meta name="description" content={videoInfo.channel_name} />
       <link rel="canonical" href={canonURL} />
 
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="Ragtag Archive" />
+      <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:url" content={canonURL} />
       <meta property="og:title" content={videoInfo.title} />
       <meta property="og:description" content={videoInfo.channel_name} />

@@ -13,6 +13,7 @@ import ChatMessageRender from './shared/ChatReplay/ChatMessageRender';
 import { buttonStyle } from './shared/VideoActionButtons';
 import { formatNumber } from './shared/format';
 import { NextImage } from './shared/NextImage';
+import { SITE_NAME } from './shared/config';
 
 type ChatExplorerPageProps = {
   chatURL?: string;
@@ -102,7 +103,7 @@ const ChatExplorerPage = (props: ChatExplorerPageProps) => {
   return (
     <PageBase flex>
       <Head>
-        <title>Chat Explorer - Ragtag Archive</title>
+        <title>Chat Explorer - {SITE_NAME}</title>
       </Head>
       {!replayData ? (
         <div className="flex flex-1 items-center justify-center">

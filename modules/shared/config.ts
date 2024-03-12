@@ -18,6 +18,15 @@ export const ES_BACKEND_URL =
 export const ES_AUTHORIZATION = process.env.ES_AUTHORIZATION || '';
 
 /**
+ * Frontend configuration
+ */
+// Canonical public URL for the website. Make sure to include the trailing slash.
+export const SITE_URL = process.env.SITE_URL || 'https://archive.ragtag.moe/';
+export const SITE_NAME = process.env.SITE_NAME || 'Ragtag Archive';
+export const SITE_DESCRIPTION =
+  process.env.SITE_DESCRIPTION || 'Preserving culture, one stream at a time';
+
+/**
  * Image optimization, defaults to false
  */
 export const ENABLE_IMAGE_OPTIMIZATION = process.env
@@ -52,8 +61,10 @@ export const TASQ_QUEUE_URL = process.env.TASQ_QUEUE_URL;
  * Open the URL in your browser to see what the data looks like.
  */
 export const STATUS_UPDATES_ENDPOINT =
+  process.env.STATUS_UPDATES_ENDPOINT ||
   'https://archive-status-updates.ragtag.workers.dev';
 export const WORKER_STATUS_ENDPOINT =
+  process.env.WORKER_STATUS_ENDPOINT ||
   'https://ragtag-archive-webhook.ragtag.workers.dev';
 
 /**

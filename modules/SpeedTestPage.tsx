@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import axios from 'axios';
-import { DRIVE_BASE_URL } from './shared/config';
+import { DRIVE_BASE_URL, SITE_NAME } from './shared/config';
 import PageBase from './shared/PageBase';
 import { formatBytes } from './shared/format';
 import { useThrottle } from './shared/hooks/useThrottle';
@@ -57,7 +57,7 @@ const SpeedTestPage = () => {
   return (
     <PageBase>
       <Head>
-        <title>Speed Test - Ragtag Archive</title>
+        <title>Speed Test - {SITE_NAME}</title>
       </Head>
       <div className="flex flex-col items-center justify-center py-16">
         <div className="flex flex-row items-start font-mono">

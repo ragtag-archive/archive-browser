@@ -18,6 +18,7 @@ import SeekBar from './SeekBar';
 import { CaptionsRenderer } from 'react-srv3';
 import MediaSync, { MediaSyncRef, MediaSyncState } from './MediaSync';
 import { NextImage } from '../NextImage';
+import { SITE_NAME, SITE_URL } from '../config';
 
 type CaptionsTrack = {
   lang: string;
@@ -373,11 +374,8 @@ const VideoPlayer2 = (props: VideoPlayerProps) => {
         >
           {showWatermark && (
             <div className="text-sm">
-              <a
-                target="_blank"
-                href={'https://archive.ragtag.moe/watch?v=' + videoId}
-              >
-                Hosted on <span className="font-bold">Ragtag Archive</span>
+              <a target="_blank" href={SITE_URL + 'watch?v=' + videoId}>
+                Hosted on <span className="font-bold">{SITE_NAME}</span>
               </a>
             </div>
           )}

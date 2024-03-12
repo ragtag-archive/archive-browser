@@ -5,6 +5,7 @@ import { AggregatedChannel } from '../pages/api/v1/channels';
 import PageBase from './shared/PageBase';
 import ServiceUnavailablePage from './ServiceUnavailablePage';
 import { NextImage } from './shared/NextImage';
+import { SITE_NAME } from './shared/config';
 
 export type ChannelsListPageProps = {
   channels?: AggregatedChannel[];
@@ -17,7 +18,7 @@ const ChannelsListPage = (props: ChannelsListPageProps) => {
   return (
     <PageBase>
       <Head>
-        <title>Channels - Ragtag Archive</title>
+        <title>Channels - {SITE_NAME}</title>
       </Head>
       <div className="">
         {channels.map((channel, idx) => (

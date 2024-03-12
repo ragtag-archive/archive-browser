@@ -1,12 +1,13 @@
 import React from 'react';
 import Head from 'next/head';
 import PageBase from '../modules/shared/PageBase';
+import { SITE_NAME } from '../modules/shared/config';
 
 const NotFoundPage = () => {
   return (
     <PageBase>
       <Head>
-        <title>404 - Ragtag Archive</title>
+        <title>404 - {SITE_NAME}</title>
       </Head>
       <div>
         <div className="px-4">

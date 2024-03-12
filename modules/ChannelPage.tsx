@@ -5,6 +5,7 @@ import PageBase from './shared/PageBase';
 import PaginatedResults from './shared/PaginatedResults';
 import { IconYouTube } from './shared/icons';
 import { NextImage } from './shared/NextImage';
+import { SITE_NAME, SITE_URL } from './shared/config';
 
 export type ChannelPageProps = {
   channelId: string;
@@ -30,22 +31,21 @@ const ChannelPage = (props: ChannelPageProps) => {
   return (
     <PageBase>
       <Head>
-        <title>{channelName} - Ragtag Archive</title>
+        <title>
+          {channelName} - {SITE_NAME}
+        </title>
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Ragtag Archive" />
+        <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:title" content={channelName} />
         <meta property="og:description" content={description} />
-        <meta
-          property="og:url"
-          content={'https://archive.ragtag.moe/channel/' + channelId}
-        />
+        <meta property="og:url" content={SITE_URL + 'channel/' + channelId} />
         <meta property="og:image" content={profileImage} />
         <meta property="twitter:card" content="summary" />
         <meta property="twitter:title" content={channelName} />
         <meta property="twitter:description" content={description} />
         <meta
           property="twitter:url"
-          content={'https://archive.ragtag.moe/channel/' + channelId}
+          content={SITE_URL + 'channel/' + channelId}
         />
         <meta property="twitter:image" content={profileImage} />
       </Head>

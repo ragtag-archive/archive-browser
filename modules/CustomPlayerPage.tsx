@@ -6,6 +6,7 @@ import PageBase from './shared/PageBase';
 import VideoPlayer2 from './shared/VideoPlayer/VideoPlayer2';
 import { buttonStyle } from './shared/VideoActionButtons';
 import { IconCheck } from './shared/icons';
+import { SITE_NAME } from './shared/config';
 
 const CustomPlayerPage = () => {
   const [isChatVisible, setIsChatVisible] = React.useState(false);
@@ -33,7 +34,7 @@ const CustomPlayerPage = () => {
   return (
     <PageBase>
       <Head>
-        <title>Custom Player - Ragtag Archive</title>
+        <title>Custom Player - {SITE_NAME}</title>
       </Head>
       {showPlayer ? (
         <div>

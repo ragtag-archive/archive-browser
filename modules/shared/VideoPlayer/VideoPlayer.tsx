@@ -19,6 +19,7 @@ import SeekBar from './SeekBar';
 import { CaptionsRenderer } from 'react-srv3';
 import { useAnimationFrame } from '../hooks/useAnimationFrame';
 import { NextImage } from '../NextImage';
+import { SITE_NAME, SITE_URL } from '../config';
 
 type CaptionsTrack = {
   lang: string;
@@ -514,9 +515,9 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
             <div className="text-sm">
               <a
                 target="_blank"
-                href={'https://archive.ragtag.moe/watch?v=' + videoId}
+                href={SITE_URL + 'watch?v=' + videoId}
               >
-                Hosted on <span className="font-bold">Ragtag Archive</span>
+                Hosted on <span className="font-bold">{SITE_NAME}</span>
               </a>
             </div>
           )}
