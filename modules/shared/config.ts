@@ -21,10 +21,12 @@ export const ES_AUTHORIZATION = process.env.ES_AUTHORIZATION || '';
  * Frontend configuration
  */
 // Canonical public URL for the website. Make sure to include the trailing slash.
-export const SITE_URL = process.env.SITE_URL || 'https://archive.ragtag.moe/';
-export const SITE_NAME = process.env.SITE_NAME || 'Ragtag Archive';
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://archive.ragtag.moe/';
+export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || 'Ragtag Archive';
 export const SITE_DESCRIPTION =
-  process.env.SITE_DESCRIPTION || 'Preserving culture, one stream at a time';
+  process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
+  'Preserving culture, one stream at a time';
 
 /**
  * Image optimization, defaults to false
