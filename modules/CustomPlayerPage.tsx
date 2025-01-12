@@ -137,6 +137,7 @@ const CustomPlayerPage = () => {
                 </span>
                 <input
                   type="file"
+                  accept="video/*"
                   className="hidden"
                   onChange={(e) => handleFile(e, setUrlVideo)}
                 />
@@ -150,6 +151,7 @@ const CustomPlayerPage = () => {
                 </span>
                 <input
                   type="file"
+                  accept=".json"
                   className="hidden"
                   onChange={(e) => handleFile(e, setUrlChat)}
                 />
@@ -163,6 +165,7 @@ const CustomPlayerPage = () => {
                 </span>
                 <input
                   type="file"
+                  accept=".srv3"
                   className="hidden"
                   onChange={(e) => handleFile(e, setUrlYtt)}
                 />
