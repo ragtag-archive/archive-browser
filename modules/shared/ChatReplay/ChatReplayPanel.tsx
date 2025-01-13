@@ -8,7 +8,7 @@ import { parseChatReplay } from './parser';
 
 export type ChatReplayPanelProps = {
   src: string;
-  info: string;
+  info?: string;
   currentTimeSeconds: number;
   onChatToggle?: (isVisible: boolean) => any;
 };
@@ -36,9 +36,9 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
         transformResponse: (res) => res,
       });
 
-      const info = await axios.get(props.info, {
+      const info: any = props.info ? await axios.get(props.info, {
         transformResponse: (res) => res,
-      });
+      }) : {};
 
       setReplayData(parseChatReplay(data.data, info.data));
       setIsChatVisible(true);

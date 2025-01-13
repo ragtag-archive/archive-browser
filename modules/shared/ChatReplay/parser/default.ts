@@ -8,7 +8,7 @@ export default class DefaultChatParser implements ChatReplayParser {
 
   constructor(chatData: string, videoInfo: string) {
     this.chatData = chatData.trim();
-    this.videoInfo = videoInfo.trim();
+    this.videoInfo = videoInfo ? videoInfo.trim() : '';
   }
 
   canParse(): boolean {
@@ -22,22 +22,21 @@ export default class DefaultChatParser implements ChatReplayParser {
   }
 
   parse(): ChatMessage[] {
-    this.chatData = JSON.parse(this.chatData);
+    const actions = JSON.parse(this.chatData);
 
     // Handle live_chat.json without time_in_seconds values
     if (
-      this.chatData.length > 0 &&
-      !('time_in_seconds' in this.chatData[0])
+      actions.length > 0 &&
+      !('time_in_seconds' in actions[0])
     ) {
-      this.videoInfo = JSON.parse(this.videoInfo);
       // Read stream start time from info.json (as seconds)
-      const startTime = Number(this.videoInfo.release_timestamp);
+      const startTime = Number(JSON.parse(this.videoInfo).release_timestamp);
       // Action times are microseconds
-      this.chatData.forEach((action) =>
+      actions.forEach((action) =>
         action.time_in_seconds = (action.timestamp / 1000000) - startTime
       );
     }
 
-    return this.chatData.sort((a, b) => a.time_in_seconds - b.time_in_seconds) as ChatMessage[];
+    return actions.sort((a, b) => a.time_in_seconds - b.time_in_seconds) as ChatMessage[];
   }
 }
