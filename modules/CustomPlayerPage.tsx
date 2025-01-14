@@ -15,6 +15,7 @@ const CustomPlayerPage = () => {
   const [urlVideo, setUrlVideo] = React.useState('');
   const [urlChat, setUrlChat] = React.useState('');
   const [urlYtt, setUrlYtt] = React.useState('');
+  const [urlInfo, setUrlInfo] = React.useState('');
   const [showPlayer, setShowPlayer] = React.useState(false);
 
   const handleFile = (
@@ -83,6 +84,7 @@ const CustomPlayerPage = () => {
               ) : (
                 <ChatReplayPanel
                   src={urlChat}
+                  info={urlInfo}
                   currentTimeSeconds={playbackProgress}
                   onChatToggle={setIsChatVisible}
                 />
@@ -137,6 +139,7 @@ const CustomPlayerPage = () => {
                 </span>
                 <input
                   type="file"
+                  accept="video/*"
                   className="hidden"
                   onChange={(e) => handleFile(e, setUrlVideo)}
                 />
@@ -150,6 +153,7 @@ const CustomPlayerPage = () => {
                 </span>
                 <input
                   type="file"
+                  accept=".json"
                   className="hidden"
                   onChange={(e) => handleFile(e, setUrlChat)}
                 />
@@ -163,8 +167,23 @@ const CustomPlayerPage = () => {
                 </span>
                 <input
                   type="file"
+                  accept=".srv3"
                   className="hidden"
                   onChange={(e) => handleFile(e, setUrlYtt)}
+                />
+              </label>
+              <label
+                className={[buttonStyle, 'relative cursor-pointer'].join(' ')}
+              >
+                <span>Select info json</span>
+                <span className="ml-auto">
+                  {urlInfo ? <IconCheck width="1em" height="1em" /> : null}
+                </span>
+                <input
+                  type="file"
+                  accept=".json"
+                  className="hidden"
+                  onChange={(e) => handleFile(e, setUrlInfo)}
                 />
               </label>
 

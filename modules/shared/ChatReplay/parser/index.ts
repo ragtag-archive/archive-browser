@@ -5,7 +5,7 @@ import YtDlpChatParser from './yt-dlp';
 export abstract class ChatReplayParser {
   name: string = '';
 
-  constructor(chatData: string) {
+  constructor(chatData: string, videoInfo: string) {
     if (this.constructor === ChatReplayParser)
       throw new Error("Abstract classes can't be instantiated.");
   }
@@ -19,10 +19,10 @@ export abstract class ChatReplayParser {
   }
 }
 
-export const parseChatReplay = (input: string) => {
+export const parseChatReplay = (input: string, info: string) => {
   console.log('[chat] parsing chat data');
   const parser = [DefaultChatParser, YtDlpChatParser]
-    .map((Parser) => new Parser(input))
+    .map((Parser) => new Parser(input, info))
     .find((parser) => parser.canParse());
   if (!parser) throw new Error('No suitable chat parser found');
   console.log('[chat] using', parser.name);
