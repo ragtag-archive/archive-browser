@@ -7,9 +7,10 @@ import VideoPlayer2 from './shared/VideoPlayer/VideoPlayer2';
 import { buttonStyle } from './shared/VideoActionButtons';
 import { IconCheck } from './shared/icons';
 import { SITE_NAME } from './shared/config';
+import { useLocalStorage } from './shared/hooks/useLocalStorage';
 
 const CustomPlayerPage = () => {
-  const [isChatVisible, setIsChatVisible] = React.useState(false);
+  const [isChatVisible, setIsChatVisible] = useLocalStorage('chat:visible', true);
   const { innerWidth, innerHeight } = useWindowSize();
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [urlVideo, setUrlVideo] = React.useState('');
@@ -40,7 +41,7 @@ const CustomPlayerPage = () => {
       {showPlayer ? (
         <div>
           <div
-            className={['flex lg:flex-row flex-col lg:h-auto'].join(' ')}
+            className="flex lg:flex-row flex-col lg:h-auto"
             style={{
               height: isChatVisible && innerWidth < 640 ? innerHeight : 'auto',
             }}
@@ -86,7 +87,6 @@ const CustomPlayerPage = () => {
                   src={urlChat}
                   info={urlInfo}
                   currentTimeSeconds={playbackProgress}
-                  onChatToggle={setIsChatVisible}
                 />
               )}
             </div>

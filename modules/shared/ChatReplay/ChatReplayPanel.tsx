@@ -5,12 +5,12 @@ import ChatReplay from './ChatReplay';
 import { IconChevronDown, IconFilter } from '../icons';
 import { useDebounce } from '../hooks/useDebounce';
 import { parseChatReplay } from './parser';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export type ChatReplayPanelProps = {
   src: string;
   info?: string;
   currentTimeSeconds: number;
-  onChatToggle?: (isVisible: boolean) => any;
 };
 
 const ChatReplayPanel = (props: ChatReplayPanelProps) => {
@@ -20,7 +20,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
   const [isFilterVisible, setIsFilterVisible] = React.useState(false);
   const [chatFilter, setChatFilter] = React.useState('');
-  const [isChatVisible, setIsChatVisible] = React.useState(false);
+  const [isChatVisible, setIsChatVisible] = useLocalStorage('chat:visible', true);
   const [isErrored, setIsErrored] = React.useState(false);
   const refChatScrollDiv = React.useRef<HTMLDivElement>(null);
 
@@ -41,7 +41,6 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
       }) : {};
 
       setReplayData(parseChatReplay(data.data, info.data));
-      setIsChatVisible(true);
     } catch (ex) {
       console.log('[chat] error parsing chat:', ex);
       setIsErrored(true);
@@ -76,10 +75,6 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
       });
   }, [props.currentTimeSeconds]);
 
-  React.useEffect(() => {
-    props.onChatToggle?.(isChatVisible);
-  }, [isChatVisible]);
-
   if (replayData === null)
     return (
       <div
@@ -111,6 +106,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
           <div>
             <button
               type="button"
+              title="Filter text"
               onClick={() => setIsFilterVisible((now) => !now)}
               className="px-4 py-2"
             >
@@ -118,13 +114,18 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
             </button>
             <button
               type="button"
+              title={isChatVisible ? 'Collapse chat' : 'Expand chat'}
               onClick={() => setIsChatVisible((now) => !now)}
               className="text-lg px-4 py-2"
             >
               <IconChevronDown
                 width="1em"
                 height="1em"
-                style={{ transform: isChatVisible ? 'rotate(180deg)' : '' }}
+                style={{
+                  transitionDuration: '0.3s',
+                  transitionProperty: 'transform',
+                  transform: isChatVisible ? 'scaleY(-1)' : 'none'
+                }}
               />
             </button>
           </div>
