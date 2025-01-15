@@ -16,7 +16,7 @@ import ExpandableContainer from './ExpandableContainer';
 import CommentSection from './CommentSection';
 import { NextImage } from './shared/NextImage';
 import { parseTimestamp } from './shared/util';
-import { useLocalStorage } from './shared/hooks/useLocalStorage';
+import useLocalStorageState from 'use-local-storage-state';
 
 const format = (n: number) => Intl.NumberFormat('en-US').format(n);
 
@@ -38,7 +38,7 @@ const WatchPage = (props: WatchPageProps) => {
 
   const { videoInfo, hasChat, relatedVideos } = props;
 
-  const [isChatVisible, setIsChatVisible] = useLocalStorage('chat:visible', true);
+  const [isChatVisible, setIsChatVisible] = useLocalStorageState('chat:visible', { defaultValue: true });
   const refMobileScrollTarget = React.useRef<HTMLDivElement>(null);
   const { innerWidth, innerHeight } = useWindowSize();
 

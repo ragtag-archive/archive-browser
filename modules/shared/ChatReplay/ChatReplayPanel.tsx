@@ -2,10 +2,10 @@ import React from 'react';
 import axios from 'axios';
 import { ChatMessage } from '../database.d';
 import ChatReplay from './ChatReplay';
-import { IconChevronDown, IconFilter } from '../icons';
+import { IconChevronDown, IconFilter, IconBars } from '../icons';
 import { useDebounce } from '../hooks/useDebounce';
 import { parseChatReplay } from './parser';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import useLocalStorageState from 'use-local-storage-state';
 
 export type ChatReplayPanelProps = {
   src: string;
@@ -20,7 +20,8 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
   const [isFilterVisible, setIsFilterVisible] = React.useState(false);
   const [chatFilter, setChatFilter] = React.useState('');
-  const [isChatVisible, setIsChatVisible] = useLocalStorage('chat:visible', true);
+  const [isChatVisible, setIsChatVisible] = useLocalStorageState('chat:visible', { defaultValue: true });
+  const [isHeaderVisible, setIsHeaderVisible] = useLocalStorageState('header:visible', { defaultValue: true });
   const [isErrored, setIsErrored] = React.useState(false);
   const refChatScrollDiv = React.useRef<HTMLDivElement>(null);
 
@@ -104,6 +105,19 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
         <div className="flex">
           <div className="flex-1 flex items-center px-4">Chat replay</div>
           <div>
+            <button
+              type="button"
+              title={isHeaderVisible ? 'Hide header' : 'Show header'}
+              onClick={() => setIsHeaderVisible((now) => !now)}
+              className="px-4 py-2"
+              style={{
+                transitionDuration: '0.3s',
+                transitionProperty: 'transform',
+                transform: isHeaderVisible ? 'none' : 'rotate(90deg)'
+              }}
+            >
+              <IconBars width="1em" height="1em" />
+            </button>
             <button
               type="button"
               title="Filter text"

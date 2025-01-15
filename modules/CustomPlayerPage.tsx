@@ -7,10 +7,10 @@ import VideoPlayer2 from './shared/VideoPlayer/VideoPlayer2';
 import { buttonStyle } from './shared/VideoActionButtons';
 import { IconCheck } from './shared/icons';
 import { SITE_NAME } from './shared/config';
-import { useLocalStorage } from './shared/hooks/useLocalStorage';
+import useLocalStorageState from 'use-local-storage-state';
 
 const CustomPlayerPage = () => {
-  const [isChatVisible, setIsChatVisible] = useLocalStorage('chat:visible', true);
+  const [isChatVisible, setIsChatVisible] = useLocalStorageState('chat:visible', { defaultValue: true });
   const { innerWidth, innerHeight } = useWindowSize();
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [urlVideo, setUrlVideo] = React.useState('');

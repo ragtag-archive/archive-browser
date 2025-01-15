@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Header from './Header';
 import { apiStatusMessage } from '../../pages/api/v1/status';
 import MemoLinkify from './MemoLinkify';
+import useLocalStorageState from 'use-local-storage-state';
 
 export type PageBaseProps = {
   children?: React.ReactNode;
@@ -13,6 +14,7 @@ export type PageBaseProps = {
 const PageBase = (props: PageBaseProps) => {
   const [bannerHide, setBannerHide] = React.useState(true);
   const [bannerMessage, setBannerMessage] = React.useState('');
+  const [isHeaderVisible, setIsHeaderVisible] = useLocalStorageState('header:visible', { defaultValue: true });
 
   const fetchStatusMessage = async () => {
     const { timestamp, message, showBanner } = await apiStatusMessage();
@@ -61,10 +63,13 @@ const PageBase = (props: PageBaseProps) => {
           </a>
         </span>
       </div>
-      <Header />
+      {isHeaderVisible && (
+        <Header />
+      )}
       <div
         className={[
-          'container mx-auto mt-4 flex-1',
+          'container mx-auto flex-1',
+          isHeaderVisible ? 'mt-4' : '',
           props.flex ? 'flex flex-col' : '',
         ].join(' ')}
       >
