@@ -75,28 +75,32 @@ const PageBase = (props: PageBaseProps) => {
       >
         {props.children}
       </div>
-      <div className="mt-6 text-gray-500 text-center">
-        Made with 🍝 by{' '}
-        <a
-          href="https://twitter.com/kitsune_cw"
-          className="hover:underline"
-          target="_blank"
-          rel="noreferrer noopener nofollow"
-        >
-          kitsune
-        </a>
-        .
-      </div>
-      <div className="mb-6 text-center">
-        <a
-          href="https://github.com/ragtag-archive/archive-browser"
-          className="text-gray-500 hover:underline"
-          target="_blank"
-          rel="noreferrer noopener nofollow"
-        >
-          Source code
-        </a>
-      </div>
+      {isHeaderVisible && (
+        <>
+          <div className="mt-6 text-gray-500 text-center">
+            Made with 🍝 by{' '}
+            <a
+              href="https://twitter.com/kitsune_cw"
+              className="hover:underline"
+              target="_blank"
+              rel="noreferrer noopener nofollow"
+            >
+              kitsune
+            </a>
+            .
+          </div>
+          <div className="mb-6 text-center">
+            <a
+              href="https://github.com/ragtag-archive/archive-browser"
+              className="text-gray-500 hover:underline"
+              target="_blank"
+              rel="noreferrer noopener nofollow"
+            >
+              Source code
+            </a>
+          </div>
+        </>
+      )}
     </div>
   );
 };

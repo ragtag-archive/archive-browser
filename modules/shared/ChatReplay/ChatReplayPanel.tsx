@@ -108,7 +108,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
           <div>
             <button
               type="button"
-              title={isHeaderVisible ? 'Hide header' : 'Show header'}
+              title={isHeaderVisible ? 'Hide header and footer' : 'Show header and footer'}
               onClick={() => setIsHeaderVisible((now) => !now)}
               className="px-2 py-2"
               style={{

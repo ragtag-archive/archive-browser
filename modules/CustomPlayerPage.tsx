@@ -11,6 +11,7 @@ import useLocalStorageState from 'use-local-storage-state';
 
 const CustomPlayerPage = () => {
   const [isChatVisible, setIsChatVisible] = useLocalStorageState('chat:visible', { defaultValue: true });
+  const [isHeaderVisible, setIsHeaderVisible] = useLocalStorageState('header:visible', { defaultValue: true });
   const { innerWidth, innerHeight } = useWindowSize();
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [urlVideo, setUrlVideo] = React.useState('');
@@ -91,13 +92,15 @@ const CustomPlayerPage = () => {
               )}
             </div>
           </div>
-          <button
-            type="button"
-            className={[buttonStyle, 'mt-4'].join(' ')}
-            onClick={() => setShowPlayer(false)}
-          >
-            Go back
-          </button>
+          {isHeaderVisible && (
+            <button
+              type="button"
+              className={[buttonStyle, 'mt-4'].join(' ')}
+              onClick={() => setShowPlayer(false)}
+            >
+              Go back
+            </button>
+          )}
         </div>
       ) : (
         <div>
