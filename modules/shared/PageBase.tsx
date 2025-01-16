@@ -68,7 +68,7 @@ const PageBase = (props: PageBaseProps) => {
       )}
       <div
         className={[
-          'container mx-auto flex-1',
+          'lg:container lg:mx-auto flex-1',
           isHeaderVisible ? 'mt-4' : '',
           props.flex ? 'flex flex-col' : '',
         ].join(' ')}

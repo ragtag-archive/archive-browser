@@ -43,7 +43,7 @@ const CustomPlayerPage = () => {
           <div
             className="flex lg:flex-row flex-col lg:h-auto"
             style={{
-              height: isChatVisible && innerWidth < 640 ? innerHeight : 'auto',
+              height: isChatVisible && innerWidth < 1024 ? innerHeight : 'auto',
             }}
           >
             <div className="w-full lg:w-3/4">
