@@ -182,7 +182,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
           <div
             className={[
               'px-2 border border-gray-800 rounded',
-              'overflow-y-scroll absolute inset-0',
+              'overflow-hidden hover:overflow-y-scroll absolute inset-0',
               'transition-all duration-200',
             ].join(' ')}
             style={{
