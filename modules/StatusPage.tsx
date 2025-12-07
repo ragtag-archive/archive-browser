@@ -1,6 +1,8 @@
 import React from 'react';
-import Linkify from 'react-linkify';
+import ReactLinkify from 'react-linkify';
 import Head from 'next/head';
+
+const Linkify = ReactLinkify as any;
 import { apiStatusMessage, WorkerStatus } from '../pages/api/v1/status';
 import { format } from 'timeago.js';
 import PageBase from './shared/PageBase';
