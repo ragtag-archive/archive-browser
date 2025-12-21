@@ -7,9 +7,11 @@ import VideoPlayer2 from './shared/VideoPlayer/VideoPlayer2';
 import { buttonStyle } from './shared/VideoActionButtons';
 import { IconCheck } from './shared/icons';
 import { SITE_NAME } from './shared/config';
+import useLocalStorageState from 'use-local-storage-state';
 
 const CustomPlayerPage = () => {
-  const [isChatVisible, setIsChatVisible] = React.useState(false);
+  const [isChatVisible, setIsChatVisible] = useLocalStorageState('chat:visible', { defaultValue: true });
+  const [isHeaderVisible, setIsHeaderVisible] = useLocalStorageState('header:visible', { defaultValue: true });
   const { innerWidth, innerHeight } = useWindowSize();
   const [playbackProgress, setPlaybackProgress] = React.useState(0);
   const [urlVideo, setUrlVideo] = React.useState('');
@@ -40,9 +42,9 @@ const CustomPlayerPage = () => {
       {showPlayer ? (
         <div>
           <div
-            className={['flex lg:flex-row flex-col lg:h-auto'].join(' ')}
+            className="flex lg:flex-row flex-col lg:h-auto"
             style={{
-              height: isChatVisible && innerWidth < 640 ? innerHeight : 'auto',
+              height: isChatVisible && innerWidth < 1024 ? innerHeight : 'auto',
             }}
           >
             <div className="w-full lg:w-3/4">
@@ -86,18 +88,19 @@ const CustomPlayerPage = () => {
                   src={urlChat}
                   info={urlInfo}
                   currentTimeSeconds={playbackProgress}
-                  onChatToggle={setIsChatVisible}
                 />
               )}
             </div>
           </div>
-          <button
-            type="button"
-            className={[buttonStyle, 'mt-4'].join(' ')}
-            onClick={() => setShowPlayer(false)}
-          >
-            Go back
-          </button>
+          {isHeaderVisible && (
+            <button
+              type="button"
+              className={[buttonStyle, 'mt-4'].join(' ')}
+              onClick={() => setShowPlayer(false)}
+            >
+              Go back
+            </button>
+          )}
         </div>
       ) : (
         <div>

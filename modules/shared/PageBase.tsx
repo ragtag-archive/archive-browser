@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Header from './Header';
 import { apiStatusMessage } from '../../pages/api/v1/status';
 import MemoLinkify from './MemoLinkify';
+import useLocalStorageState from 'use-local-storage-state';
 
 export type PageBaseProps = {
   children?: React.ReactNode;
@@ -13,6 +14,7 @@ export type PageBaseProps = {
 const PageBase = (props: PageBaseProps) => {
   const [bannerHide, setBannerHide] = React.useState(true);
   const [bannerMessage, setBannerMessage] = React.useState('');
+  const [isHeaderVisible, setIsHeaderVisible] = useLocalStorageState('header:visible', { defaultValue: true });
 
   const fetchStatusMessage = async () => {
     const { timestamp, message, showBanner } = await apiStatusMessage();
@@ -61,37 +63,44 @@ const PageBase = (props: PageBaseProps) => {
           </a>
         </span>
       </div>
-      <Header />
+      {isHeaderVisible && (
+        <Header />
+      )}
       <div
         className={[
-          'container mx-auto mt-4 flex-1',
+          'lg:container lg:mx-auto flex-1',
+          isHeaderVisible ? 'mt-4' : '',
           props.flex ? 'flex flex-col' : '',
         ].join(' ')}
       >
         {props.children}
       </div>
-      <div className="mt-6 text-gray-500 text-center">
-        Made with 🍝 by{' '}
-        <a
-          href="https://twitter.com/kitsune_cw"
-          className="hover:underline"
-          target="_blank"
-          rel="noreferrer noopener nofollow"
-        >
-          kitsune
-        </a>
-        .
-      </div>
-      <div className="mb-6 text-center">
-        <a
-          href="https://github.com/ragtag-archive/archive-browser"
-          className="text-gray-500 hover:underline"
-          target="_blank"
-          rel="noreferrer noopener nofollow"
-        >
-          Source code
-        </a>
-      </div>
+      {isHeaderVisible && (
+        <>
+          <div className="mt-6 text-gray-500 text-center">
+            Made with 🍝 by{' '}
+            <a
+              href="https://twitter.com/kitsune_cw"
+              className="hover:underline"
+              target="_blank"
+              rel="noreferrer noopener nofollow"
+            >
+              kitsune
+            </a>
+            .
+          </div>
+          <div className="mb-6 text-center">
+            <a
+              href="https://github.com/ragtag-archive/archive-browser"
+              className="text-gray-500 hover:underline"
+              target="_blank"
+              rel="noreferrer noopener nofollow"
+            >
+              Source code
+            </a>
+          </div>
+        </>
+      )}
     </div>
   );
 };

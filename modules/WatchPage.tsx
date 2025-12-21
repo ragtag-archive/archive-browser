@@ -16,6 +16,7 @@ import ExpandableContainer from './ExpandableContainer';
 import CommentSection from './CommentSection';
 import { NextImage } from './shared/NextImage';
 import { parseTimestamp } from './shared/util';
+import useLocalStorageState from 'use-local-storage-state';
 
 const format = (n: number) => Intl.NumberFormat('en-US').format(n);
 
@@ -37,7 +38,7 @@ const WatchPage = (props: WatchPageProps) => {
 
   const { videoInfo, hasChat, relatedVideos } = props;
 
-  const [isChatVisible, setIsChatVisible] = React.useState(false);
+  const [isChatVisible, setIsChatVisible] = useLocalStorageState('chat:visible', { defaultValue: true });
   const refMobileScrollTarget = React.useRef<HTMLDivElement>(null);
   const { innerWidth, innerHeight } = useWindowSize();
 
@@ -73,9 +74,9 @@ const WatchPage = (props: WatchPageProps) => {
     <PageBase>
       <VideoPlayerHead videoInfo={videoInfo} />
       <div
-        className={['flex lg:flex-row flex-col lg:h-auto'].join(' ')}
+        className="flex lg:flex-row flex-col lg:h-auto"
         style={{
-          height: isChatVisible && innerWidth < 640 ? innerHeight : 'auto',
+          height: isChatVisible && innerWidth < 1024 ? innerHeight : 'auto',
         }}
       >
         <div className="w-full lg:w-3/4">
@@ -145,7 +146,6 @@ const WatchPage = (props: WatchPageProps) => {
             <ChatReplayPanel
               src={urlChat}
               currentTimeSeconds={playbackProgress}
-              onChatToggle={setIsChatVisible}
             />
           )}
         </div>

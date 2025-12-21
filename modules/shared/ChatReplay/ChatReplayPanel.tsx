@@ -2,15 +2,15 @@ import React from 'react';
 import axios from 'axios';
 import { ChatMessage } from '../database.d';
 import ChatReplay from './ChatReplay';
-import { IconChevronDown, IconFilter } from '../icons';
+import { IconChevronDown, IconFilter, IconBars, IconTachometerAlt } from '../icons';
 import { useDebounce } from '../hooks/useDebounce';
 import { parseChatReplay } from './parser';
+import useLocalStorageState from 'use-local-storage-state';
 
 export type ChatReplayPanelProps = {
   src: string;
   info?: string;
   currentTimeSeconds: number;
-  onChatToggle?: (isVisible: boolean) => any;
 };
 
 const ChatReplayPanel = (props: ChatReplayPanelProps) => {
@@ -20,7 +20,9 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
   const [downloadProgress, setDownloadProgress] = React.useState(-1);
   const [isFilterVisible, setIsFilterVisible] = React.useState(false);
   const [chatFilter, setChatFilter] = React.useState('');
-  const [isChatVisible, setIsChatVisible] = React.useState(false);
+  const [isChatVisible, setIsChatVisible] = useLocalStorageState('chat:visible', { defaultValue: true });
+  const [isChatSmooth, setIsChatSmooth] = useLocalStorageState('chat:smooth', { defaultValue: true });
+  const [isHeaderVisible, setIsHeaderVisible] = useLocalStorageState('header:visible', { defaultValue: true });
   const [isErrored, setIsErrored] = React.useState(false);
   const refChatScrollDiv = React.useRef<HTMLDivElement>(null);
 
@@ -41,7 +43,6 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
       }) : {};
 
       setReplayData(parseChatReplay(data.data, info.data));
-      setIsChatVisible(true);
     } catch (ex) {
       console.log('[chat] error parsing chat:', ex);
       setIsErrored(true);
@@ -72,13 +73,9 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
     if (refChatScrollDiv.current)
       refChatScrollDiv.current.scrollTo({
         top: refChatScrollDiv.current.scrollHeight,
-        behavior: 'smooth',
+        behavior: isChatSmooth ? 'smooth' : 'instant',
       });
   }, [props.currentTimeSeconds]);
-
-  React.useEffect(() => {
-    props.onChatToggle?.(isChatVisible);
-  }, [isChatVisible]);
 
   if (replayData === null)
     return (
@@ -107,24 +104,57 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
     <div className="h-full flex flex-col">
       <div className="flex flex-col text-white bg-gray-900">
         <div className="flex">
-          <div className="flex-1 flex items-center px-4">Chat replay</div>
+          <div className="flex-1 flex items-center px-2">Chat replay</div>
           <div>
             <button
               type="button"
+              title={isHeaderVisible ? 'Hide header and footer' : 'Show header and footer'}
+              onClick={() => setIsHeaderVisible((now) => !now)}
+              className="px-2 py-2"
+              style={{
+                transitionDuration: '0.3s',
+                transitionProperty: 'transform',
+                transform: isHeaderVisible ? 'none' : 'rotate(90deg)'
+              }}
+            >
+              <IconBars width="1.1em" height="1.1em" />
+            </button>
+
+            <button
+              type="button"
+              title={isChatSmooth ? 'Smooth scroll' : 'Instant scroll'}
+              onClick={() => setIsChatSmooth((now) => !now)}
+              className="px-2 py-2"
+              style={{
+                transform: isChatSmooth ? 'scaleX(-1)' : 'none'
+              }}
+            >
+              <IconTachometerAlt width="1.2em" height="1.2em" />
+            </button>
+
+            <button
+              type="button"
+              title="Filter text"
               onClick={() => setIsFilterVisible((now) => !now)}
-              className="px-4 py-2"
+              className="px-2 py-2"
             >
               <IconFilter width="1em" height="1em" />
             </button>
+
             <button
               type="button"
+              title={isChatVisible ? 'Collapse chat' : 'Expand chat'}
               onClick={() => setIsChatVisible((now) => !now)}
-              className="text-lg px-4 py-2"
+              className="text-lg px-3 py-2"
             >
               <IconChevronDown
                 width="1em"
                 height="1em"
-                style={{ transform: isChatVisible ? 'rotate(180deg)' : '' }}
+                style={{
+                  transitionDuration: '0.3s',
+                  transitionProperty: 'transform',
+                  transform: isChatVisible ? 'scaleY(-1)' : 'none'
+                }}
               />
             </button>
           </div>
@@ -152,7 +182,7 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
           <div
             className={[
               'px-2 border border-gray-800 rounded',
-              'overflow-y-scroll absolute inset-0',
+              'overflow-hidden hover:overflow-y-scroll absolute inset-0',
               'transition-all duration-200',
             ].join(' ')}
             style={{

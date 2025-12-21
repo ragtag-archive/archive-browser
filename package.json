@@ -24,7 +24,8 @@
     "react-query": "^3.39.3",
     "react-srv3": "^1.0.3",
     "sharp": "^0.32.1",
-    "timeago.js": "^4.0.2"
+    "timeago.js": "^4.0.2",
+    "use-local-storage-state": "^19.5.0"
   },
   "devDependencies": {
     "@tailwindcss/ui": "^0.7.2",
