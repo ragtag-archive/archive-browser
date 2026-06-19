@@ -4,7 +4,7 @@ import {
   ENABLE_SIGN_URLS,
   FILE_JWT_PRIVATE_KEY,
 } from './config';
-import { VideoFile } from './database.d';
+import type { VideoFile } from './database.d';
 
 const K_EXTENSION_BYPASS = ['jpg', 'webp'];
 

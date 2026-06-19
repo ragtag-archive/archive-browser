@@ -92,7 +92,7 @@ type ChatMessageBase = {
   emotes?: ChatMessageEmote[];
 };
 
-type ChatMessageImage = {
+export type ChatMessageImage = {
   url: string;
   id: string;
   width?: number;
@@ -104,7 +104,7 @@ type ChatMessageAuthorBadge = {
   icons: ChatMessageImage[];
 };
 
-type ChatMessageAuthor = {
+export type ChatMessageAuthor = {
   name: string;
   id: string;
   images: ChatMessageImage[];
@@ -152,13 +152,11 @@ export type ChatMessage =
   | ChatMembershipItem
   | ChatPaidMessage;
 
-export const ChatMessageTypes = [
-  'paid_message',
-  'membership_item',
-  'text_message',
-  'viewer_engagement_message',
-] as const;
-export type ChatMessageType = (typeof ChatMessageTypes)[number];
+export type ChatMessageType =
+  | 'paid_message'
+  | 'membership_item'
+  | 'text_message'
+  | 'viewer_engagement_message';
 
 /**
  * Search logs

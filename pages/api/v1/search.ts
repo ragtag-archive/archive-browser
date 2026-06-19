@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ES_INDEX, ES_INDEX_SEARCH_LOG } from '../../../modules/shared/config';
-import {
+import type {
   ElasticSearchLog,
   ElasticSearchResult,
   VideoMetadata,

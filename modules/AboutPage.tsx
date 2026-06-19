@@ -30,7 +30,7 @@ const AboutPage = () => {
           If you have any questions or concerns, feel free to hop on{' '}
           <a
             target="_blank"
-            rel="noreferrer noopener nofollow"
+            rel="noopener"
             href="https://ragtag.link/archive-discord"
           >
             our Discord server
@@ -38,10 +38,14 @@ const AboutPage = () => {
           . You can also contact me on Twitter at{' '}
           <a
             target="_blank"
-            rel="noreferrer noopener nofollow"
+            rel="noopener nofollow"
             href="https://twitter.com/kitsune_cw"
           >
             @kitsune_cw
+          </a>{' '}
+          or visit my website at{' '}
+          <a target="_blank" rel="noopener" href="https://www.kitsu.red">
+            kitsu.red
           </a>
           . For legal inquiries, feel free to contact me through the channels
           above, or send me an email at{' '}

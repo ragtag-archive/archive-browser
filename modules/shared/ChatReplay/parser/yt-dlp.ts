@@ -1,5 +1,5 @@
 import { ChatReplayParser } from '.';
-import {
+import type {
   ChatMessage,
   ChatMessageAuthor,
   ChatMessageImage,
@@ -53,8 +53,8 @@ export default class YtDlpChatParser implements ChatReplayParser {
             'addChatItemAction' in actionBase
               ? 'add_chat_item'
               : 'addLiveChatTickerItemAction' in actionBase
-              ? 'add_live_chat_ticker_item'
-              : 'unknown';
+                ? 'add_live_chat_ticker_item'
+                : 'unknown';
 
           // Skip handling tickers for now
           if (action_type !== 'add_chat_item') return null;
@@ -64,10 +64,10 @@ export default class YtDlpChatParser implements ChatReplayParser {
             'liveChatMembershipItemRenderer' in actionItem
               ? 'membership_item'
               : 'liveChatTextMessageRenderer' in actionItem
-              ? 'text_message'
-              : 'liveChatPaidMessageRenderer' in actionItem
-              ? 'paid_message'
-              : 'unknown';
+                ? 'text_message'
+                : 'liveChatPaidMessageRenderer' in actionItem
+                  ? 'paid_message'
+                  : 'unknown';
 
           if (message_type === 'unknown') return null;
 

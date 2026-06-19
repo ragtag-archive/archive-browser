@@ -3,11 +3,7 @@ import Link from 'next/link';
 import Head from 'next/head';
 import axios from 'axios';
 import PageBase from './shared/PageBase';
-import {
-  ChatMessage,
-  ChatMessageType,
-  ChatMessageTypes,
-} from './shared/database.d';
+import type { ChatMessage, ChatMessageType } from './shared/database.d';
 import ServiceUnavailablePage from './ServiceUnavailablePage';
 import ChatMessageRender from './shared/ChatReplay/ChatMessageRender';
 import { buttonStyle } from './shared/VideoActionButtons';
@@ -26,6 +22,13 @@ const inputStyle = `
   w-full rounded px-4 py-1
   bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring
   transition duration-100`.replace(/\s+/g, ' ');
+
+const ChatMessageTypes = [
+  'paid_message',
+  'membership_item',
+  'text_message',
+  'viewer_engagement_message',
+] as const satisfies readonly ChatMessageType[];
 
 const ChatExplorerPage = (props: ChatExplorerPageProps) => {
   if (!props.v || !props.chatURL) return <ServiceUnavailablePage />;

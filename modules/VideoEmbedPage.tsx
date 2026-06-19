@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { VideoMetadata } from './shared/database.d';
+import type { VideoMetadata } from './shared/database.d';
 import VideoPlayer2 from './shared/VideoPlayer/VideoPlayer2';
 import VideoPlayerHead from './shared/VideoPlayerHead';
 

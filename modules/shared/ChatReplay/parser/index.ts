@@ -1,4 +1,4 @@
-import { ChatMessage } from '../../database.d';
+import type { ChatMessage } from '../../database.d';
 import DefaultChatParser from './default';
 import YtDlpChatParser from './yt-dlp';
 

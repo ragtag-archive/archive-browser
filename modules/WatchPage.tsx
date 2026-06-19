@@ -1,6 +1,6 @@
 import React from 'react';
 import PageBase from './shared/PageBase';
-import { VideoMetadata } from './shared/database.d';
+import type { VideoMetadata } from './shared/database.d';
 import { formatDate } from './shared/format';
 import ChatReplayPanel from './shared/ChatReplay/ChatReplayPanel';
 import VideoCard from './shared/VideoCard';

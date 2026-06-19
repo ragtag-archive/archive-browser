@@ -1,7 +1,7 @@
 import { GetServerSideProps, GetStaticPaths } from 'next';
 import ChannelPage, { ChannelPageProps } from '../../modules/ChannelPage';
 import { DRIVE_BASE_URL } from '../../modules/shared/config';
-import {
+import type {
   ElasticSearchResult,
   VideoMetadata,
 } from '../../modules/shared/database.d';

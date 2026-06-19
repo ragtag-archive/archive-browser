@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChatMessage } from '../database.d';
+import type { ChatMessage } from '../database.d';
 import { formatSeconds } from '../format';
 import { proxyYT3 as proxyURL } from '../util';
 
@@ -115,10 +115,10 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
           title === 'Owner'
             ? 'owner'
             : title === 'Moderator'
-            ? 'moderator'
-            : title.toLowerCase().includes('member')
-            ? 'member'
-            : ''
+              ? 'moderator'
+              : title.toLowerCase().includes('member')
+                ? 'member'
+                : ''
         ) || [];
       return (
         <div key={msg.message_id} className="px-2 mb-2">
@@ -129,10 +129,10 @@ const ChatMessageRender = React.memo((props: ChatMessageRenderProps) => {
                 authorType.includes('owner')
                   ? 'bg-blue-600 text-white font-bold px-2 rounded'
                   : authorType.includes('moderator')
-                  ? 'text-blue-600 font-bold'
-                  : authorType.includes('member')
-                  ? 'text-green-500'
-                  : '',
+                    ? 'text-blue-600 font-bold'
+                    : authorType.includes('member')
+                      ? 'text-green-500'
+                      : '',
               ].join(' ')}
             >
               {msg.author.name}

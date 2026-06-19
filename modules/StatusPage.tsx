@@ -27,8 +27,8 @@ const StatusCard = (props: StatusCardProps) => {
             props.ok === null
               ? ''
               : props.ok
-              ? 'text-green-500'
-              : 'text-red-500'
+                ? 'text-green-500'
+                : 'text-red-500'
           }
         >
           {props.statusText}
@@ -142,10 +142,10 @@ const StatusPage = () => {
             ok: ['rate_limit', 'work_failed', 'video_failed'].includes(s.event)
               ? false
               : ['video_uploaded', 'video_downloaded', 'work_end'].includes(
-                  s.event
-                )
-              ? true
-              : null,
+                    s.event
+                  )
+                ? true
+                : null,
             statusText: K_EVENT_TEXT[s.event],
             videoId: s.data.video_id,
             timestamp: s.timestamp,

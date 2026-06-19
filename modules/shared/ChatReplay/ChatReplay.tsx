@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChatMessage } from '../database.d';
+import type { ChatMessage } from '../database.d';
 import ChatMessageRender from './ChatMessageRender';
 
 export type ChatReplayProps = {

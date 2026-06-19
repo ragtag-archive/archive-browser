@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { ChatMessage } from '../database.d';
+import type { ChatMessage } from '../database.d';
 import ChatReplay from './ChatReplay';
 import { IconChevronDown, IconFilter } from '../icons';
 import { useDebounce } from '../hooks/useDebounce';
@@ -36,9 +36,11 @@ const ChatReplayPanel = (props: ChatReplayPanelProps) => {
         transformResponse: (res) => res,
       });
 
-      const info: any = props.info ? await axios.get(props.info, {
-        transformResponse: (res) => res,
-      }) : {};
+      const info: any = props.info
+        ? await axios.get(props.info, {
+            transformResponse: (res) => res,
+          })
+        : {};
 
       setReplayData(parseChatReplay(data.data, info.data));
       setIsChatVisible(true);

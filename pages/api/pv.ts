@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ES_INDEX, ES_INDEX_PAGE_VIEWS } from '../../modules/shared/config';
-import {
+import type {
   ElasticSearchResult,
   VideoMetadata,
 } from '../../modules/shared/database.d';

@@ -5,7 +5,7 @@ import {
   ENABLE_RAID_MODE,
   RAID_MODE_ALLOW_VIDEO_PLAYBACK,
 } from '../modules/shared/config';
-import {
+import type {
   ElasticSearchResult,
   VideoFile,
   VideoMetadata,

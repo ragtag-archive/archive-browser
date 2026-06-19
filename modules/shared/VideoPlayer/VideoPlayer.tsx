@@ -513,10 +513,7 @@ sync: thresh ${(threshStartSync.current * 1000).toFixed(2)}ms, ${
         >
           {showWatermark && (
             <div className="text-sm">
-              <a
-                target="_blank"
-                href={SITE_URL + 'watch?v=' + videoId}
-              >
+              <a target="_blank" href={SITE_URL + 'watch?v=' + videoId}>
                 Hosted on <span className="font-bold">{SITE_NAME}</span>
               </a>
             </div>

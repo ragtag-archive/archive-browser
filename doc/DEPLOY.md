@@ -185,7 +185,7 @@ besides the Download button to get the various files.
 
 ## Run it!
 
-Once everything is prepared, run `yarn` to install all the dependencies. When
-done, run `yarn dev` to start a dev server. If successful, you should be able to
-open `http://localhost:3000` in your browser and see the video you just
+Once everything is prepared, run `pnpm install` to install all the dependencies.
+When done, run `pnpm dev` to start a dev server. If successful, you should be
+able to open `http://localhost:3000` in your browser and see the video you just
 inserted.

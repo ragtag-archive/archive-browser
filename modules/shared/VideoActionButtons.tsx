@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { VideoMetadata } from './database.d';
+import type { VideoMetadata } from './database.d';
 import { formatBytes } from './format';
 import {
   IconChartBar,
@@ -51,20 +51,21 @@ const VideoActionButtons = React.memo(
         label: name.includes('.f' + fmtVideo + '.')
           ? 'Video only'
           : name.includes('.f' + fmtAudio + '.')
-          ? 'Audio only'
-          : name.endsWith('.vtt')
-          ? 'Captions (vtt, ' + name.split('.')[1] + ')'
-          : name.endsWith('.ytt')
-          ? 'Captions (srv3, ' + name.split('.')[1] + ')'
-          : name.endsWith('.chat.json') || name.endsWith('.live_chat.json')
-          ? 'Chat logs (json)'
-          : name.endsWith('.info.json')
-          ? 'Metadata (json)'
-          : name.endsWith('.webp')
-          ? 'Thumbnail (webp)'
-          : name.endsWith('.jpg')
-          ? 'Thumbnail (jpeg)'
-          : name,
+            ? 'Audio only'
+            : name.endsWith('.vtt')
+              ? 'Captions (vtt, ' + name.split('.')[1] + ')'
+              : name.endsWith('.ytt')
+                ? 'Captions (srv3, ' + name.split('.')[1] + ')'
+                : name.endsWith('.chat.json') ||
+                    name.endsWith('.live_chat.json')
+                  ? 'Chat logs (json)'
+                  : name.endsWith('.info.json')
+                    ? 'Metadata (json)'
+                    : name.endsWith('.webp')
+                      ? 'Thumbnail (webp)'
+                      : name.endsWith('.jpg')
+                        ? 'Thumbnail (jpeg)'
+                        : name,
         name,
         size,
         url,

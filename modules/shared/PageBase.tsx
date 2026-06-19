@@ -73,10 +73,10 @@ const PageBase = (props: PageBaseProps) => {
       <div className="mt-6 text-gray-500 text-center">
         Made with 🍝 by{' '}
         <a
-          href="https://twitter.com/kitsune_cw"
+          href="https://www.kitsu.red/"
           className="hover:underline"
           target="_blank"
-          rel="noreferrer noopener nofollow"
+          rel="noopener"
         >
           kitsune
         </a>

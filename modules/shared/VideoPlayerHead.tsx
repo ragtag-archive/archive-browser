@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { VideoMetadata } from './database.d';
+import type { VideoMetadata } from './database.d';
 import { SITE_NAME, SITE_URL } from './config';
 
 export type VideoPlayerHeadProps = {

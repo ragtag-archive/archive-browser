@@ -2,6 +2,7 @@
   "name": "archive-browser",
   "version": "0.1.0",
   "private": false,
+  "packageManager": "pnpm@10.33.4",
   "license": "",
   "scripts": {
     "dev": "next dev",
@@ -9,34 +10,38 @@
     "start": "next start"
   },
   "dependencies": {
-    "@tailwindcss/typography": "^0.5.9",
-    "@types/react-linkify": "^1.0.1",
-    "amplitude-js": "^8.21.9",
-    "axios": "^1.4.0",
-    "joi": "^17.9.2",
-    "jsonwebtoken": "^9.0.1",
-    "next": "^13.5.11",
+    "@tailwindcss/typography": "^0.5.20",
+    "amplitude-js": "^8.21.10",
+    "axios": "^1.18.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.3",
+    "next": "^16.2.9",
     "nprogress": "^0.2.0",
-    "pretty-bytes": "^6.1.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "pretty-bytes": "^7.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-linkify": "^1.0.0-alpha",
     "react-query": "^3.39.3",
-    "react-srv3": "^1.0.3",
-    "sharp": "^0.32.1",
+    "react-srv3": "^1.0.4",
+    "sharp": "^0.35.1",
     "timeago.js": "^4.0.2"
   },
   "devDependencies": {
-    "@tailwindcss/ui": "^0.7.2",
-    "@types/jsonwebtoken": "^9.0.2",
-    "@types/node": "^20.4.1",
-    "@types/nprogress": "^0.2.0",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
-    "postcss": "^8.4.25",
-    "postcss-preset-env": "^9.0.0",
-    "prettier": "^3.0.0",
-    "tailwindcss": "^3.3.2",
-    "typescript": "^5.1.6"
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.19.25",
+    "@types/nprogress": "^0.2.3",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "@types/react-linkify": "^1.0.4",
+    "postcss": "^8.5.15",
+    "postcss-preset-env": "^11.3.1",
+    "prettier": "^3.8.4",
+    "tailwindcss": "^3.4.18",
+    "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
   }
 }
