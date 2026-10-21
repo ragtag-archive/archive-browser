@@ -97,8 +97,10 @@ export const ApiSearchSortFields = [
 type SortField = (typeof ApiSearchSortFields)[number];
 
 const SEARCH_LOG_MAX_QUERY_LENGTH = 200;
-const HTTP_MAX_SIZE = 50;
-const HTTP_MAX_RESULT_WINDOW = 1000;
+// Matches Elasticsearch's default index.max_result_window. Existing API
+// consumers (including kumo) request up to 10000 results at once.
+const HTTP_MAX_SIZE = 10000;
+const HTTP_MAX_RESULT_WINDOW = 10000;
 
 export const apiSearch = async (query: {
   q?: string;
