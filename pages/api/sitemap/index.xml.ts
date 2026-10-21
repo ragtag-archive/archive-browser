@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { apiListChannels } from '../v1/channels';
+import { setXmlResponseHeaders, xmlEscape } from '../../../modules/shared/xml';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const host = req.headers.host || 'archive.ragtag.moe';
@@ -11,18 +12,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     ...channels.map((channel) =>
       [
         '<sitemap><loc>',
-        'https://',
-        host,
-        '/api/sitemap/channel/',
-        channel.channel_id,
-        '.xml',
+        xmlEscape(
+          [
+            'https://',
+            host,
+            '/api/sitemap/channel/',
+            channel.channel_id,
+            '.xml',
+          ].join('')
+        ),
         '</loc></sitemap>',
       ].join('')
     ),
     '</sitemapindex>',
   ].join('\n');
 
-  res.setHeader('Content-Type', 'text/xml');
+  setXmlResponseHeaders(res);
   res.write(sitemap);
   res.end();
 };

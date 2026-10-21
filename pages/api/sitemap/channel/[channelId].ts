@@ -1,6 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { signFileURLs } from '../../../../modules/shared/fileAuth';
 import { getRemoteAddress } from '../../../../modules/shared/util';
+import {
+  setXmlResponseHeaders,
+  xmlCData,
+  xmlEscape,
+} from '../../../../modules/shared/xml';
 import { apiSearch } from '../../v1/search';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -8,9 +13,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const host = req.headers.host || 'archive.ragtag.moe';
   const ip = getRemoteAddress(req);
-  const videos = await apiSearch({ channel_id, size: 10000 }).then(
-    (res) => res.data.hits.hits
-  );
+  const videos = await apiSearch({
+    channel_id,
+    size: 10000,
+    _source: [
+      'title',
+      'description',
+      'duration',
+      'upload_date',
+      'timestamps.publishedAt',
+      'channel_name',
+      'drive_base',
+      'files',
+    ],
+  }).then((res) => res.data.hits.hits);
 
   // Sign URLs
   videos.forEach((video) =>
@@ -26,17 +42,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       )?.url;
       return [
         '<url>',
-        `<loc>https://${host}/watch?v=${video._id}</loc>`,
+        `<loc>${xmlEscape(`https://${host}/watch?v=${video._id}`)}</loc>`,
         '<video:video>',
-        `<video:thumbnail_loc>${thumbnail_url}</video:thumbnail_loc>`,
-        `<video:title><![CDATA[${video._source.title}]]></video:title>`,
-        `<video:description><![CDATA[${video._source.description}]]></video:description>`,
-        `<video:player_loc>https://${host}/embed/${video._id}</video:player_loc>`,
-        `<video:duration>${video._source.duration}</video:duration>`,
-        `<video:publication_date>${
+        `<video:thumbnail_loc>${xmlEscape(thumbnail_url)}</video:thumbnail_loc>`,
+        `<video:title>${xmlCData(video._source.title)}</video:title>`,
+        `<video:description>${xmlCData(
+          video._source.description
+        )}</video:description>`,
+        `<video:player_loc>${xmlEscape(
+          `https://${host}/embed/${video._id}`
+        )}</video:player_loc>`,
+        `<video:duration>${xmlEscape(video._source.duration)}</video:duration>`,
+        `<video:publication_date>${xmlEscape(
           video._source.timestamps?.publishedAt || video._source.upload_date
-        }</video:publication_date>`,
-        `<video:uploader info="https://${host}/channel/${channel_id}">${video._source.channel_name}</video:uploader>`,
+        )}</video:publication_date>`,
+        `<video:uploader info="${xmlEscape(
+          `https://${host}/channel/${channel_id}`
+        )}">${xmlEscape(video._source.channel_name)}</video:uploader>`,
         '</video:video>',
         '</url>',
       ].join('\n');
@@ -44,7 +66,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     '</urlset>',
   ].join('\n');
 
-  res.setHeader('Content-Type', 'text/xml');
+  setXmlResponseHeaders(res);
+  res.setHeader('Cache-Control', 'public, max-age=3600');
   res.write(sitemap);
   res.end();
 };
