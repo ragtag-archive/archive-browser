@@ -96,6 +96,10 @@ export const ApiSearchSortFields = [
 ] as const;
 type SortField = (typeof ApiSearchSortFields)[number];
 
+const SEARCH_LOG_MAX_QUERY_LENGTH = 200;
+const HTTP_MAX_SIZE = 50;
+const HTTP_MAX_RESULT_WINDOW = 1000;
+
 export const apiSearch = async (query: {
   q?: string;
   v?: string;
@@ -104,6 +108,7 @@ export const apiSearch = async (query: {
   sort_order?: 'asc' | 'desc';
   from?: number;
   size?: number;
+  _source?: string[];
 }) => {
   const q = query.q || '';
   const v = query.v || '';
@@ -166,6 +171,8 @@ export const apiSearch = async (query: {
     },
   };
 
+  if (query._source) requestData['_source'] = query._source;
+
   if (query.sort) {
     const sort = [
       {
@@ -183,7 +190,7 @@ export const apiSearch = async (query: {
   }
 
   // Log the search
-  if (q) {
+  if (q && q.length <= SEARCH_LOG_MAX_QUERY_LENGTH) {
     const searchLog: ElasticSearchLog = {
       query: q.trim().replace(/\s+/g, ' '),
       timestamp: new Date().toISOString(),
@@ -239,8 +246,50 @@ export const apiSearchRaw = <T = any>(dsl: any) =>
     data: dsl,
   });
 
+const firstQueryValue = (value: string | string[] | undefined) =>
+  Array.isArray(value) ? value[0] : value;
+
+const parseInteger = (value: string | undefined, fallback: number) => {
+  const n = Number.parseInt(value ?? '', 10);
+  return Number.isFinite(n) ? n : fallback;
+};
+
+const sanitizeHttpSearchQuery = (
+  query: NextApiRequest['query']
+): Parameters<typeof apiSearch>[0] => {
+  const size = Math.min(
+    Math.max(parseInteger(firstQueryValue(query.size), 10), 1),
+    HTTP_MAX_SIZE
+  );
+  const from = Math.min(
+    Math.max(parseInteger(firstQueryValue(query.from), 0), 0),
+    HTTP_MAX_RESULT_WINDOW - size
+  );
+
+  const sortParam = firstQueryValue(query.sort);
+  const sort = ApiSearchSortFields.includes(sortParam as SortField)
+    ? (sortParam as SortField)
+    : undefined;
+
+  const sortOrderParam = firstQueryValue(query.sort_order);
+  const sort_order =
+    sortOrderParam === 'asc' || sortOrderParam === 'desc'
+      ? sortOrderParam
+      : undefined;
+
+  return {
+    q: firstQueryValue(query.q),
+    v: firstQueryValue(query.v),
+    channel_id: firstQueryValue(query.channel_id),
+    sort,
+    sort_order,
+    from,
+    size,
+  };
+};
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.query.completion)
     res.json(await apiSearchCompletion(String(req.query.q)));
-  else res.json((await apiSearch(req.query)).data);
+  else res.json((await apiSearch(sanitizeHttpSearchQuery(req.query))).data);
 };
