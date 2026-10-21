@@ -12,10 +12,10 @@
   "dependencies": {
     "@tailwindcss/typography": "^0.5.20",
     "amplitude-js": "^8.21.10",
-    "axios": "^1.18.0",
-    "joi": "^17.13.3",
+    "axios": "^1.20.0",
+    "joi": "^17.13.8",
     "jsonwebtoken": "^9.0.3",
-    "next": "^16.2.9",
+    "next": "^16.4.2",
     "nprogress": "^0.2.0",
     "pretty-bytes": "^7.1.0",
     "react": "^18.3.1",
@@ -23,7 +23,7 @@
     "react-linkify": "^1.0.0-alpha",
     "react-query": "^3.39.3",
     "react-srv3": "^1.0.4",
-    "sharp": "^0.35.1",
+    "sharp": "^0.35.5",
     "timeago.js": "^4.0.2"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
     "@types/react-linkify": "^1.0.4",
-    "postcss": "^8.5.15",
+    "postcss": "^8.5.31",
     "postcss-preset-env": "^11.3.1",
     "prettier": "^3.8.4",
     "tailwindcss": "^3.4.18",
