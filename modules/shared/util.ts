@@ -15,10 +15,14 @@ export const checkAutoplay = (): Promise<boolean> =>
     }
   });
 
+const firstHeaderValue = (value: string | string[] | undefined) =>
+  (Array.isArray(value) ? value[0] : value)?.split(',')[0].trim() || '';
+
 export const getRemoteAddress = (req: IncomingMessage): string =>
-  (req.headers['cf-connecting-ip'] ||
-    req.headers['x-forwarded-for'] ||
-    req.socket.remoteAddress) as string;
+  firstHeaderValue(req.headers['cf-connecting-ip']) ||
+  firstHeaderValue(req.headers['x-forwarded-for']) ||
+  req.socket.remoteAddress ||
+  '';
 
 export const proxyYT3 = (url: string): string => {
   try {
